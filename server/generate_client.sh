@@ -1,0 +1,1 @@
+mvn clean compile typescript-generator:generate

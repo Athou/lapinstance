@@ -1,0 +1,12 @@
+.rbc-off-range-bg {
+    background-color: dimgrey;
+}
+
+.rbc-toolbar button {
+    color: #f5f8fa;
+    cursor: pointer;
+}
+
+.rbc-today {
+    background-color: indigo;
+}

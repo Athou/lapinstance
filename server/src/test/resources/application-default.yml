@@ -1,0 +1,15 @@
+jda:
+  discord:
+    token:
+    guild-id:
+    raid-text-channel-id:
+    user-roles:
+    admin-roles:
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          discord:
+            client-id: test_id
+            client-secret: test_secret

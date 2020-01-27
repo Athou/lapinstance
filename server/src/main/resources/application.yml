@@ -1,0 +1,37 @@
+server:
+  port: 8760
+  base-url: http://localhost:3000/
+  servlet:
+    session:
+      persistent: true
+      store-dir: ./sessions
+      timeout: 30d
+      cookie:
+        max-age: 30d
+settings:
+  roster:
+    enabled: false
+spring:
+  datasource:
+    platform: h2
+    sql-script-encoding: UTF-8
+  jackson:
+    serialization:
+      WRITE_DATES_AS_TIMESTAMPS: true
+  security:
+    oauth2:
+      client:
+        registration:
+          discord:
+            client-authentication-method: post
+            authorization-grant-type: authorization_code
+            scope:
+              - identify
+            redirect-uri: "{baseUrl}/login/oauth2/code/discord"
+            client-name: Lapinstance client
+        provider:
+          discord:
+            authorization-uri: https://discordapp.com/api/oauth2/authorize
+            token-uri: https://discordapp.com/api/oauth2/token
+            user-info-uri: https://discordapp.com/api/users/@me
+            userNameAttribute: username
