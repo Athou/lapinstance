@@ -71,7 +71,7 @@ class DiscordEmbedService {
 		List<RaidSubscription> filtered = subscriptions.stream()
 				.filter(s -> s.getResponse() == RaidSubscriptionResponse.PRESENT)
 				.collect(Collectors.toList());
-		return new Field("", discordEmoteService.getParticipantsEmote().forMessage() + " " + filtered.size(), false);
+		return buildField(discordEmoteService.getParticipantsEmote().forMessage(), filtered, false, false);
 	}
 
 	private Field buildRoleCountField(List<RaidSubscription> subscriptions, CharacterRole role) {
@@ -79,7 +79,7 @@ class DiscordEmbedService {
 				.filter(s -> s.getResponse() == RaidSubscriptionResponse.PRESENT && s.getCharacter().getSpec().getRole() == role)
 				.collect(Collectors.toList());
 
-		return buildField(discordEmoteService.getEmote(role).forMessage(), filtered, false);
+		return buildField(discordEmoteService.getEmote(role).forMessage(), filtered, false, true);
 	}
 
 	private Field buildTankField(List<RaidSubscription> subscriptions) {
@@ -87,7 +87,7 @@ class DiscordEmbedService {
 				.filter(s -> s.getResponse() == RaidSubscriptionResponse.PRESENT)
 				.filter(s -> s.getCharacter().getSpec().getRole() == CharacterRole.TANK)
 				.collect(Collectors.toList());
-		return buildField(discordEmoteService.getEmote(CharacterSpec.WARRIOR_TANK).forMessage(), filtered, true);
+		return buildField(discordEmoteService.getEmote(CharacterSpec.WARRIOR_TANK).forMessage(), filtered, true, true);
 	}
 
 	private Field buildClassField(CharacterClass characterClass, List<RaidSubscription> subscriptions) {
@@ -96,15 +96,15 @@ class DiscordEmbedService {
 				.filter(s -> s.getCharacter().getSpec().getRole() != CharacterRole.TANK)
 				.filter(s -> s.getCharacter().getSpec().getCharacterClass() == characterClass)
 				.collect(Collectors.toList());
-		return buildField(discordEmoteService.getEmote(characterClass).forMessage(), filtered, true);
+		return buildField(discordEmoteService.getEmote(characterClass).forMessage(), filtered, true, true);
 	}
 
 	private Field buildResponseField(RaidSubscriptionResponse response, List<RaidSubscription> subscriptions) {
 		List<RaidSubscription> filtered = subscriptions.stream().filter(s -> s.getResponse() == response).collect(Collectors.toList());
-		return buildField(discordEmoteService.getEmote(response).forMessage(), filtered, true);
+		return buildField(discordEmoteService.getEmote(response).forMessage(), filtered, true, true);
 	}
 
-	private Field buildField(String icon, List<RaidSubscription> subscriptions, boolean showParticipantList) {
+	private Field buildField(String icon, List<RaidSubscription> subscriptions, boolean showParticipantList, boolean inline) {
 		String content = icon + " " + bold("" + subscriptions.size());
 
 		if (showParticipantList) {
@@ -115,7 +115,7 @@ class DiscordEmbedService {
 			content += System.lineSeparator() + list;
 		}
 
-		return new Field("", content, true);
+		return new Field("", content, inline);
 	}
 
 	private Field buildBlankLineField() {
