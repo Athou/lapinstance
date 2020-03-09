@@ -1,6 +1,12 @@
 # Lapinstance
 
-WoW Classic raid management and discord integration for Les Lapins de Lumière
+WoW Classic raid management and discord integration for Les Lapins de Lumière (EU-Sulfuron).
+
+![Raid calendar](https://i.imgur.com/gncwg4P.png "Raid calendar")
+
+![Raid page](https://i.imgur.com/eVbqA6J.png "Raid page")
+
+![Discord integration](https://i.imgur.com/b6InkwS.png "Discord integration")
 
 ## Build for production
 
