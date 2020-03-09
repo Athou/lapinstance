@@ -2,6 +2,12 @@
 
 WoW Classic raid management and discord integration for Les Lapins de Lumière (EU-Sulfuron).
 
+- Users log in with their discord account
+- Guild master manages raids from the website
+- Guild members can subscribe to raids from the website or via discord reactions
+- Guild master can send reminders to members that are not yet subscribed to a raid
+- Displays Onyxia resets on the calendar
+
 ![Raid calendar](https://i.imgur.com/gncwg4P.png "Raid calendar")
 
 ![Raid page](https://i.imgur.com/eVbqA6J.png "Raid page")
