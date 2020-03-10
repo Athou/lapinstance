@@ -16,7 +16,7 @@ export const RaidNotificationButton: React.FC<{ raidId: number }> = props => {
 
     const notificationButtonClicked = () => {
         client.raids.findMissingRaidSubscriptions(props.raidId).then(resp => {
-            setUsers(resp.data.map(u => ({ ...u, selected: false })))
+            setUsers(resp.data.map(u => ({ ...u, selected: true })))
             setOpen(true)
         })
     }
