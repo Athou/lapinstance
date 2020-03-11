@@ -1,10 +1,12 @@
 import { H4, H5 } from "@blueprintjs/core"
 import React from "react"
 import { Col, Grid, Row } from "react-flexbox-grid"
+import { useHistory } from "react-router-dom"
 import styled from "styled-components"
 import { RaidSubscription } from "../../api"
 import { CharacterRole, characterRoleLabels, specToRoleMapping } from "../../api/utils"
 import { useSession } from "../../App"
+import { Routes } from "../../Routes"
 import { SpecIcon } from "../spec-icons/SpecIcon"
 
 export const SubscriptionList: React.FC<{ subscriptions: RaidSubscription[] }> = props => {
@@ -52,10 +54,15 @@ type StyledCharacterNameProps = {
 const StyledCharacterName = styled.span`
     margin-left: 0.2rem;
     color: ${(props: StyledCharacterNameProps) => (props.user ? "yellow" : "inherit")};
+    &:hover {
+        text-decoration: underline;
+        cursor: pointer;
+    }
 `
 
 const RaidSubscriptionList: React.FC<{ title: string; subscriptions: RaidSubscription[] }> = props => {
     const session = useSession()
+    const history = useHistory()
 
     const buildSubscriptionDisplayName = (subscription: RaidSubscription) =>
         subscription.character ? subscription.character.name : subscription.user.name
@@ -77,7 +84,12 @@ const RaidSubscriptionList: React.FC<{ title: string; subscriptions: RaidSubscri
             {sortedSubscriptions.map(sub => (
                 <div key={sub.id}>
                     {sub.character && <SpecIcon spec={sub.character.spec} />}
-                    <StyledCharacterName user={session.user.id === sub.user.id}>{buildSubscriptionDisplayName(sub)}</StyledCharacterName>
+                    <StyledCharacterName
+                        user={session.user.id === sub.user.id}
+                        onClick={() => history.push(Routes.user.show.create({ userId: String(sub.user.id!) }))}
+                    >
+                        {buildSubscriptionDisplayName(sub)}
+                    </StyledCharacterName>
                 </div>
             ))}
         </>

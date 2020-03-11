@@ -12,6 +12,7 @@ export const Header: React.FC = () => {
 
     const raidLinkActive = !!useRouteMatch(Routes.raid.list.template())
     const rosterLinkActive = !!useRouteMatch(Routes.roster.template())
+    const usersLinkActive = !!useRouteMatch(Routes.user.list.template())
     const profileLinkActive = !!useRouteMatch(Routes.profile.template())
 
     return (
@@ -25,6 +26,13 @@ export const Header: React.FC = () => {
                     icon="flame"
                     text="Raids"
                     onClick={() => history.push(Routes.raid.list.create({}))}
+                />
+                <Button
+                    minimal
+                    active={usersLinkActive}
+                    icon="people"
+                    text="Joueurs"
+                    onClick={() => history.push(Routes.user.list.create({}))}
                 />
                 {applicationSettings.roasterEnabled && session.hasRole(UserRole.ADMIN) && (
                     <Button

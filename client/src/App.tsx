@@ -7,12 +7,13 @@ import { client } from "./api/client"
 import "./App.css"
 import { Header } from "./components/Header"
 import { Loader } from "./components/Loader"
-import { ProfilePage } from "./pages/ProfilePage"
 import { RaidEditPage } from "./pages/RaidEditPage"
 import { RaidNewPage } from "./pages/RaidNewPage"
 import { RaidPage } from "./pages/RaidPage"
 import { RaidsPage } from "./pages/RaidsPage"
 import { RosterPage } from "./pages/RosterPage"
+import { UserPage } from "./pages/UserPage"
+import { UsersPage } from "./pages/UsersPage"
 import { Routes } from "./Routes"
 
 const Content = styled.div`
@@ -60,14 +61,23 @@ const App: React.FC = () => {
                                     <Route path={Routes.raid.new.template()} component={RaidNewPage} />
                                     <Route
                                         path={Routes.raid.show.template()}
-                                        render={props => <RaidPage raidId={props.match.params.raidId} />}
+                                        render={props => <RaidPage raidId={+props.match.params.raidId} />}
                                     />
                                     <Route
                                         path={Routes.raid.edit.template()}
-                                        render={props => <RaidEditPage raidId={props.match.params.raidId} />}
+                                        render={props => <RaidEditPage raidId={+props.match.params.raidId} />}
                                     />
+
                                     <Route path={Routes.roster.template()} component={RosterPage} />
-                                    <Route path={Routes.profile.template()} component={ProfilePage} />
+
+                                    <Route path={Routes.user.list.template()} component={UsersPage} />
+                                    <Route
+                                        path={Routes.user.show.template()}
+                                        render={props => <UserPage userId={+props.match.params.userId} />}
+                                    />
+
+                                    <Route path={Routes.profile.template()} render={() => <UserPage userId={session.user.id!} />} />
+
                                     <Redirect to={Routes.raid.list.create({})} />
                                 </Switch>
                             </Content>

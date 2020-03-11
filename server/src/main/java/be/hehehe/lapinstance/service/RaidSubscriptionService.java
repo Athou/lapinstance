@@ -142,9 +142,14 @@ public class RaidSubscriptionService {
 			throw new MissingCharacterException();
 		}
 
-		Raid raid = raidRepository.findById(subscription.getRaid().getId()).orElseThrow(() -> new ResourceNotFoundException());
+		Raid raid = raidRepository.findById(subscription.getRaid().getId()).orElseThrow(ResourceNotFoundException::new);
 		if (raid.getDate().before(new Date())) {
 			throw new PastRaidDateException();
+		}
+
+		User user = userRepository.findById(subscription.getUser().getId()).orElseThrow(ResourceNotFoundException::new);
+		if (user.isDisabled()) {
+			throw new UserDisabledException();
 		}
 
 		// check that the user is part of the roster for that raid
@@ -157,7 +162,6 @@ public class RaidSubscriptionService {
 		}
 
 		// remove existing subscriptions
-		User user = subscription.getUser();
 		List<RaidSubscription> existingSubscriptions = raidSubscriptionRepository.findByRaidIdAndUserId(subscription.getRaid().getId(),
 				user.getId());
 		raidSubscriptionRepository.deleteAll(existingSubscriptions);
@@ -174,6 +178,7 @@ public class RaidSubscriptionService {
 	public List<User> findMissingSubscriptions(long raidId) {
 		List<RaidSubscription> subscriptions = raidSubscriptionRepository.findByRaidId(raidId);
 		List<User> users = userRepository.findAll();
+		users.removeIf(User::isDisabled);
 		users.removeIf(u -> subscriptions.stream().anyMatch(s -> s.getUser().getId() == u.getId()));
 		return users;
 	}
@@ -194,6 +199,10 @@ public class RaidSubscriptionService {
 	}
 
 	public static class UserCharacterNotInRosterException extends RuntimeException {
+		private static final long serialVersionUID = 1L;
+	}
+
+	public static class UserDisabledException extends RuntimeException {
 		private static final long serialVersionUID = 1L;
 	}
 

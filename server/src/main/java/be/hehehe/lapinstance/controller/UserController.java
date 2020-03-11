@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.google.common.collect.Lists;
 
 import be.hehehe.lapinstance.SecurityConfiguration.SecurityContext;
+import be.hehehe.lapinstance.UserRole;
 import be.hehehe.lapinstance.model.RaidSubscription;
 import be.hehehe.lapinstance.model.RosterMember;
 import be.hehehe.lapinstance.model.User;
@@ -38,6 +40,19 @@ public class UserController {
 	@GetMapping
 	public List<User> findAllUsers() {
 		return Lists.newArrayList(userRepository.findAll());
+	}
+
+	@GetMapping("{userId}")
+	public User getUser(@PathVariable("userId") long userId) {
+		return userRepository.findById(userId).orElseThrow(ResourceNotFoundException::new);
+	}
+
+	@PreAuthorize(UserRole.PreAuthorizeStrings.ADMIN)
+	@PostMapping("{userId}")
+	public User saveUser(@PathVariable("userId") long userId, @RequestBody User user) {
+		User existing = userRepository.findById(userId).orElseThrow(ResourceNotFoundException::new);
+		existing.setDisabled(user.isDisabled());
+		return userRepository.save(existing);
 	}
 
 	@GetMapping("{userId}/characters")

@@ -7,6 +7,10 @@ export const Routes = {
         show: route("raid", "show", param("raidId")),
         edit: route("raid", "edit", param("raidId"))
     },
+    user: {
+        list: route("users"),
+        show: route("user", param("userId"))
+    },
     roster: route("roster"),
     profile: route("profile")
 }

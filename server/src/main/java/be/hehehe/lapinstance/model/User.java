@@ -22,6 +22,11 @@ public class User extends AbstractModel {
 	@JsonProperty(required = true)
 	private String name;
 
+	@NotBlank
+	@JsonProperty(required = true)
 	private String discordId;
+
+	@JsonProperty(required = true)
+	private boolean disabled;
 
 }

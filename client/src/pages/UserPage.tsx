@@ -1,8 +1,8 @@
-import { Button, H4 } from "@blueprintjs/core"
+import { Button, H4, Switch } from "@blueprintjs/core"
 import React, { useEffect, useState } from "react"
 import { Col, Row } from "react-flexbox-grid"
 import styled from "styled-components"
-import { CharacterSpec, UserCharacter } from "../api"
+import { CharacterSpec, User, UserCharacter, UserRole } from "../api"
 import { client } from "../api/client"
 import { useSession } from "../App"
 import { CharacterCard } from "../components/characters/CharacterCard"
@@ -15,29 +15,38 @@ type EditableUserCharacter = UserCharacter & { editMode: boolean }
 const CardWrapper = styled.div`
     margin-bottom: 1rem;
 `
-export const ProfilePage: React.FC = () => {
+export const UserPage: React.FC<{ userId: number }> = props => {
+    const [user, setUser] = useState<User>()
     const [characters, setCharacters] = useState<EditableUserCharacter[]>([])
     const [loading, setLoading] = useState(false)
     const session = useSession()
-    const userId = session.user.id!
-    const showAddButton = characters.filter(c => !c.id).length === 0
+
+    const editable = session.hasRole(UserRole.ADMIN) || session.user.id === props.userId
+
+    const showEditButton = editable
+    const showAddButton = editable && characters.filter(c => !c.id).length === 0
+
+    const toggleDisabled = () => {
+        user && client.users.saveUser(user.id!, { ...user, disabled: !user.disabled }).then(resp => setUser(resp.data))
+    }
 
     const addCharacter = () => {
-        setCharacters(chars => [
-            ...chars,
-            {
-                name: "",
-                spec: CharacterSpec.DRUID_BALANCE,
-                main: true,
-                editMode: true,
-                user: session.user
-            }
-        ])
+        user &&
+            setCharacters(chars => [
+                ...chars,
+                {
+                    name: "",
+                    spec: CharacterSpec.DRUID_BALANCE,
+                    main: true,
+                    editMode: true,
+                    user: user
+                }
+            ])
     }
 
     const saveCharacter = (newCharacter: UserCharacter) => {
         client.users
-            .saveUserCharacter(userId, newCharacter)
+            .saveUserCharacter(props.userId, newCharacter)
             .then(resp =>
                 setCharacters(chars =>
                     chars.map(existing => (existing.id && existing.id !== resp.data.id ? existing : { ...resp.data, editMode: false }))
@@ -59,25 +68,27 @@ export const ProfilePage: React.FC = () => {
 
     useEffect(() => {
         setLoading(true)
-        client.users
-            .findAllUserCharacters(userId)
-            .then(resp =>
+        Promise.all([client.users.getUser(props.userId), client.users.findAllUserCharacters(props.userId)])
+            .then(([userResp, charsResp]) => {
+                setUser(userResp.data)
                 setCharacters(
-                    resp.data.map(c => ({
+                    charsResp.data.map(c => ({
                         ...c,
                         editMode: false
                     }))
                 )
-            )
+            })
             .finally(() => setLoading(false))
-    }, [userId])
+    }, [props.userId])
 
-    if (loading) return <Loader />
+    if (loading || !user) return <Loader />
     return (
         <>
-            <PageTitle>Mon profil</PageTitle>
+            <PageTitle>{user.name}</PageTitle>
 
-            <H4>Mes personnages</H4>
+            {session.hasRole(UserRole.ADMIN) && <Switch checked={!user.disabled} label="Actif" onChange={toggleDisabled} />}
+
+            <H4>Personnages</H4>
             <Row>
                 <Col md={6}>
                     {characters.map(char => (
@@ -85,7 +96,7 @@ export const ProfilePage: React.FC = () => {
                             {char.editMode ? (
                                 <CharacterEdit character={char} onSave={saveCharacter} onCancel={() => cancelEditCharacter(char.id)} />
                             ) : (
-                                <CharacterCard character={char} onEdit={() => editCharacter(char.id!)} />
+                                <CharacterCard character={char} editable={showEditButton} onEdit={() => editCharacter(char.id!)} />
                             )}
                         </CardWrapper>
                     ))}

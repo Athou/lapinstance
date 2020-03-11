@@ -30,6 +30,7 @@ import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.context.annotation.SessionScope;
 
+import be.hehehe.lapinstance.model.User;
 import be.hehehe.lapinstance.service.UserService;
 import be.hehehe.lapinstance.service.discord.DiscordService;
 import lombok.Getter;
@@ -90,7 +91,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				String userName = discordService.getUserNickname(discordId)
 						.orElseThrow(() -> new RuntimeException("unauthorized user: " + oAuth2User.getName()));
 
-				long userId = userService.saveOrUpdate(discordId, userName).getId();
+				User user = userService.saveOrUpdate(discordId, userName);
+				if (user.isDisabled()) {
+					throw new RuntimeException("user is disabled: " + oAuth2User.getName());
+				}
 
 				Set<UserRole> roles = discordService.getUserRoles(discordId);
 				Set<GrantedAuthority> authorities = roles.stream()
@@ -98,7 +102,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 						.collect(Collectors.toSet());
 
 				Map<String, Object> attributes = new HashMap<>(oAuth2User.getAttributes());
-				attributes.put(ATTRIBUTE_KEY_USER_ID, userId);
+				attributes.put(ATTRIBUTE_KEY_USER_ID, user.getId());
 
 				log.info("user {} ({}) logged in with roles {}", userName, discordId, roles);
 				return new SimpleOAuth2User(userName, authorities, attributes);

@@ -1,9 +1,9 @@
-insert into USERS (id, name, discord_id) values 
-(1, 'Athou', '111098757910683648'),
-(2, 'Batto', '111506271345082368'),
-(3, 'Koin', '106015318253531136'),
-(4, 'FakeUser1', ''),
-(5, 'FakeUser2', '');
+insert into USERS (id, name, discord_id, disabled) values 
+(1, 'Athou', '111098757910683648', false),
+(2, 'Batto', '111506271345082368', false),
+(3, 'Koin', '106015318253531136', false),
+(4, 'FakeUser1', '000', false),
+(5, 'FakeUser2', '001', false);
 
 insert into USER_CHARACTERS (id, name, spec, main, user_id) values
 (1, 'Athou', 'DRUID_RESTO', true, 1),
