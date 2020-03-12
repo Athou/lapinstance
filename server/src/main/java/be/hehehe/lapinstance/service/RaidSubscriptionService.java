@@ -1,8 +1,11 @@
 package be.hehehe.lapinstance.service;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
@@ -176,10 +179,21 @@ public class RaidSubscriptionService {
 	}
 
 	public List<User> findMissingSubscriptions(long raidId) {
-		List<RaidSubscription> subscriptions = raidSubscriptionRepository.findByRaidId(raidId);
 		List<User> users = userRepository.findAll();
+
+		// remove disabled users
 		users.removeIf(User::isDisabled);
+
+		// remove users having no characters
+		Map<Long, List<UserCharacter>> characters = userCharacterRepository.findAll()
+				.stream()
+				.collect(Collectors.groupingBy(c -> c.getUser().getId()));
+		users.removeIf(u -> characters.getOrDefault(u.getId(), Collections.emptyList()).isEmpty());
+
+		// remove users already subscribed
+		List<RaidSubscription> subscriptions = raidSubscriptionRepository.findByRaidId(raidId);
 		users.removeIf(u -> subscriptions.stream().anyMatch(s -> s.getUser().getId() == u.getId()));
+
 		return users;
 	}
 
