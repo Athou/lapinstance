@@ -57,9 +57,7 @@ export const UserPage: React.FC<{ userId: number }> = props => {
                 main: newCharacter.main
             })
             .then(resp => {
-                setCharacters(chars =>
-                    chars.map(existing => (existing.id && existing.id !== resp.data.id ? existing : { ...resp.data, editMode: false }))
-                )
+                setCharacters(chars => chars.map(existing => (existing.id !== resp.data.id ? existing : { ...resp.data, editMode: false })))
                 toaster.show({
                     message: "Personnage enregistré",
                     intent: "success",

@@ -23,7 +23,7 @@ export const SubscriptionSelection: React.FC<{
     const handleChange = (e: React.FormEvent<HTMLInputElement>) => {
         const val = e.currentTarget.value
 
-        const char = props.characters.find(c => c.id && String(c.id) === val)
+        const char = props.characters.find(c => String(c.id) === val)
         const resp = responses.find(r => r === val)
         if (char) {
             setSelectedCharacter(char)
