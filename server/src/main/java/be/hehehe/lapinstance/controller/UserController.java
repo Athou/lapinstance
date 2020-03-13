@@ -26,6 +26,7 @@ import be.hehehe.lapinstance.model.UserCharacter;
 import be.hehehe.lapinstance.repository.RaidSubscriptionRepository;
 import be.hehehe.lapinstance.repository.UserCharacterRepository;
 import be.hehehe.lapinstance.repository.UserRepository;
+import be.hehehe.lapinstance.service.UserCharacterService;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
@@ -37,6 +38,7 @@ public class UserController {
 	private final UserRepository userRepository;
 	private final RaidSubscriptionRepository raidSubscriptionRepository;
 	private final UserCharacterRepository userCharacterRepository;
+	private final UserCharacterService userCharacterService;
 	private final SecurityContext securityContext;
 
 	@GetMapping
@@ -80,7 +82,7 @@ public class UserController {
 		character.setMain(req.isMain());
 		character.setUser(userRepository.findById(userId).orElseThrow(ResourceNotFoundException::new));
 
-		return userCharacterRepository.save(character);
+		return userCharacterService.saveUserCharacter(character);
 	}
 
 	@GetMapping("{userId}/subscriptions")
