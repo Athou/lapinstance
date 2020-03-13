@@ -32,22 +32,6 @@ insert into USER_CHARACTERS (id, name, spec, main, user_id) values
 insert into RAIDS (id, date, comment, raid_type) values
 (1, DATEADD(DAY, 1, CURRENT_DATE()), 'Tout le monde à l''heure dans l''instance', 'BLACKWING_LAIR');
 
-insert into ROSTER_MEMBERS (raid_type, user_character_id) values 
-('ONYXIA', 1),
-('ONYXIA', 2),
-('ONYXIA', 3),
-('ONYXIA', 4),
-('MOLTEN_CORE', 1),
-('MOLTEN_CORE', 2),
-('MOLTEN_CORE', 3),
-('MOLTEN_CORE', 4),
-('ZUL_GURUB', 1),
-('ZUL_GURUB', 2),
-('ZUL_GURUB', 3),
-('ZUL_GURUB', 4),
-('BLACKWING_LAIR', 1),
-('BLACKWING_LAIR', 3);
-
 insert into RAID_SUBSCRIPTIONS (raid_id, user_id, response, character_id) values
 (1, 4, 'LATE', null),
 (1, 4, 'PRESENT', 8),

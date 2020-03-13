@@ -4,7 +4,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
@@ -17,12 +16,10 @@ import be.hehehe.lapinstance.model.CharacterClass;
 import be.hehehe.lapinstance.model.Raid;
 import be.hehehe.lapinstance.model.RaidSubscription;
 import be.hehehe.lapinstance.model.RaidSubscriptionResponse;
-import be.hehehe.lapinstance.model.RosterMember;
 import be.hehehe.lapinstance.model.User;
 import be.hehehe.lapinstance.model.UserCharacter;
 import be.hehehe.lapinstance.repository.RaidRepository;
 import be.hehehe.lapinstance.repository.RaidSubscriptionRepository;
-import be.hehehe.lapinstance.repository.RosterMemberRepository;
 import be.hehehe.lapinstance.repository.UserCharacterRepository;
 import be.hehehe.lapinstance.repository.UserRepository;
 import be.hehehe.lapinstance.service.discord.DiscordService;
@@ -37,23 +34,19 @@ public class RaidSubscriptionService {
 	private final RaidSubscriptionRepository raidSubscriptionRepository;
 	private final RaidRepository raidRepository;
 	private final UserCharacterRepository userCharacterRepository;
-	private final RosterMemberRepository rosterMemberRepository;
 	private final DiscordService discordService;
-	private final ApplicationSettingsService applicationSettingsService;
 	private final URLService urlService;
 
 	@Autowired
 	public RaidSubscriptionService(UserRepository userRepository, RaidSubscriptionRepository raidSubscriptionRepository,
-			RaidRepository raidRepository, UserCharacterRepository userCharacterRepository, RosterMemberRepository rosterMemberRepository,
-			DiscordService discordService, ApplicationSettingsService applicationSettingsService, URLService urlService) {
+			RaidRepository raidRepository, UserCharacterRepository userCharacterRepository, DiscordService discordService,
+			URLService urlService) {
 
 		this.userRepository = userRepository;
 		this.raidSubscriptionRepository = raidSubscriptionRepository;
 		this.raidRepository = raidRepository;
 		this.userCharacterRepository = userCharacterRepository;
-		this.rosterMemberRepository = rosterMemberRepository;
 		this.discordService = discordService;
-		this.applicationSettingsService = applicationSettingsService;
 		this.urlService = urlService;
 
 		addMessageReactionListener();
@@ -153,15 +146,6 @@ public class RaidSubscriptionService {
 		User user = userRepository.findById(subscription.getUser().getId()).orElseThrow(ResourceNotFoundException::new);
 		if (user.isDisabled()) {
 			throw new UserDisabledException();
-		}
-
-		// check that the user is part of the roster for that raid
-		if (applicationSettingsService.isRosterEnabled()) {
-			Optional<RosterMember> rosterMember = rosterMemberRepository
-					.findByRaidTypeAndUserCharacterId(subscription.getRaid().getRaidType(), subscription.getCharacter().getId());
-			if (!rosterMember.isPresent()) {
-				throw new UserCharacterNotInRosterException();
-			}
 		}
 
 		// remove existing subscriptions

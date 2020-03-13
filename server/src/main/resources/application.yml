@@ -8,9 +8,6 @@ server:
       timeout: 30d
       cookie:
         max-age: 30d
-settings:
-  roster:
-    enabled: false
 spring:
   datasource:
     platform: h2

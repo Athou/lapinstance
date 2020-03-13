@@ -22,11 +22,9 @@ import be.hehehe.lapinstance.SecurityConfiguration.SecurityContext;
 import be.hehehe.lapinstance.UserRole;
 import be.hehehe.lapinstance.model.CharacterSpec;
 import be.hehehe.lapinstance.model.RaidSubscription;
-import be.hehehe.lapinstance.model.RosterMember;
 import be.hehehe.lapinstance.model.User;
 import be.hehehe.lapinstance.model.UserCharacter;
 import be.hehehe.lapinstance.repository.RaidSubscriptionRepository;
-import be.hehehe.lapinstance.repository.RosterMemberRepository;
 import be.hehehe.lapinstance.repository.UserCharacterRepository;
 import be.hehehe.lapinstance.repository.UserRepository;
 import lombok.Data;
@@ -40,7 +38,6 @@ public class UserController {
 	private final UserRepository userRepository;
 	private final RaidSubscriptionRepository raidSubscriptionRepository;
 	private final UserCharacterRepository userCharacterRepository;
-	private final RosterMemberRepository rosterMemberRepository;
 	private final SecurityContext securityContext;
 
 	@GetMapping
@@ -85,11 +82,6 @@ public class UserController {
 		character.setUser(userRepository.findById(userId).orElseThrow(ResourceNotFoundException::new));
 
 		return userCharacterRepository.save(character);
-	}
-
-	@GetMapping("{userId}/rosterMemberships")
-	public List<RosterMember> findAllRosterMemberships(@PathVariable("userId") long userId) {
-		return rosterMemberRepository.findByUserId(userId);
 	}
 
 	@GetMapping("{userId}/subscriptions")

@@ -13,7 +13,6 @@ const IconWrapper = styled.span`
 export const SubscriptionSelection: React.FC<{
     subscription?: RaidSubscription
     characters: UserCharacter[]
-    isCharacterSelectable: (character: UserCharacter) => boolean
     onSave: (character: UserCharacter | undefined, response: RaidSubscriptionResponse | undefined) => void
 }> = props => {
     const responses = [RaidSubscriptionResponse.LATE, RaidSubscriptionResponse.BENCH, RaidSubscriptionResponse.ABSENT]
@@ -46,7 +45,7 @@ export const SubscriptionSelection: React.FC<{
             <form onSubmit={handleSubmit}>
                 <RadioGroup onChange={handleChange} selectedValue={selectedCharacter?.id ?? selectedResponse}>
                     {props.characters.map(c => (
-                        <Radio key={c.id} value={c.id} disabled={!props.isCharacterSelectable(c)}>
+                        <Radio key={c.id} value={c.id}>
                             <IconWrapper>
                                 <SpecIcon spec={c.spec} />
                             </IconWrapper>

@@ -11,6 +11,5 @@ export const Routes = {
         list: route("users"),
         show: route("user", param("userId"))
     },
-    roster: route("roster"),
     profile: route("profile")
 }

@@ -3,10 +3,10 @@ import React, { useEffect, useState } from "react"
 import Moment from "react-moment"
 import { Link, useHistory } from "react-router-dom"
 import styled from "styled-components"
-import { Raid, RaidSubscription, RaidSubscriptionResponse, RosterMember, UserCharacter, UserRole } from "../api"
+import { Raid, RaidSubscription, RaidSubscriptionResponse, UserCharacter, UserRole } from "../api"
 import { client } from "../api/client"
 import { raidTypeLabels } from "../api/utils"
-import { useApplicationSettings, useSession } from "../App"
+import { useSession } from "../App"
 import { ActionButton } from "../components/ActionButton"
 import { Box, Flex } from "../components/flexbox"
 import { Loader } from "../components/Loader"
@@ -26,22 +26,15 @@ export const RaidPage: React.FC<{ raidId: number }> = props => {
     const [raid, setRaid] = useState<Raid>()
     const [subscriptions, setSubscriptions] = useState<RaidSubscription[]>([])
     const [userCharacters, setUserCharacters] = useState<UserCharacter[]>([])
-    const [rosterMemberships, setRosterMemberships] = useState<RosterMember[]>([])
     const [subscription, setSubscription] = useState<RaidSubscription>()
     const [deleteAlertOpen, setDeleteAlertOpen] = useState(false)
     const [loading, setLoading] = useState(false)
 
     const session = useSession()
-    const applicationSettings = useApplicationSettings()
     const history = useHistory()
 
     const editRaid = (raidId: number) => history.push(Routes.raid.edit.create({ raidId: String(raidId) }))
     const deleteRaid = (raidId: number) => client.raids.deleteRaid(raidId).then(() => history.push(Routes.raid.list.create({})))
-
-    const isCharacterSelectable = (char: UserCharacter) => {
-        if (!applicationSettings.roasterEnabled) return true
-        return rosterMemberships.some(rm => rm.raidType === raid?.raidType && rm.userCharacter.id === char.id)
-    }
 
     const saveSubscription = (character: UserCharacter | undefined, response: RaidSubscriptionResponse | undefined) => {
         raid &&
@@ -69,14 +62,12 @@ export const RaidPage: React.FC<{ raidId: number }> = props => {
         Promise.all([
             client.raids.getRaid(props.raidId),
             client.raids.findRaidSubscriptions(props.raidId),
-            client.users.findAllUserCharacters(session.user.id),
-            client.users.findAllRosterMemberships(session.user.id)
+            client.users.findAllUserCharacters(session.user.id)
         ])
-            .then(([raidResp, subscriptionsResp, userCharactersResp, membershipsResp]) => {
+            .then(([raidResp, subscriptionsResp, userCharactersResp]) => {
                 setRaid(raidResp.data)
                 setSubscriptions(subscriptionsResp.data)
                 setUserCharacters(userCharactersResp.data)
-                setRosterMemberships(membershipsResp.data)
 
                 const userSubscription = subscriptionsResp.data.find(s => s.user.id === session.user.id)
                 setSubscription(userSubscription)
@@ -127,12 +118,7 @@ export const RaidPage: React.FC<{ raidId: number }> = props => {
                         <span>.</span>
                     </div>
                 ) : (
-                    <SubscriptionSelection
-                        subscription={subscription}
-                        characters={userCharacters}
-                        isCharacterSelectable={isCharacterSelectable}
-                        onSave={saveSubscription}
-                    />
+                    <SubscriptionSelection subscription={subscription} characters={userCharacters} onSave={saveSubscription} />
                 )}
             </StyledCard>
         </>
