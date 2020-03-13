@@ -29,7 +29,7 @@ export const RaidsPage: React.FC = () => {
         setLoading(true)
         Promise.all([
             client.raids.findAllRaids(),
-            client.users.findAllSubscriptions(session.user.id!),
+            client.users.findAllSubscriptions(session.user.id),
             client.raidTypes.nextReset(RaidType.ONYXIA)
         ])
             .then(([raidsResp, subsResp, onyxiaResp]) => {

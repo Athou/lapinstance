@@ -86,7 +86,7 @@ const RaidSubscriptionList: React.FC<{ title: string; subscriptions: RaidSubscri
                     {sub.character && <SpecIcon spec={sub.character.spec} />}
                     <StyledCharacterName
                         user={session.user.id === sub.user.id}
-                        onClick={() => history.push(Routes.user.show.create({ userId: String(sub.user.id!) }))}
+                        onClick={() => history.push(Routes.user.show.create({ userId: String(sub.user.id) }))}
                     >
                         {buildSubscriptionDisplayName(sub)}
                     </StyledCharacterName>

@@ -44,7 +44,7 @@ export const UsersPage: React.FC = () => {
         let rerolls = userCharacters.filter(c => !c.main && c.user.id === char.user.id).sort((a, b) => a.name.localeCompare(b.name))
 
         return (
-            <tr onClick={() => history.push(Routes.user.show.create({ userId: String(char.user.id!) }))}>
+            <tr onClick={() => history.push(Routes.user.show.create({ userId: String(char.user.id) }))}>
                 <td>
                     <SpecIcon spec={char.spec} />
                     <StyledCharacterName>{char.name}</StyledCharacterName>

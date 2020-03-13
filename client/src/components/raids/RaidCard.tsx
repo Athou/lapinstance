@@ -28,7 +28,7 @@ export const RaidCard: React.FC<{
 
     return (
         <>
-            <StyledCard elevation={2} interactive onClick={() => props.onClick(props.raid.id!)}>
+            <StyledCard elevation={2} interactive onClick={() => props.onClick(props.raid.id)}>
                 <Flex>
                     <Box grow={1}>
                         <H5>{raidTypeLabels[props.raid.raidType]}</H5>

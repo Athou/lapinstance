@@ -110,7 +110,7 @@ export const UserPage: React.FC<{ userId: number }> = props => {
                             {char.editMode ? (
                                 <CharacterEdit character={char} onSave={saveCharacter} onCancel={() => cancelEditCharacter(char.id)} />
                             ) : (
-                                <CharacterCard character={char} editable={showEditButton} onEdit={() => editCharacter(char.id!)} />
+                                <CharacterCard character={char} editable={showEditButton} onEdit={() => editCharacter(char.id)} />
                             )}
                         </CardWrapper>
                     ))}

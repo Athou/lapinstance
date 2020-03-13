@@ -69,8 +69,8 @@ export const RaidPage: React.FC<{ raidId: number }> = props => {
         Promise.all([
             client.raids.getRaid(props.raidId),
             client.raids.findRaidSubscriptions(props.raidId),
-            client.users.findAllUserCharacters(session.user.id!),
-            client.users.findAllRosterMemberships(session.user.id!)
+            client.users.findAllUserCharacters(session.user.id),
+            client.users.findAllRosterMemberships(session.user.id)
         ])
             .then(([raidResp, subscriptionsResp, userCharactersResp, membershipsResp]) => {
                 setRaid(raidResp.data)
@@ -96,8 +96,8 @@ export const RaidPage: React.FC<{ raidId: number }> = props => {
                 <Box>
                     {session.hasRole(UserRole.ADMIN) && (
                         <>
-                            <RaidNotificationButton raidId={raid.id!} />
-                            <ActionButton onClick={() => editRaid(raid.id!)} icon="edit" marginRight />
+                            <RaidNotificationButton raidId={raid.id} />
+                            <ActionButton onClick={() => editRaid(raid.id)} icon="edit" marginRight />
                             <ActionButton onClick={() => setDeleteAlertOpen(true)} icon="trash" intent="danger" />
                             <Alert
                                 confirmButtonText="Effacer"
@@ -106,7 +106,7 @@ export const RaidPage: React.FC<{ raidId: number }> = props => {
                                 intent="danger"
                                 isOpen={deleteAlertOpen}
                                 onCancel={() => setDeleteAlertOpen(false)}
-                                onConfirm={() => deleteRaid(raid.id!)}
+                                onConfirm={() => deleteRaid(raid.id)}
                             >
                                 <p>Effacer le raid ?</p>
                             </Alert>

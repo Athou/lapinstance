@@ -76,7 +76,7 @@ const App: React.FC = () => {
                                         render={props => <UserPage userId={+props.match.params.userId} />}
                                     />
 
-                                    <Route path={Routes.profile.template()} render={() => <UserPage userId={session.user.id!} />} />
+                                    <Route path={Routes.profile.template()} render={() => <UserPage userId={session.user.id} />} />
 
                                     <Redirect to={Routes.raid.list.create({})} />
                                 </Switch>
