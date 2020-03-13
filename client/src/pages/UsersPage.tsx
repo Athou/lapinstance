@@ -58,7 +58,7 @@ export const UsersPage: React.FC = () => {
                     ))}
                 </td>
                 <td>
-                    <Icon icon={char.user.disabled ? "cross" : "tick"} />
+                    <Icon icon={char.user.disabled ? "cross" : "tick"} intent={char.user.disabled ? "danger" : "success"} />
                 </td>
             </tr>
         )
