@@ -24,10 +24,10 @@ export const UserPage: React.FC<{ userId: number }> = props => {
     const editable = session.hasRole(UserRole.ADMIN) || session.user.id === props.userId
 
     const showEditButton = editable
-    const showAddButton = editable && characters.filter(c => !c.id).length === 0
+    const showAddButton = editable && characters.filter(c => c.id === 0).length === 0
 
     const toggleDisabled = () => {
-        user && client.users.saveUser(user.id!, { ...user, disabled: !user.disabled }).then(resp => setUser(resp.data))
+        user && client.users.saveUser(user.id, { disabled: !user.disabled }).then(resp => setUser(resp.data))
     }
 
     const addCharacter = () => {
@@ -35,6 +35,7 @@ export const UserPage: React.FC<{ userId: number }> = props => {
             setCharacters(chars => [
                 ...chars,
                 {
+                    id: 0,
                     name: "",
                     spec: CharacterSpec.DRUID_BALANCE,
                     main: true,
@@ -46,7 +47,12 @@ export const UserPage: React.FC<{ userId: number }> = props => {
 
     const saveCharacter = (newCharacter: UserCharacter) => {
         client.users
-            .saveUserCharacter(props.userId, newCharacter)
+            .saveUserCharacter(props.userId, {
+                characterId: newCharacter.id,
+                name: newCharacter.name,
+                spec: newCharacter.spec,
+                main: newCharacter.main
+            })
             .then(resp =>
                 setCharacters(chars =>
                     chars.map(existing => (existing.id && existing.id !== resp.data.id ? existing : { ...resp.data, editMode: false }))

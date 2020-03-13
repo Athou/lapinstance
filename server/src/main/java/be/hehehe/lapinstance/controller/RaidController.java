@@ -1,6 +1,9 @@
 package be.hehehe.lapinstance.controller;
 
+import java.util.Date;
 import java.util.List;
+
+import javax.validation.constraints.NotNull;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
@@ -13,17 +16,23 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.collect.Lists;
 
 import be.hehehe.lapinstance.SecurityConfiguration.SecurityContext;
 import be.hehehe.lapinstance.UserRole;
 import be.hehehe.lapinstance.model.Raid;
 import be.hehehe.lapinstance.model.RaidSubscription;
+import be.hehehe.lapinstance.model.RaidSubscriptionResponse;
+import be.hehehe.lapinstance.model.RaidType;
 import be.hehehe.lapinstance.model.User;
 import be.hehehe.lapinstance.repository.RaidRepository;
 import be.hehehe.lapinstance.repository.RaidSubscriptionRepository;
+import be.hehehe.lapinstance.repository.UserCharacterRepository;
+import be.hehehe.lapinstance.repository.UserRepository;
 import be.hehehe.lapinstance.service.RaidService;
 import be.hehehe.lapinstance.service.RaidSubscriptionService;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -32,6 +41,8 @@ import lombok.RequiredArgsConstructor;
 public class RaidController {
 
 	private final RaidRepository raidRepository;
+	private final UserRepository userRepository;
+	private final UserCharacterRepository userCharacterRepository;
 	private final RaidService raidService;
 	private final RaidSubscriptionRepository raidSubscriptionRepository;
 	private final RaidSubscriptionService raidSubscriptionService;
@@ -44,16 +55,18 @@ public class RaidController {
 
 	@PostMapping
 	@PreAuthorize(UserRole.PreAuthorizeStrings.ADMIN)
-	public Raid saveRaid(@RequestBody Raid raid) {
-		if (raid.getId() == 0) {
-			return raidService.save(raid);
+	public Raid saveRaid(@RequestBody SaveRaidRequest req) {
+		final Raid raid;
+		if (req.getRaidId() == null) {
+			raid = new Raid();
 		} else {
-			Raid existing = raidRepository.findById(raid.getId()).orElseThrow(ResourceNotFoundException::new);
-			existing.setComment(raid.getComment());
-			existing.setDate(raid.getDate());
-			existing.setRaidType(raid.getRaidType());
-			return raidService.save(existing);
+			raid = raidRepository.findById(req.getRaidId()).orElseThrow(ResourceNotFoundException::new);
 		}
+
+		raid.setComment(req.getComment());
+		raid.setDate(req.getDate());
+		raid.setRaidType(req.getRaidType());
+		return raidService.save(raid);
 	}
 
 	@DeleteMapping("{id}")
@@ -73,15 +86,21 @@ public class RaidController {
 	}
 
 	@PostMapping("{raidId}/subscriptions")
-	public RaidSubscription saveRaidSubscription(@PathVariable("raidId") long raidId, @RequestBody RaidSubscription raidSubscription) {
-		if (!securityContext.isAdmin() && !securityContext.isUser(raidSubscription.getUser().getId())) {
+	public RaidSubscription saveRaidSubscription(@PathVariable("raidId") long raidId, @RequestBody SaveRaidSubscriptionRequest req) {
+		if (!securityContext.isAdmin() && !securityContext.isUser(req.getUserId())) {
 			throw new AccessDeniedException("");
 		}
 
-		Raid raid = raidRepository.findById(raidId).orElseThrow(ResourceNotFoundException::new);
-		raidSubscription.setRaid(raid);
+		RaidSubscription sub = new RaidSubscription();
+		sub.setRaid(raidRepository.findById(raidId).orElseThrow(ResourceNotFoundException::new));
+		sub.setUser(userRepository.findById(req.getUserId()).orElseThrow(ResourceNotFoundException::new));
+		sub.setResponse(req.getResponse());
 
-		return raidSubscriptionService.save(raidSubscription);
+		if (req.getCharacterId() != null) {
+			sub.setCharacter(userCharacterRepository.findById(req.getCharacterId()).orElseThrow(ResourceNotFoundException::new));
+		}
+
+		return raidSubscriptionService.save(sub);
 	}
 
 	@GetMapping("{raidId}/missingSubscriptions")
@@ -90,8 +109,39 @@ public class RaidController {
 	}
 
 	@PostMapping("{raidId}/missingSubscriptions/notify")
-	public void notifyMissingRaidSubscriptions(@PathVariable("raidId") long raidId, @RequestBody List<User> users) {
-		raidSubscriptionService.notifyMissingSubscriptions(raidId, users);
+	public void notifyMissingRaidSubscriptions(@PathVariable("raidId") long raidId, @RequestBody List<Long> userIds) {
+		raidSubscriptionService.notifyMissingSubscriptions(raidId, userIds);
+	}
+
+	@Data
+	public static class SaveRaidRequest {
+
+		private Long raidId;
+
+		private String comment;
+
+		@NotNull
+		@JsonProperty(required = true)
+		private Date date;
+
+		@NotNull
+		@JsonProperty(required = true)
+		private RaidType raidType;
+	}
+
+	@Data
+	public static class SaveRaidSubscriptionRequest {
+
+		@NotNull
+		@JsonProperty(required = true)
+		private RaidSubscriptionResponse response;
+
+		@NotNull
+		@JsonProperty(required = true)
+		private long userId;
+
+		private Long characterId;
+
 	}
 
 }

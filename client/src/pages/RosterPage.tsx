@@ -12,6 +12,7 @@ export const RosterPage: React.FC = () => {
     const addMember = (userCharacter: UserCharacter, raidType: RaidType) => {
         client.rosters
             .addRosterMember({
+                id: 0,
                 raidType,
                 userCharacter
             })
@@ -21,6 +22,7 @@ export const RosterPage: React.FC = () => {
     const removeMember = (userCharacter: UserCharacter, raidType: RaidType) => {
         client.rosters
             .removeRosterMember({
+                id: 0,
                 raidType,
                 userCharacter
             })

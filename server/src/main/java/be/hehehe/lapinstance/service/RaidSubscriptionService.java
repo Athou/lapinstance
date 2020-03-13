@@ -197,12 +197,13 @@ public class RaidSubscriptionService {
 		return users;
 	}
 
-	public void notifyMissingSubscriptions(long raidId, List<User> users) {
-		List<User> actualMissingUsers = findMissingSubscriptions(raidId);
-		users.removeIf(u -> actualMissingUsers.stream().noneMatch(mu -> mu.getId() == u.getId()));
+	public void notifyMissingSubscriptions(long raidId, List<Long> userIds) {
+		List<User> notifyUsers = userRepository.findAllById(userIds);
+		List<User> allMissingUsers = findMissingSubscriptions(raidId);
+		notifyUsers.removeIf(u -> allMissingUsers.stream().noneMatch(mu -> mu.getId() == u.getId()));
 
-		Raid raid = raidRepository.getOne(raidId);
-		for (User user : users) {
+		Raid raid = raidRepository.findById(raidId).orElseThrow(ResourceNotFoundException::new);
+		for (User user : notifyUsers) {
 			String message = String.format("Hey, tu ne t'es pas inscrit au raid %s du %s!", raid.getRaidType().getLongName(),
 					raid.getFormattedDate());
 			message += System.lineSeparator() + String.format("Tu peux t'inscrire depuis le channel <#%s> ou via la page <%s>",

@@ -47,10 +47,9 @@ export const RaidPage: React.FC<{ raidId: number }> = props => {
         raid &&
             client.raids
                 .saveRaidSubscription(props.raidId, {
-                    raid,
-                    character,
                     response: response ?? RaidSubscriptionResponse.PRESENT,
-                    user: session.user
+                    userId: session.user.id,
+                    characterId: character?.id
                 })
                 .then(resp => {
                     setSubscriptions(subs => {

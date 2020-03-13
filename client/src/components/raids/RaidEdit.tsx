@@ -3,28 +3,31 @@ import { DatePicker } from "@blueprintjs/datetime"
 import React, { useState } from "react"
 import MomentLocaleUtils from "react-day-picker/moment"
 import { useHistory } from "react-router-dom"
-import { Raid, RaidType } from "../../api"
+import { Raid, RaidType, SaveRaidRequest } from "../../api"
 import { client } from "../../api/client"
 import { raidTypeLabels, RaidTypes } from "../../api/utils"
 import { Routes } from "../../Routes"
 import { ActionButton } from "../ActionButton"
 
-export const RaidEdit: React.FC<{ raid: Raid }> = props => {
-    const [raidType, setRaidType] = useState(props.raid.raidType)
-    const [date, setDate] = useState(props.raid.date)
-    const [comment, setComment] = useState(props.raid.comment)
+export const RaidEdit: React.FC<{ raid?: Raid }> = props => {
+    const newRaidDate = new Date()
+    newRaidDate.setHours(20, 30, 0, 0)
+
+    const [raidType, setRaidType] = useState(props.raid?.raidType ?? RaidType.ONYXIA)
+    const [date, setDate] = useState(props.raid?.date ?? newRaidDate.getTime())
+    const [comment, setComment] = useState(props.raid?.comment)
     const history = useHistory()
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
 
-        const raid: Raid = {
-            id: props.raid.id,
+        const req: SaveRaidRequest = {
+            raidId: props.raid?.id,
             raidType,
             date,
             comment
         }
-        client.raids.saveRaid(raid).then(() => history.push(Routes.raid.list.create({})))
+        client.raids.saveRaid(req).then(() => history.push(Routes.raid.list.create({})))
     }
 
     const handleCancel = () => history.push(Routes.raid.list.create({}))

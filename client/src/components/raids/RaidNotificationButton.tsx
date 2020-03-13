@@ -29,7 +29,7 @@ export const RaidNotificationButton: React.FC<{ raidId: number }> = props => {
         client.raids
             .notifyMissingRaidSubscriptions(
                 props.raidId,
-                users.filter(u => u.selected)
+                users.filter(u => u.selected).map(u => u.id)
             )
             .then(() => {
                 setOpen(false)
