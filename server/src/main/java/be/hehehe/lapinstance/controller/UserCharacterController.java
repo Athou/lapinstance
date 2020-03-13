@@ -7,8 +7,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.google.common.collect.Lists;
-
 import be.hehehe.lapinstance.model.UserCharacter;
 import be.hehehe.lapinstance.repository.UserCharacterRepository;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +20,7 @@ public class UserCharacterController {
 
 	@GetMapping
 	public List<UserCharacter> findAllUserCharacters() {
-		return Lists.newArrayList(userCharacterRepository.findAll());
+		return userCharacterRepository.findAll();
 	}
 
 }

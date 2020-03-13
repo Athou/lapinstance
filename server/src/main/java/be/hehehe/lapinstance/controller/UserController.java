@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.common.collect.Lists;
 
 import be.hehehe.lapinstance.SecurityConfiguration.SecurityContext;
 import be.hehehe.lapinstance.UserRole;
@@ -42,7 +41,7 @@ public class UserController {
 
 	@GetMapping
 	public List<User> findAllUsers() {
-		return Lists.newArrayList(userRepository.findAll());
+		return userRepository.findAll();
 	}
 
 	@GetMapping("{userId}")

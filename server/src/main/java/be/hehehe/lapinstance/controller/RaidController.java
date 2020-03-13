@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.common.collect.Lists;
 
 import be.hehehe.lapinstance.SecurityConfiguration.SecurityContext;
 import be.hehehe.lapinstance.UserRole;
@@ -77,7 +76,7 @@ public class RaidController {
 
 	@GetMapping
 	public List<Raid> findAllRaids() {
-		return Lists.newArrayList(raidRepository.findAll());
+		return raidRepository.findAll();
 	}
 
 	@GetMapping("{raidId}/subscriptions")
