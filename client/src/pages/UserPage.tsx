@@ -1,4 +1,4 @@
-import { Button, H4, Switch } from "@blueprintjs/core"
+import { Button, H4, Switch, Toaster } from "@blueprintjs/core"
 import React, { useEffect, useState } from "react"
 import { Col, Row } from "react-flexbox-grid"
 import styled from "styled-components"
@@ -15,6 +15,9 @@ type EditableUserCharacter = UserCharacter & { editMode: boolean }
 const CardWrapper = styled.div`
     margin-bottom: 1rem;
 `
+
+const toaster = Toaster.create()
+
 export const UserPage: React.FC<{ userId: number }> = props => {
     const [user, setUser] = useState<User>()
     const [characters, setCharacters] = useState<EditableUserCharacter[]>([])
@@ -53,11 +56,16 @@ export const UserPage: React.FC<{ userId: number }> = props => {
                 spec: newCharacter.spec,
                 main: newCharacter.main
             })
-            .then(resp =>
+            .then(resp => {
                 setCharacters(chars =>
                     chars.map(existing => (existing.id && existing.id !== resp.data.id ? existing : { ...resp.data, editMode: false }))
                 )
-            )
+                toaster.show({
+                    message: "Personnage enregistré",
+                    intent: "success",
+                    icon: "tick"
+                })
+            })
     }
 
     const editCharacter = (id: number) => {
