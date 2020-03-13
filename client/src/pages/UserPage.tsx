@@ -11,12 +11,12 @@ import { Loader } from "../components/Loader"
 import { PageTitle } from "../components/PageTitle"
 
 type EditableUserCharacter = UserCharacter & { editMode: boolean }
+const toaster = Toaster.create()
+const NEW_CHARACTER_ID = 0
 
 const CardWrapper = styled.div`
     margin-bottom: 1rem;
 `
-
-const toaster = Toaster.create()
 
 export const UserPage: React.FC<{ userId: number }> = props => {
     const [user, setUser] = useState<User>()
@@ -38,7 +38,7 @@ export const UserPage: React.FC<{ userId: number }> = props => {
             setCharacters(chars => [
                 ...chars,
                 {
-                    id: 0,
+                    id: NEW_CHARACTER_ID,
                     name: "",
                     spec: CharacterSpec.DRUID_BALANCE,
                     main: true,
@@ -48,16 +48,22 @@ export const UserPage: React.FC<{ userId: number }> = props => {
             ])
     }
 
-    const saveCharacter = (newCharacter: UserCharacter) => {
+    const saveCharacter = (char: UserCharacter) => {
         client.users
             .saveUserCharacter(props.userId, {
-                characterId: newCharacter.id,
-                name: newCharacter.name,
-                spec: newCharacter.spec,
-                main: newCharacter.main
+                characterId: char.id === NEW_CHARACTER_ID ? undefined : char.id,
+                name: char.name,
+                spec: char.spec,
+                main: char.main
             })
             .then(resp => {
-                setCharacters(chars => chars.map(existing => (existing.id !== resp.data.id ? existing : { ...resp.data, editMode: false })))
+                setCharacters(chars => {
+                    if (char.id === NEW_CHARACTER_ID) {
+                        return chars.map(existing => (existing.id !== NEW_CHARACTER_ID ? existing : { ...resp.data, editMode: false }))
+                    } else {
+                        return chars.map(existing => (existing.id !== resp.data.id ? existing : { ...resp.data, editMode: false }))
+                    }
+                })
                 toaster.show({
                     message: "Personnage enregistré",
                     intent: "success",
@@ -70,11 +76,11 @@ export const UserPage: React.FC<{ userId: number }> = props => {
         setCharacters(chars => chars.map(existing => (existing.id === id ? { ...existing, editMode: true } : existing)))
     }
 
-    const cancelEditCharacter = (id?: number) => {
-        if (id) {
-            setCharacters(chars => chars.map(existing => (existing.id === id ? { ...existing, editMode: false } : existing)))
+    const cancelEditCharacter = (id: number) => {
+        if (id === NEW_CHARACTER_ID) {
+            setCharacters(chars => chars.filter(c => c.id !== NEW_CHARACTER_ID))
         } else {
-            setCharacters(chars => chars.filter(c => c.id))
+            setCharacters(chars => chars.map(existing => (existing.id === id ? { ...existing, editMode: false } : existing)))
         }
     }
 
