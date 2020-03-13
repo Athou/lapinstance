@@ -1,4 +1,4 @@
-import { Intent, Toaster } from "@blueprintjs/core"
+import { Toaster } from "@blueprintjs/core"
 import axios from "axios"
 import {
     AxiosApplicationSettingsControllerClient,
@@ -19,7 +19,7 @@ axiosInstance.interceptors.response.use(
         toaster.show({
             message: "Erreur: " + error,
             icon: "error",
-            intent: Intent.DANGER
+            intent: "danger"
         })
         return Promise.reject(error)
     }

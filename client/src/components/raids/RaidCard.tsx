@@ -1,4 +1,4 @@
-import { Card, Elevation, H5, H6 } from "@blueprintjs/core"
+import { Card, H5, H6 } from "@blueprintjs/core"
 import React from "react"
 import Moment from "react-moment"
 import styled from "styled-components"
@@ -28,7 +28,7 @@ export const RaidCard: React.FC<{
 
     return (
         <>
-            <StyledCard elevation={Elevation.TWO} interactive onClick={() => props.onClick(props.raid.id!)}>
+            <StyledCard elevation={2} interactive onClick={() => props.onClick(props.raid.id!)}>
                 <Flex>
                     <Box grow={1}>
                         <H5>{raidTypeLabels[props.raid.raidType]}</H5>

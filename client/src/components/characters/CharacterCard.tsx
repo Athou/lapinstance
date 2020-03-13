@@ -1,4 +1,4 @@
-import { Button, Card, Elevation, H5, Icon } from "@blueprintjs/core"
+import { Button, Card, H5, Icon } from "@blueprintjs/core"
 import React from "react"
 import styled from "styled-components"
 import { UserCharacter } from "../../api"
@@ -24,7 +24,7 @@ const StyledMainIcon = styled(Icon)`
 export const CharacterCard: React.FC<{ character: UserCharacter; editable: boolean; onEdit: () => void }> = props => {
     return (
         <>
-            <Card elevation={Elevation.TWO}>
+            <Card elevation={2}>
                 <CardTitle>
                     {props.character.main && <StyledMainIcon icon="tick-circle" iconSize={18} />}
                     <CardTitleText>{props.character.name}</CardTitleText>

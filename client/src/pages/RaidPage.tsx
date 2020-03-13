@@ -1,4 +1,4 @@
-import { Alert, Card, Intent, Toaster } from "@blueprintjs/core"
+import { Alert, Card, Toaster } from "@blueprintjs/core"
 import React, { useEffect, useState } from "react"
 import Moment from "react-moment"
 import { Link, useHistory } from "react-router-dom"
@@ -59,7 +59,7 @@ export const RaidPage: React.FC<{ raidId: number }> = props => {
                     toaster.show({
                         message: "Réponse enregistrée",
                         icon: "tick",
-                        intent: Intent.SUCCESS
+                        intent: "success"
                     })
                 })
     }
@@ -103,7 +103,7 @@ export const RaidPage: React.FC<{ raidId: number }> = props => {
                                 confirmButtonText="Effacer"
                                 cancelButtonText="Annuler"
                                 icon="trash"
-                                intent={Intent.DANGER}
+                                intent="danger"
                                 isOpen={deleteAlertOpen}
                                 onCancel={() => setDeleteAlertOpen(false)}
                                 onConfirm={() => deleteRaid(raid.id!)}

@@ -1,4 +1,4 @@
-import { Card, Checkbox, Elevation, FormGroup, HTMLSelect, InputGroup } from "@blueprintjs/core"
+import { Card, Checkbox, FormGroup, HTMLSelect, InputGroup } from "@blueprintjs/core"
 import React, { useState } from "react"
 import { CharacterSpec, UserCharacter } from "../../api"
 import { characterSpecLabels, CharacterSpecs } from "../../api/utils"
@@ -29,7 +29,7 @@ export const CharacterEdit: React.FC<{
 
     return (
         <>
-            <Card elevation={Elevation.TWO}>
+            <Card elevation={2}>
                 <form onSubmit={handleSubmit}>
                     <FormGroup label="Nom">
                         <InputGroup required value={name} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setName(e.target.value)} />
