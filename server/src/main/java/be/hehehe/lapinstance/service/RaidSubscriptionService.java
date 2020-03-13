@@ -197,10 +197,6 @@ public class RaidSubscriptionService {
 		}
 	}
 
-	public static class UserCharacterNotInRosterException extends RuntimeException {
-		private static final long serialVersionUID = 1L;
-	}
-
 	public static class UserDisabledException extends RuntimeException {
 		private static final long serialVersionUID = 1L;
 	}
