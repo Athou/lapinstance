@@ -1,4 +1,5 @@
 import { HTMLTable, Icon } from "@blueprintjs/core"
+import _ from "lodash"
 import React, { useEffect, useState } from "react"
 import { useHistory } from "react-router-dom"
 import styled from "styled-components"
@@ -31,10 +32,12 @@ export const UsersPage: React.FC = () => {
             .findAllUserCharacters()
             .then(resp =>
                 setUserCharacters(
-                    resp.data.sort((a, b) => {
-                        if (a.spec === b.spec) return a.name.localeCompare(b.name)
-                        return a.spec.localeCompare(b.spec)
-                    })
+                    _.sortBy(
+                        resp.data,
+                        c => c.user.disabled,
+                        c => c.spec,
+                        c => c.name
+                    )
                 )
             )
             .finally(() => setLoading(false))
