@@ -10,20 +10,20 @@ import { Routes } from "../../Routes"
 import { SpecIcon } from "../spec-icons/SpecIcon"
 
 export const SubscriptionList: React.FC<{ subscriptions: RaidSubscription[] }> = props => {
-    const participants = props.subscriptions.filter(sub => sub.response !== "ABSENT")
+    const presents = props.subscriptions.filter(sub => sub.response == "PRESENT")
     const absents = props.subscriptions.filter(sub => sub.response === "ABSENT")
     const lates = props.subscriptions.filter(sub => sub.response === "LATE")
     const benches = props.subscriptions.filter(sub => sub.response === "BENCH")
 
     const roleList = (role: CharacterRole) => {
-        const subs = participants.filter(sub => sub.character && specToRoleMapping[sub.character.spec] === role)
+        const subs = presents.filter(sub => sub.character && specToRoleMapping[sub.character.spec] === role)
         const title = characterRoleLabels[role]
         return <RaidSubscriptionList title={title} subscriptions={subs} />
     }
 
     return (
         <>
-            <H4>Inscrits ({participants.length})</H4>
+            <H4>Inscrits ({presents.length})</H4>
             <Grid>
                 <Row>
                     <Col xs>{roleList(CharacterRole.TANK)}</Col>
