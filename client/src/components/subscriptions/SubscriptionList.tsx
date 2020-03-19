@@ -60,6 +60,10 @@ const StyledCharacterName = styled.span`
     }
 `
 
+const CharactersWrapper = styled.div`
+    margin-bottom: 2rem;
+`
+
 const RaidSubscriptionList: React.FC<{ title: string; subscriptions: RaidSubscription[] }> = props => {
     const session = useSession()
     const history = useHistory()
@@ -81,17 +85,19 @@ const RaidSubscriptionList: React.FC<{ title: string; subscriptions: RaidSubscri
     return (
         <>
             <H5>{`${props.title} (${sortedSubscriptions.length})`}</H5>
-            {sortedSubscriptions.map(sub => (
-                <div key={sub.id}>
-                    {sub.character && <SpecIcon spec={sub.character.spec} />}
-                    <StyledCharacterName
-                        user={session.user.id === sub.user.id}
-                        onClick={() => history.push(Routes.user.show.create({ userId: String(sub.user.id) }))}
-                    >
-                        {buildSubscriptionDisplayName(sub)}
-                    </StyledCharacterName>
-                </div>
-            ))}
+            <CharactersWrapper>
+                {sortedSubscriptions.map(sub => (
+                    <div key={sub.id}>
+                        {sub.character && <SpecIcon spec={sub.character.spec} />}
+                        <StyledCharacterName
+                            user={session.user.id === sub.user.id}
+                            onClick={() => history.push(Routes.user.show.create({ userId: String(sub.user.id) }))}
+                        >
+                            {buildSubscriptionDisplayName(sub)}
+                        </StyledCharacterName>
+                    </div>
+                ))}
+            </CharactersWrapper>
         </>
     )
 }
