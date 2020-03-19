@@ -10,7 +10,7 @@ import { Routes } from "../../Routes"
 import { SpecIcon } from "../spec-icons/SpecIcon"
 
 export const SubscriptionList: React.FC<{ subscriptions: RaidSubscription[] }> = props => {
-    const presents = props.subscriptions.filter(sub => sub.response == "PRESENT")
+    const presents = props.subscriptions.filter(sub => sub.response === "PRESENT")
     const absents = props.subscriptions.filter(sub => sub.response === "ABSENT")
     const lates = props.subscriptions.filter(sub => sub.response === "LATE")
     const benches = props.subscriptions.filter(sub => sub.response === "BENCH")
