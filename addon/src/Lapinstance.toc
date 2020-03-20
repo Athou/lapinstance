@@ -1,0 +1,9 @@
+## Interface: 11304
+## Title: Lapinstance
+## Version: 1.0
+## SavedVariables: Lapinstance_DB
+## OptionalDeps: Ace3
+## X-Embeds: Ace3
+
+embeds.xml
+main.lua

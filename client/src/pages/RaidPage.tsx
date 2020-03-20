@@ -12,6 +12,7 @@ import { Box, Flex } from "../components/flexbox"
 import { Loader } from "../components/Loader"
 import { PageTitle } from "../components/PageTitle"
 import { RaidNotificationButton } from "../components/raids/RaidNotificationButton"
+import { RaidParticipantsCopyButton } from "../components/raids/RaidParticipantsCopyButton"
 import { SubscriptionList } from "../components/subscriptions/SubscriptionList"
 import { SubscriptionSelection } from "../components/subscriptions/SubscriptionSelection"
 import { Routes } from "../Routes"
@@ -32,6 +33,8 @@ export const RaidPage: React.FC<{ raidId: number }> = props => {
 
     const session = useSession()
     const history = useHistory()
+
+    const participants = subscriptions.filter(sub => sub.response === "PRESENT")
 
     const editRaid = (raidId: number) => history.push(Routes.raid.edit.create({ raidId: String(raidId) }))
     const deleteRaid = (raidId: number) => client.raids.deleteRaid(raidId).then(() => history.push(Routes.raid.list.create({})))
@@ -87,6 +90,7 @@ export const RaidPage: React.FC<{ raidId: number }> = props => {
                 <Box>
                     {session.hasRole(UserRole.ADMIN) && (
                         <>
+                            <RaidParticipantsCopyButton subscriptions={participants} />
                             <RaidNotificationButton raidId={raid.id} />
                             <ActionButton onClick={() => editRaid(raid.id)} icon="edit" marginRight />
                             <ActionButton onClick={() => setDeleteAlertOpen(true)} icon="trash" intent="danger" />
