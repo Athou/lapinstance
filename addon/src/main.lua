@@ -24,14 +24,27 @@ local function extractCharacterNames(text)
     return tokens
 end
 
+local function collectRaidMembers()
+    local raidMembers = {}
+    for i = 1, MAX_RAID_MEMBERS do
+        local raidMember = GetRaidRosterInfo(i)
+        if raidMember then table.insert(raidMembers, raidMember) end
+    end
+    return raidMembers
+end
+
 local function MassInvites(characterNames)
     if not IsInRaid() then
         printLocal("Vous n'êtes pas en raid.")
         return
     end
 
+    local raidMembers = collectRaidMembers()
+
     for _, characterName in pairs(characterNames) do
-        InviteUnit(characterName)
+        if not arrayContains(raidMembers, characterName) then
+            InviteUnit(characterName)
+        end
     end
 end
 
@@ -41,11 +54,7 @@ local function ReportMissingCharactersFromRaid(logFunction, characterNames)
         return
     end
 
-    local raidMembers = {}
-    for i = 1, MAX_RAID_MEMBERS do
-        local raidMember = GetRaidRosterInfo(i)
-        if raidMember then table.insert(raidMembers, raidMember) end
-    end
+    local raidMembers = collectRaidMembers()
 
     local missingCharacterNames = {}
     for _, characterName in pairs(characterNames) do
