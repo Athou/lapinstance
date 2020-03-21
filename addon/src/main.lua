@@ -14,9 +14,12 @@ local function arrayContains(array, value)
     return false
 end
 
-local function splitOnComma(text)
+local function extractCharacterNames(text)
     local tokens = {}
-    for token in text:gmatch("[^,]+") do table.insert(tokens, token) end
+    for token in text:gmatch("[^,\r\n\t%s]+") do
+        local trimmed = token:gsub("%s+", "")
+        if trimmed ~= "" then table.insert(tokens, trimmed) end
+    end
     return tokens
 end
 
@@ -79,7 +82,8 @@ function Lapinstance:ChatCommand(input)
     reportButton:SetText("Kiképala")
     reportButton:SetWidth(200)
     reportButton:SetCallback("OnClick", function()
-        ReportMissingCharactersFromRaid(splitOnComma(charactersEditBox:GetText()))
+        ReportMissingCharactersFromRaid(extractCharacterNames(
+                                            charactersEditBox:GetText()))
     end)
     frame:AddChild(reportButton)
 
@@ -87,7 +91,7 @@ function Lapinstance:ChatCommand(input)
     massInviteButton:SetText("Mass-Invites")
     massInviteButton:SetWidth(200)
     massInviteButton:SetCallback("OnClick", function()
-        MassInvites(splitOnComma(charactersEditBox:GetText()))
+        MassInvites(extractCharacterNames(charactersEditBox:GetText()))
     end)
     frame:AddChild(massInviteButton)
 end
