@@ -62,6 +62,11 @@
 			<artifactId>client</artifactId>
 			<version>1.0.0</version>
 		</dependency>
+		<dependency>
+			<groupId>be.hehehe.lapinstance</groupId>
+			<artifactId>addon</artifactId>
+			<version>1.0.0</version>
+		</dependency>
 
 		<dependency>
 			<groupId>com.h2database</groupId>

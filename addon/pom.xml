@@ -12,8 +12,7 @@
 	<artifactId>addon</artifactId>
 	<name>lapinstance-addon</name>
 	<description>Lapinstance WoW Classic addon</description>
-	<packaging>pom</packaging>
-	
+
 	<build>
 		<plugins>
 			<plugin>
@@ -27,10 +26,32 @@
 				</configuration>
 				<executions>
 					<execution>
-						<phase>package</phase>
+						<phase>process-resources</phase>
 						<goals>
 							<goal>single</goal>
 						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<artifactId>maven-resources-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>copy zip file</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.build.directory}/classes/META-INF/resources</outputDirectory>
+							<resources>
+								<resource>
+									<directory>target</directory>
+									<include>*.zip</include>
+									<filtering>false</filtering>
+								</resource>
+							</resources>
+						</configuration>
 					</execution>
 				</executions>
 			</plugin>
