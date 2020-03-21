@@ -7,7 +7,8 @@ function Lapinstance:OnInitialize()
     self:RegisterChatCommand("lap", "ChatCommand")
 end
 
-local function log(msg) print("|cff00ff00Lapinstance|r " .. msg) end
+local function printLocal(msg) print("|cff00ff00Lapinstance|r " .. msg) end
+local function printToRaid(msg) SendChatMessage(msg, "RAID") end
 
 local function arrayContains(array, value)
     for i, v in ipairs(array) do if v == value then return true end end
@@ -25,7 +26,7 @@ end
 
 local function MassInvites(characterNames)
     if not IsInRaid() then
-        log("Vous n'êtes pas en raid.")
+        printLocal("Vous n'êtes pas en raid.")
         return
     end
 
@@ -34,9 +35,9 @@ local function MassInvites(characterNames)
     end
 end
 
-local function ReportMissingCharactersFromRaid(characterNames)
+local function ReportMissingCharactersFromRaid(logFunction, characterNames)
     if not IsInRaid() then
-        log("Vous n'êtes pas en raid.")
+        printLocal("Vous n'êtes pas en raid.")
         return
     end
 
@@ -52,9 +53,10 @@ local function ReportMissingCharactersFromRaid(characterNames)
             table.insert(missingCharacterNames, characterName)
         end
     end
-    local missingCharacterString = table.getn(missingCharacterNames) > 0 and table.concat(missingCharacterNames, ", ") or "/"
-    log("Personnages manquants: " .. missingCharacterString)
-
+    local missingCharacterString = table.getn(missingCharacterNames) > 0 and
+                                       table.concat(missingCharacterNames, ", ") or
+                                       "/"
+    logFunction("Personnages manquants: " .. missingCharacterString)
 
     local additionalCharacterNames = {}
     for _, raidMember in pairs(raidMembers) do
@@ -62,8 +64,10 @@ local function ReportMissingCharactersFromRaid(characterNames)
             table.insert(additionalCharacterNames, raidMember)
         end
     end
-    local additionalCharacterString = table.getn(additionalCharacterNames) > 0 and table.concat(additionalCharacterNames, ", ") or "/"
-    log("Personnages pas prévus: " .. additionalCharacterString)
+    local additionalCharacterString =
+        table.getn(additionalCharacterNames) > 0 and
+            table.concat(additionalCharacterNames, ", ") or "/"
+    logFunction("Personnages pas prévus: " .. additionalCharacterString)
 end
 
 function Lapinstance:ChatCommand(input)
@@ -82,10 +86,19 @@ function Lapinstance:ChatCommand(input)
     reportButton:SetText("Kiképala")
     reportButton:SetWidth(200)
     reportButton:SetCallback("OnClick", function()
-        ReportMissingCharactersFromRaid(extractCharacterNames(
+        ReportMissingCharactersFromRaid(printLocal, extractCharacterNames(
                                             charactersEditBox:GetText()))
     end)
     frame:AddChild(reportButton)
+
+    local raidReportButton = AceGUI:Create("Button")
+    raidReportButton:SetText("Kiképala (annonce raid)")
+    raidReportButton:SetWidth(200)
+    raidReportButton:SetCallback("OnClick", function()
+        ReportMissingCharactersFromRaid(printToRaid, extractCharacterNames(
+                                            charactersEditBox:GetText()))
+    end)
+    frame:AddChild(raidReportButton)
 
     local massInviteButton = AceGUI:Create("Button")
     massInviteButton:SetText("Mass-Invites")
