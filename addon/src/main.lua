@@ -8,7 +8,10 @@ function Lapinstance:OnInitialize()
 end
 
 local function printLocal(msg) print("|cff00ff00Lapinstance|r " .. msg) end
-local function printToRaid(msg) SendChatMessage(msg, "RAID") end
+local function printToRaid(msg)
+    local text = msg:len() > 255 and (msg:sub(0, 252) .. "...") or msg
+    SendChatMessage(text, "RAID")
+end
 
 local function arrayContains(array, value)
     for i, v in ipairs(array) do if v == value then return true end end
