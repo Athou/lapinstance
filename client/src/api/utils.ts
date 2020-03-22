@@ -8,7 +8,9 @@ export const raidTypeLabels = {
     [RaidType.AHN_QIRAJ_40]: "Ahn'Qiraj 40",
     [RaidType.AHN_QIRAJ_20]: "Ahn'Qiraj 20",
     [RaidType.ZUL_GURUB]: "Zul'Gurub",
-    [RaidType.NAXXRAMAS]: "Naxxramas"
+    [RaidType.NAXXRAMAS]: "Naxxramas",
+    [RaidType.PVP]: "PvP",
+    [RaidType.OTHER]: "Autre"
 }
 export const raidTypeShortLabels = {
     [RaidType.ONYXIA]: "Ony",
@@ -17,7 +19,9 @@ export const raidTypeShortLabels = {
     [RaidType.AHN_QIRAJ_40]: "AQ40",
     [RaidType.AHN_QIRAJ_20]: "AQ20",
     [RaidType.ZUL_GURUB]: "ZG",
-    [RaidType.NAXXRAMAS]: "Naxx"
+    [RaidType.NAXXRAMAS]: "Naxx",
+    [RaidType.PVP]: "PvP",
+    [RaidType.OTHER]: "Autre"
 }
 
 export const characterSpecLabels = {
