@@ -2,10 +2,10 @@ import { Button, ButtonGroup } from "@blueprintjs/core"
 import moment from "moment"
 import React from "react"
 import { Calendar, Event, EventPropGetter, momentLocalizer, ToolbarProps } from "react-big-calendar"
+import { Box, Flex } from "reflexbox"
 import styled from "styled-components"
 import { Raid, RaidType } from "../../api"
 import { raidTypeShortLabels } from "../../api/utils"
-import { Box, Flex } from "../flexbox"
 
 const localizer = momentLocalizer(moment)
 
@@ -81,7 +81,7 @@ export const RaidCalendar: React.FC<{
 const Toolbar: React.FC<ToolbarProps> = props => {
     return (
         <Flex>
-            <ToolbarLabelBox grow={1}>{props.label}</ToolbarLabelBox>
+            <ToolbarLabelBox flexGrow={1}>{props.label}</ToolbarLabelBox>
             <Box>
                 <ToolbarButtonGroup>
                     <Button onClick={() => props.onNavigate("PREV")} icon="chevron-left" />

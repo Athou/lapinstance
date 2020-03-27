@@ -1,10 +1,10 @@
 import { Card, H5, H6 } from "@blueprintjs/core"
 import React from "react"
 import Moment from "react-moment"
+import { Box, Flex } from "reflexbox"
 import styled from "styled-components"
 import { Raid, RaidSubscription } from "../../api"
 import { raidTypeLabels } from "../../api/utils"
-import { Box, Flex } from "../flexbox"
 import { ResponseIcon } from "../response-icons/ResponseIcon"
 import { SpecIcon } from "../spec-icons/SpecIcon"
 
@@ -30,7 +30,7 @@ export const RaidCard: React.FC<{
         <>
             <StyledCard elevation={2} interactive onClick={() => props.onClick(props.raid.id)}>
                 <Flex>
-                    <Box grow={1}>
+                    <Box flexGrow={1}>
                         <H5>{raidTypeLabels[props.raid.raidType]}</H5>
                     </Box>
                     <Box>{icon}</Box>

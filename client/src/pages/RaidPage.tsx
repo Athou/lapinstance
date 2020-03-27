@@ -2,13 +2,13 @@ import { Alert, Card, Toaster } from "@blueprintjs/core"
 import React, { useEffect, useState } from "react"
 import Moment from "react-moment"
 import { Link, useHistory } from "react-router-dom"
+import { Box, Flex } from "reflexbox"
 import styled from "styled-components"
 import { Raid, RaidSubscription, RaidSubscriptionResponse, UserCharacter, UserRole } from "../api"
 import { client } from "../api/client"
 import { raidTypeLabels } from "../api/utils"
 import { useSession } from "../App"
 import { ActionButton } from "../components/ActionButton"
-import { Box, Flex } from "../components/flexbox"
 import { Loader } from "../components/Loader"
 import { PageTitle } from "../components/PageTitle"
 import { RaidNotificationButton } from "../components/raids/RaidNotificationButton"
@@ -82,7 +82,7 @@ export const RaidPage: React.FC<{ raidId: number }> = props => {
     return (
         <>
             <Flex>
-                <Box grow={1}>
+                <Box flexGrow={1}>
                     <PageTitle>
                         Raid {raidTypeLabels[raid.raidType]} - <Moment format="dddd DD MMMM YYYY HH:mm">{raid.date}</Moment>
                     </PageTitle>
