@@ -1,4 +1,5 @@
 import { Button, H4 } from "@blueprintjs/core"
+import moment from "moment"
 import React, { useEffect, useState } from "react"
 import { Col, Row } from "react-flexbox-grid"
 import { useHistory } from "react-router-dom"
@@ -19,7 +20,7 @@ const RaidSection = styled.div`
 export const RaidsPage: React.FC = () => {
     const [raids, setRaids] = useState<Raid[]>([])
     const [userSubscriptions, setUserSubscriptions] = useState<RaidSubscription[]>()
-    const [nextOnyxiaReset, setNextOnyxiaReset] = useState<number>(0)
+    const [onyxiaResets, setOnyxiaResets] = useState<number[]>([])
     const [loading, setLoading] = useState(false)
     const history = useHistory()
     const session = useSession()
@@ -27,27 +28,38 @@ export const RaidsPage: React.FC = () => {
 
     useEffect(() => {
         setLoading(true)
+
+        const onyxiaFrom = moment()
+            .subtract(1, "month")
+            .startOf("month")
+            .valueOf()
+        const onyxiaUntil = moment()
+            .add(1, "month")
+            .endOf("month")
+            .valueOf()
+
         Promise.all([
             client.raids.findAllRaids(),
             client.users.findAllSubscriptions(session.user.id),
-            client.raidTypes.nextReset(RaidType.ONYXIA)
+            client.raidTypes.nextReset(RaidType.ONYXIA, {
+                from: onyxiaFrom,
+                until: onyxiaUntil
+            })
         ])
             .then(([raidsResp, subsResp, onyxiaResp]) => {
                 setRaids(raidsResp.data)
                 setUserSubscriptions(subsResp.data)
-                setNextOnyxiaReset(onyxiaResp.data)
+                setOnyxiaResets(onyxiaResp.data)
             })
             .finally(() => setLoading(false))
     }, [session.user.id])
 
     const now = new Date().getTime()
     const futureRaids = raids.filter(raid => now < raid.date).sort((a, b) => a.date - b.date)
-    const resets: RaidReset[] = [
-        {
-            date: nextOnyxiaReset,
-            raidType: RaidType.ONYXIA
-        }
-    ]
+    const resets: RaidReset[] = onyxiaResets.map(r => ({
+        date: r,
+        raidType: RaidType.ONYXIA
+    }))
 
     if (loading) return <Loader />
     return (

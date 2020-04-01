@@ -1,6 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
-// Generated using typescript-generator version 2.19.577 on 2020-03-22 13:41:04.
+// Generated using typescript-generator version 2.19.577 on 2020-04-01 13:47:54.
 
 export interface AbstractModel {
     id: number;
@@ -74,20 +74,6 @@ export interface HttpClient<O> {
     request<R>(requestConfig: { method: string; url: string; queryParams?: any; data?: any; copyFn?: (data: R) => R; options?: O; }): RestResponse<R>;
 }
 
-export class UserCharacterControllerClient<O> {
-
-    constructor(protected httpClient: HttpClient<O>) {
-    }
-
-    /**
-     * HTTP GET /userCharacters
-     * Java method: be.hehehe.lapinstance.controller.UserCharacterController.findAllUserCharacters
-     */
-    findAllUserCharacters(options?: O): RestResponse<UserCharacter[]> {
-        return this.httpClient.request({ method: "GET", url: uriEncoding`userCharacters`, options: options });
-    }
-}
-
 export class SessionControllerClient<O> {
 
     constructor(protected httpClient: HttpClient<O>) {
@@ -99,74 +85,6 @@ export class SessionControllerClient<O> {
      */
     getCurrentUser(options?: O): RestResponse<Session> {
         return this.httpClient.request({ method: "GET", url: uriEncoding`session/user`, options: options });
-    }
-}
-
-export class RaidTypeControllerClient<O> {
-
-    constructor(protected httpClient: HttpClient<O>) {
-    }
-
-    /**
-     * HTTP GET /raidTypes/{raidType}/nextReset
-     * Java method: be.hehehe.lapinstance.controller.RaidTypeController.nextReset
-     */
-    nextReset(raidType: RaidType, options?: O): RestResponse<DateAsNumber> {
-        return this.httpClient.request({ method: "GET", url: uriEncoding`raidTypes/${raidType}/nextReset`, options: options });
-    }
-}
-
-export class UserControllerClient<O> {
-
-    constructor(protected httpClient: HttpClient<O>) {
-    }
-
-    /**
-     * HTTP GET /users
-     * Java method: be.hehehe.lapinstance.controller.UserController.findAllUsers
-     */
-    findAllUsers(options?: O): RestResponse<User[]> {
-        return this.httpClient.request({ method: "GET", url: uriEncoding`users`, options: options });
-    }
-
-    /**
-     * HTTP GET /users/{userId}
-     * Java method: be.hehehe.lapinstance.controller.UserController.getUser
-     */
-    getUser(userId: number, options?: O): RestResponse<User> {
-        return this.httpClient.request({ method: "GET", url: uriEncoding`users/${userId}`, options: options });
-    }
-
-    /**
-     * HTTP POST /users/{userId}
-     * Java method: be.hehehe.lapinstance.controller.UserController.saveUser
-     */
-    saveUser(userId: number, req: SaveUserRequest, options?: O): RestResponse<User> {
-        return this.httpClient.request({ method: "POST", url: uriEncoding`users/${userId}`, data: req, options: options });
-    }
-
-    /**
-     * HTTP GET /users/{userId}/characters
-     * Java method: be.hehehe.lapinstance.controller.UserController.findAllUserCharacters
-     */
-    findAllUserCharacters(userId: number, options?: O): RestResponse<UserCharacter[]> {
-        return this.httpClient.request({ method: "GET", url: uriEncoding`users/${userId}/characters`, options: options });
-    }
-
-    /**
-     * HTTP POST /users/{userId}/characters
-     * Java method: be.hehehe.lapinstance.controller.UserController.saveUserCharacter
-     */
-    saveUserCharacter(userId: number, req: SaveUserCharacterRequest, options?: O): RestResponse<UserCharacter> {
-        return this.httpClient.request({ method: "POST", url: uriEncoding`users/${userId}/characters`, data: req, options: options });
-    }
-
-    /**
-     * HTTP GET /users/{userId}/subscriptions
-     * Java method: be.hehehe.lapinstance.controller.UserController.findAllSubscriptions
-     */
-    findAllSubscriptions(userId: number, options?: O): RestResponse<RaidSubscription[]> {
-        return this.httpClient.request({ method: "GET", url: uriEncoding`users/${userId}/subscriptions`, options: options });
     }
 }
 
@@ -237,6 +155,88 @@ export class RaidControllerClient<O> {
      */
     saveRaidSubscription(raidId: number, req: SaveRaidSubscriptionRequest, options?: O): RestResponse<RaidSubscription> {
         return this.httpClient.request({ method: "POST", url: uriEncoding`raids/${raidId}/subscriptions`, data: req, options: options });
+    }
+}
+
+export class UserCharacterControllerClient<O> {
+
+    constructor(protected httpClient: HttpClient<O>) {
+    }
+
+    /**
+     * HTTP GET /userCharacters
+     * Java method: be.hehehe.lapinstance.controller.UserCharacterController.findAllUserCharacters
+     */
+    findAllUserCharacters(options?: O): RestResponse<UserCharacter[]> {
+        return this.httpClient.request({ method: "GET", url: uriEncoding`userCharacters`, options: options });
+    }
+}
+
+export class RaidTypeControllerClient<O> {
+
+    constructor(protected httpClient: HttpClient<O>) {
+    }
+
+    /**
+     * HTTP GET /raidTypes/{raidType}/nextReset
+     * Java method: be.hehehe.lapinstance.controller.RaidTypeController.nextReset
+     */
+    nextReset(raidType: RaidType, queryParams: { from: number; until: number; }, options?: O): RestResponse<DateAsNumber[]> {
+        return this.httpClient.request({ method: "GET", url: uriEncoding`raidTypes/${raidType}/nextReset`, queryParams: queryParams, options: options });
+    }
+}
+
+export class UserControllerClient<O> {
+
+    constructor(protected httpClient: HttpClient<O>) {
+    }
+
+    /**
+     * HTTP GET /users
+     * Java method: be.hehehe.lapinstance.controller.UserController.findAllUsers
+     */
+    findAllUsers(options?: O): RestResponse<User[]> {
+        return this.httpClient.request({ method: "GET", url: uriEncoding`users`, options: options });
+    }
+
+    /**
+     * HTTP GET /users/{userId}
+     * Java method: be.hehehe.lapinstance.controller.UserController.getUser
+     */
+    getUser(userId: number, options?: O): RestResponse<User> {
+        return this.httpClient.request({ method: "GET", url: uriEncoding`users/${userId}`, options: options });
+    }
+
+    /**
+     * HTTP POST /users/{userId}
+     * Java method: be.hehehe.lapinstance.controller.UserController.saveUser
+     */
+    saveUser(userId: number, req: SaveUserRequest, options?: O): RestResponse<User> {
+        return this.httpClient.request({ method: "POST", url: uriEncoding`users/${userId}`, data: req, options: options });
+    }
+
+    /**
+     * HTTP GET /users/{userId}/characters
+     * Java method: be.hehehe.lapinstance.controller.UserController.findAllUserCharacters
+     */
+    findAllUserCharacters(userId: number, options?: O): RestResponse<UserCharacter[]> {
+        return this.httpClient.request({ method: "GET", url: uriEncoding`users/${userId}/characters`, options: options });
+    }
+
+    /**
+     * HTTP POST /users/{userId}/characters
+     * Java method: be.hehehe.lapinstance.controller.UserController.saveUserCharacter
+     */
+    saveUserCharacter(userId: number, req: SaveUserCharacterRequest, options?: O): RestResponse<UserCharacter> {
+        return this.httpClient.request({ method: "POST", url: uriEncoding`users/${userId}/characters`, data: req, options: options });
+    }
+
+    /**
+     * HTTP GET /users/{userId}/subscriptions
+     * Java method: be.hehehe.lapinstance.controller.UserController.findAllSubscriptions
+     */
+    findAllSubscriptions(userId: number, options?: O): RestResponse<RaidSubscription[]> {
+        return this.httpClient.request({ method: "GET", url: uriEncoding`users/${userId}/subscriptions`, options: options });
     }
 }
 
@@ -362,7 +362,7 @@ class AxiosHttpClient implements HttpClient<Axios.AxiosRequestConfig> {
     }
 }
 
-export class AxiosUserCharacterControllerClient extends UserCharacterControllerClient<Axios.AxiosRequestConfig> {
+export class AxiosSessionControllerClient extends SessionControllerClient<Axios.AxiosRequestConfig> {
 
     constructor(baseURL: string, axiosInstance: Axios.AxiosInstance = axios.create()) {
         axiosInstance.defaults.baseURL = baseURL;
@@ -370,7 +370,15 @@ export class AxiosUserCharacterControllerClient extends UserCharacterControllerC
     }
 }
 
-export class AxiosSessionControllerClient extends SessionControllerClient<Axios.AxiosRequestConfig> {
+export class AxiosRaidControllerClient extends RaidControllerClient<Axios.AxiosRequestConfig> {
+
+    constructor(baseURL: string, axiosInstance: Axios.AxiosInstance = axios.create()) {
+        axiosInstance.defaults.baseURL = baseURL;
+        super(new AxiosHttpClient(axiosInstance));
+    }
+}
+
+export class AxiosUserCharacterControllerClient extends UserCharacterControllerClient<Axios.AxiosRequestConfig> {
 
     constructor(baseURL: string, axiosInstance: Axios.AxiosInstance = axios.create()) {
         axiosInstance.defaults.baseURL = baseURL;
@@ -387,14 +395,6 @@ export class AxiosRaidTypeControllerClient extends RaidTypeControllerClient<Axio
 }
 
 export class AxiosUserControllerClient extends UserControllerClient<Axios.AxiosRequestConfig> {
-
-    constructor(baseURL: string, axiosInstance: Axios.AxiosInstance = axios.create()) {
-        axiosInstance.defaults.baseURL = baseURL;
-        super(new AxiosHttpClient(axiosInstance));
-    }
-}
-
-export class AxiosRaidControllerClient extends RaidControllerClient<Axios.AxiosRequestConfig> {
 
     constructor(baseURL: string, axiosInstance: Axios.AxiosInstance = axios.create()) {
         axiosInstance.defaults.baseURL = baseURL;
