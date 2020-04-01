@@ -1,4 +1,4 @@
-import { Button, H4, Switch, Toaster } from "@blueprintjs/core"
+import { Alert, Button, H4, Switch, Toaster } from "@blueprintjs/core"
 import React, { useEffect, useState } from "react"
 import { Col, Row } from "react-flexbox-grid"
 import styled from "styled-components"
@@ -21,6 +21,7 @@ const CardWrapper = styled.div`
 export const UserPage: React.FC<{ userId: number }> = props => {
     const [user, setUser] = useState<User>()
     const [characters, setCharacters] = useState<EditableUserCharacter[]>([])
+    const [disablingConfirmationOpen, setDisablingConfirmationOpen] = useState(false)
     const [loading, setLoading] = useState(false)
     const session = useSession()
 
@@ -29,8 +30,13 @@ export const UserPage: React.FC<{ userId: number }> = props => {
     const showEditButton = editable
     const showAddButton = editable && characters.filter(c => c.id === 0).length === 0
 
-    const toggleDisabled = () => {
-        user && client.users.saveUser(user.id, { disabled: !user.disabled }).then(resp => setUser(resp.data))
+    const enableUser = () => user && client.users.saveUser(user.id, { disabled: false }).then(resp => setUser(resp.data))
+    const disableUser = () => {
+        user &&
+            client.users.saveUser(user.id, { disabled: true }).then(resp => {
+                setUser(resp.data)
+                setDisablingConfirmationOpen(false)
+            })
     }
 
     const addCharacter = () => {
@@ -104,7 +110,23 @@ export const UserPage: React.FC<{ userId: number }> = props => {
         <>
             <PageTitle>{user.name}</PageTitle>
 
-            {session.hasRole(UserRole.ADMIN) && <Switch checked={!user.disabled} label="Actif" onChange={toggleDisabled} />}
+            {session.hasRole(UserRole.ADMIN) && (
+                <Switch
+                    checked={!user.disabled}
+                    label="Actif"
+                    onChange={() => (user.disabled ? enableUser() : setDisablingConfirmationOpen(true))}
+                />
+            )}
+            <Alert
+                cancelButtonText="Annuler"
+                confirmButtonText="Désactiver"
+                intent="danger"
+                isOpen={disablingConfirmationOpen}
+                onCancel={() => setDisablingConfirmationOpen(false)}
+                onConfirm={() => disableUser()}
+            >
+                Désactiver le compte de {user.name} ?
+            </Alert>
 
             <H4>Personnages</H4>
             <Row>
