@@ -111,6 +111,8 @@ export const RaidPage: React.FC<{ raidId: number }> = props => {
             </Flex>
 
             <StyledCard>
+                <p>{raid.comment}</p>
+
                 <SubscriptionList subscriptions={subscriptions} />
             </StyledCard>
 
