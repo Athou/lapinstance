@@ -19,8 +19,8 @@ const RaidSection = styled.div`
 
 export const RaidsPage: React.FC = () => {
     const [raids, setRaids] = useState<Raid[]>([])
+    const [raidResets, setRaidResets] = useState<RaidReset[]>([])
     const [userSubscriptions, setUserSubscriptions] = useState<RaidSubscription[]>()
-    const [onyxiaResets, setOnyxiaResets] = useState<number[]>([])
     const [loading, setLoading] = useState(false)
     const history = useHistory()
     const session = useSession()
@@ -29,11 +29,11 @@ export const RaidsPage: React.FC = () => {
     useEffect(() => {
         setLoading(true)
 
-        const onyxiaFrom = moment()
+        const raidResetFrom = moment()
             .subtract(1, "month")
             .startOf("month")
             .valueOf()
-        const onyxiaUntil = moment()
+        const raidResetUntil = moment()
             .add(1, "month")
             .endOf("month")
             .valueOf()
@@ -42,24 +42,38 @@ export const RaidsPage: React.FC = () => {
             client.raids.findAllRaids(),
             client.users.findAllSubscriptions(session.user.id),
             client.raidTypes.nextReset(RaidType.ONYXIA, {
-                from: onyxiaFrom,
-                until: onyxiaUntil
+                from: raidResetFrom,
+                until: raidResetUntil
+            }),
+            client.raidTypes.nextReset(RaidType.ZUL_GURUB, {
+                from: raidResetFrom,
+                until: raidResetUntil
             })
         ])
-            .then(([raidsResp, subsResp, onyxiaResp]) => {
+            .then(([raidsResp, subsResp, onyxiaResp, zgResp]) => {
                 setRaids(raidsResp.data)
                 setUserSubscriptions(subsResp.data)
-                setOnyxiaResets(onyxiaResp.data)
+
+                const resets: RaidReset[] = []
+                resets.push(
+                    ...onyxiaResp.data.map(r => ({
+                        date: r,
+                        raidType: RaidType.ONYXIA
+                    }))
+                )
+                resets.push(
+                    ...zgResp.data.map(r => ({
+                        date: r,
+                        raidType: RaidType.ZUL_GURUB
+                    }))
+                )
+                setRaidResets(resets)
             })
             .finally(() => setLoading(false))
     }, [session.user.id])
 
     const now = new Date().getTime()
     const futureRaids = raids.filter(raid => now < raid.date).sort((a, b) => a.date - b.date)
-    const resets: RaidReset[] = onyxiaResets.map(r => ({
-        date: r,
-        raidType: RaidType.ONYXIA
-    }))
 
     if (loading) return <Loader />
     return (
@@ -84,7 +98,7 @@ export const RaidsPage: React.FC = () => {
                 </Col>
                 <Col md={9}>
                     <H4>Calendrier</H4>
-                    <RaidCalendar raids={raids} resets={resets} onRaidSelect={raidId => showRaid(raidId)} />
+                    <RaidCalendar raids={raids} resets={raidResets} onRaidSelect={raidId => showRaid(raidId)} />
                 </Col>
             </Row>
         </>

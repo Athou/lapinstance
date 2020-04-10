@@ -22,6 +22,7 @@ public class RaidResetService {
 
 	public RaidResetService() {
 		resetTimes.put(RaidType.ONYXIA, new GregorianCalendar(2020, Calendar.FEBRUARY, 28, 9, 0).getTime());
+		resetTimes.put(RaidType.ZUL_GURUB, new GregorianCalendar(2020, Calendar.APRIL, 16, 9, 0).getTime());
 	}
 
 	public List<Date> getResetTimes(RaidType raidType, Date from, Date until) {
