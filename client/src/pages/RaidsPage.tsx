@@ -1,4 +1,4 @@
-import { Button, H4 } from "@blueprintjs/core"
+import { Button, H4, Switch } from "@blueprintjs/core"
 import moment from "moment"
 import React, { useEffect, useState } from "react"
 import { Col, Row } from "react-flexbox-grid"
@@ -20,6 +20,12 @@ const RaidSection = styled.div`
 export const RaidsPage: React.FC = () => {
     const [raids, setRaids] = useState<Raid[]>([])
     const [raidResets, setRaidResets] = useState<RaidReset[]>([])
+    const [raidResetFilter, setRaidResetFilter] = useState<Map<RaidType, boolean>>(
+        new Map<RaidType, boolean>([
+            [RaidType.ONYXIA, true],
+            [RaidType.ZUL_GURUB, true]
+        ])
+    )
     const [userSubscriptions, setUserSubscriptions] = useState<RaidSubscription[]>()
     const [loading, setLoading] = useState(false)
     const history = useHistory()
@@ -74,6 +80,7 @@ export const RaidsPage: React.FC = () => {
 
     const now = new Date().getTime()
     const futureRaids = raids.filter(raid => now < raid.date).sort((a, b) => a.date - b.date)
+    const filteredRaidResets = raidResets.filter(reset => raidResetFilter.get(reset.raidType))
 
     if (loading) return <Loader />
     return (
@@ -98,7 +105,25 @@ export const RaidsPage: React.FC = () => {
                 </Col>
                 <Col md={9}>
                     <H4>Calendrier</H4>
-                    <RaidCalendar raids={raids} resets={raidResets} onRaidSelect={raidId => showRaid(raidId)} />
+                    <RaidCalendar raids={raids} resets={filteredRaidResets} onRaidSelect={raidId => showRaid(raidId)} />
+                    <Switch
+                        inline
+                        checked={raidResetFilter.get(RaidType.ONYXIA)}
+                        onClick={() => {
+                            raidResetFilter.set(RaidType.ONYXIA, !raidResetFilter.get(RaidType.ONYXIA))
+                            setRaidResetFilter(new Map(raidResetFilter))
+                        }}
+                        label="Reset Onyxia"
+                    />
+                    <Switch
+                        inline
+                        checked={raidResetFilter.get(RaidType.ZUL_GURUB)}
+                        onClick={() => {
+                            raidResetFilter.set(RaidType.ZUL_GURUB, !raidResetFilter.get(RaidType.ZUL_GURUB))
+                            setRaidResetFilter(new Map(raidResetFilter))
+                        }}
+                        label="Reset ZG"
+                    />
                 </Col>
             </Row>
         </>
