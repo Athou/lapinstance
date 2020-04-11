@@ -27,6 +27,8 @@ export type RaidReset = {
     raidType: RaidType
 }
 
+type EventPayload = { type: "raid"; raid: Raid } | { type: "reset"; reset: RaidReset }
+
 export const RaidCalendar: React.FC<{
     raids: Raid[]
     resets: RaidReset[]
@@ -35,28 +37,38 @@ export const RaidCalendar: React.FC<{
     const events: Event[] = props.raids.map(raid => {
         const endDate = new Date(raid.date)
         endDate.setHours(23, 59, 59, 999)
+        const resource: EventPayload = {
+            type: "raid",
+            raid
+        }
         return {
             title: `${moment(raid.date).format("HH:mm")} ${raidTypeShortLabels[raid.raidType]}`,
             start: new Date(raid.date),
             end: endDate,
-            resource: raid.id
+            resource
         }
     })
 
-    props.resets.forEach(reset =>
+    props.resets.forEach(reset => {
+        const resource: EventPayload = {
+            type: "reset",
+            reset
+        }
         events.push({
             title: `${moment(reset.date).format("HH:mm")} Reset ${raidTypeShortLabels[reset.raidType]}`,
             start: new Date(reset.date),
             end: new Date(reset.date),
-            resource: "reset"
+            resource
         })
-    )
+    })
 
     const eventPropGetter: EventPropGetter<any> = (event, start, end, isSelected) => {
-        if (event.resource === "reset") {
+        const resource: EventPayload = event.resource
+        if (resource.type === "reset") {
+            const color = resource.reset.raidType === RaidType.ONYXIA ? "#793122" : "#8B8467"
             return {
                 style: {
-                    backgroundColor: "#793122"
+                    backgroundColor: color
                 }
             }
         }
@@ -71,7 +83,10 @@ export const RaidCalendar: React.FC<{
                 events={events}
                 views={["month"]}
                 eventPropGetter={eventPropGetter}
-                onSelectEvent={(e: Event) => e.resource !== "reset" && props.onRaidSelect(e.resource as number)}
+                onSelectEvent={(e: Event) => {
+                    const resource: EventPayload = e.resource
+                    resource.type === "raid" && props.onRaidSelect(resource.raid.id)
+                }}
                 components={{ toolbar: Toolbar }}
             />
         </>

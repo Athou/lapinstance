@@ -41,7 +41,7 @@ public class RaidResetService {
 			if (cal.getTime().after(from)) {
 				resets.add(cal.getTime());
 			}
-			cal.add(raidType.getResetTimer(), Calendar.DATE);
+			cal.add(Calendar.DATE, raidType.getResetTimer());
 		}
 
 		return resets;
