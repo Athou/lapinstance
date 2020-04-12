@@ -65,7 +65,7 @@ export const RaidCalendar: React.FC<{
     const eventPropGetter: EventPropGetter<any> = (event, start, end, isSelected) => {
         const resource: EventPayload = event.resource
         if (resource.type === "reset") {
-            const color = resource.reset.raidType === RaidType.ONYXIA ? "#793122" : "#8B8467"
+            const color = resource.reset.raidType === RaidType.ONYXIA ? "#793122" : "#4CA66B"
             return {
                 style: {
                     backgroundColor: color
