@@ -17,6 +17,7 @@ export const RaidEdit: React.FC<{ raid?: Raid; raidTextChannels: RaidTextChannel
     const [raidTextChannelId, setRaidTextChannelId] = useState(props.raid?.discordTextChannelId ?? props.raidTextChannels[0].id)
     const [date, setDate] = useState(props.raid?.date ?? newRaidDate.getTime())
     const [comment, setComment] = useState(props.raid?.comment)
+    const [saving, setSaving] = useState(false)
 
     const history = useHistory()
 
@@ -30,7 +31,12 @@ export const RaidEdit: React.FC<{ raid?: Raid; raidTextChannels: RaidTextChannel
             date,
             comment
         }
-        client.raids.saveRaid(req).then(() => history.push(Routes.raid.list.create({})))
+
+        setSaving(true)
+        client.raids
+            .saveRaid(req)
+            .then(() => history.push(Routes.raid.list.create({})))
+            .finally(() => setSaving(false))
     }
 
     const handleCancel = () => history.push(Routes.raid.list.create({}))
@@ -74,7 +80,7 @@ export const RaidEdit: React.FC<{ raid?: Raid; raidTextChannels: RaidTextChannel
                     <TextArea fill value={comment} onChange={e => setComment(e.target.value)} />
                 </FormGroup>
 
-                <ActionButton intent="primary" type="submit" text="Enregistrer" marginRight />
+                <ActionButton intent="primary" type="submit" text="Enregistrer" loading={saving} marginRight />
                 <ActionButton text="Annuler" onClick={handleCancel} />
             </form>
         </>
