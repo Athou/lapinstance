@@ -3,6 +3,7 @@ package be.hehehe.lapinstance.service.discord;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -21,9 +22,12 @@ import be.hehehe.lapinstance.model.Raid;
 import be.hehehe.lapinstance.model.RaidSubscription;
 import be.hehehe.lapinstance.model.RaidSubscriptionResponse;
 import be.hehehe.lapinstance.model.RaidTextChannel;
+import be.hehehe.lapinstance.model.UserCharacter;
 import be.hehehe.lapinstance.repository.RaidRepository;
 import be.hehehe.lapinstance.repository.RaidSubscriptionRepository;
+import be.hehehe.lapinstance.repository.UserCharacterRepository;
 import be.hehehe.lapinstance.service.URLService;
+import be.hehehe.lapinstance.service.discord.DiscordEmbedService.SubscriptionModel;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -46,6 +50,7 @@ public class DiscordService {
 
 	private final RaidRepository raidRepository;
 	private final RaidSubscriptionRepository raidSubscriptionRepository;
+	private final UserCharacterRepository userCharacterRepository;
 	private final URLService urlService;
 	private final DiscordEmbedService discordEmbedService;
 	private final DiscordEmoteService discordEmoteService;
@@ -60,13 +65,15 @@ public class DiscordService {
 	private final List<MessageReactionListener> messageReactionListeners = new ArrayList<>();
 
 	@Autowired
-	public DiscordService(RaidRepository raidRepository, RaidSubscriptionRepository raidSubscriptionRepository, URLService urlService,
-			DiscordEmbedService discordEmbedService, DiscordEmoteService discordEmoteService, @Value("${jda.discord.token}") String token,
+	public DiscordService(RaidRepository raidRepository, RaidSubscriptionRepository raidSubscriptionRepository,
+			UserCharacterRepository userCharacterRepository, URLService urlService, DiscordEmbedService discordEmbedService,
+			DiscordEmoteService discordEmoteService, @Value("${jda.discord.token}") String token,
 			@Value("${jda.discord.guild-id}") String guildId, @Value("${jda.discord.raid-text-channel-ids}") String[] raidTextChannelIds,
 			@Value("${jda.discord.user-roles}") String[] userRoles, @Value("${jda.discord.admin-roles}") String[] adminRoles) {
 
 		this.raidRepository = raidRepository;
 		this.raidSubscriptionRepository = raidSubscriptionRepository;
+		this.userCharacterRepository = userCharacterRepository;
 		this.urlService = urlService;
 		this.discordEmbedService = discordEmbedService;
 		this.discordEmoteService = discordEmoteService;
@@ -136,7 +143,12 @@ public class DiscordService {
 		List<RaidSubscription> subscriptions = raidSubscriptionRepository.findByRaidId(raidId);
 		TextChannel textChannel = guild.getTextChannelById(raid.getDiscordTextChannelId());
 
-		MessageEmbed embed = discordEmbedService.buildEmbed(raid, subscriptions, urlService.getRaidUrl(raid.getId()));
+		Map<Long, UserCharacter> mainCharactersByUserId = userCharacterRepository.findAll()
+				.stream()
+				.filter(c -> c.isMain())
+				.collect(Collectors.toMap(c -> c.getUser().getId(), c -> c));
+		List<SubscriptionModel> subscriptionModels = buildSubscriptionModels(subscriptions, mainCharactersByUserId);
+		MessageEmbed embed = discordEmbedService.buildEmbed(raid, subscriptionModels, urlService.getRaidUrl(raid.getId()));
 
 		Message message = null;
 		if (raid.getDiscordMessageId() != null) {
@@ -164,6 +176,32 @@ public class DiscordService {
 		} else {
 			message.editMessage(embed).complete();
 		}
+	}
+
+	private List<SubscriptionModel> buildSubscriptionModels(List<RaidSubscription> subscriptions,
+			Map<Long, UserCharacter> mainCharactersByUserId) {
+		return subscriptions.stream().map(sub -> {
+			final String name;
+			UserCharacter mainCharacter = mainCharactersByUserId.get(sub.getUser().getId());
+			if (sub.getCharacter() == null) {
+				if (mainCharacter == null) {
+					name = sub.getUser().getName();
+				} else {
+					name = mainCharacter.getName();
+				}
+			} else {
+				if (mainCharacter == null) {
+					name = sub.getCharacter().getName();
+				} else {
+					if (sub.getCharacter().isMain()) {
+						name = sub.getCharacter().getName();
+					} else {
+						name = sub.getCharacter().getName() + " (" + mainCharacter.getName() + ")";
+					}
+				}
+			}
+			return new SubscriptionModel(name, sub.getResponse(), sub.getCharacter() == null ? null : sub.getCharacter().getSpec());
+		}).collect(Collectors.toList());
 	}
 
 	public void removeEmbed(long raidId) {

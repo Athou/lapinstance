@@ -12,9 +12,9 @@ import be.hehehe.lapinstance.model.CharacterClass;
 import be.hehehe.lapinstance.model.CharacterRole;
 import be.hehehe.lapinstance.model.CharacterSpec;
 import be.hehehe.lapinstance.model.Raid;
-import be.hehehe.lapinstance.model.RaidSubscription;
 import be.hehehe.lapinstance.model.RaidSubscriptionResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.Value;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.MessageEmbed.Field;
@@ -25,7 +25,11 @@ class DiscordEmbedService {
 
 	private final DiscordEmoteService discordEmoteService;
 
-	public MessageEmbed buildEmbed(Raid raid, List<RaidSubscription> subscriptions, String raidUrl) {
+	private enum ParticipantListStyle {
+		NONE, NAME, NAME_AND_ICON;
+	}
+
+	public MessageEmbed buildEmbed(Raid raid, List<SubscriptionModel> subscriptions, String raidUrl) {
 
 		EmbedBuilder eb = new EmbedBuilder();
 		eb.setTitle(raid.getRaidType().getLongName(), raidUrl);
@@ -42,7 +46,7 @@ class DiscordEmbedService {
 		return eb.build();
 	}
 
-	private void buildSubscriptionFields(EmbedBuilder eb, List<RaidSubscription> subscriptions) {
+	private void buildSubscriptionFields(EmbedBuilder eb, List<SubscriptionModel> subscriptions) {
 
 		eb.addField(buildParticipantCountField(subscriptions));
 
@@ -67,55 +71,58 @@ class DiscordEmbedService {
 		eb.addField(buildResponseField(RaidSubscriptionResponse.ABSENT, subscriptions));
 	}
 
-	private Field buildParticipantCountField(List<RaidSubscription> subscriptions) {
-		List<RaidSubscription> filtered = subscriptions.stream()
+	private Field buildParticipantCountField(List<SubscriptionModel> subscriptions) {
+		List<SubscriptionModel> filtered = subscriptions.stream()
 				.filter(s -> s.getResponse() == RaidSubscriptionResponse.PRESENT)
 				.collect(Collectors.toList());
-		return buildField(discordEmoteService.getParticipantsEmote().forMessage(), filtered, false, false);
+		return buildField(discordEmoteService.getParticipantsEmote().forMessage(), filtered, ParticipantListStyle.NONE, false);
 	}
 
-	private Field buildRoleCountField(List<RaidSubscription> subscriptions, CharacterRole role) {
-		List<RaidSubscription> filtered = subscriptions.stream()
-				.filter(s -> s.getResponse() == RaidSubscriptionResponse.PRESENT && s.getCharacter().getSpec().getRole() == role)
+	private Field buildRoleCountField(List<SubscriptionModel> subscriptions, CharacterRole role) {
+		List<SubscriptionModel> filtered = subscriptions.stream()
+				.filter(s -> s.getResponse() == RaidSubscriptionResponse.PRESENT && s.getSpec().getRole() == role)
 				.collect(Collectors.toList());
 
-		return buildField(discordEmoteService.getEmote(role).forMessage(), filtered, false, true);
+		return buildField(discordEmoteService.getEmote(role).forMessage(), filtered, ParticipantListStyle.NONE, true);
 	}
 
-	private Field buildTankField(List<RaidSubscription> subscriptions) {
-		List<RaidSubscription> filtered = subscriptions.stream()
+	private Field buildTankField(List<SubscriptionModel> subscriptions) {
+		List<SubscriptionModel> filtered = subscriptions.stream()
 				.filter(s -> s.getResponse() == RaidSubscriptionResponse.PRESENT)
-				.filter(s -> s.getCharacter().getSpec().getRole() == CharacterRole.TANK)
+				.filter(s -> s.getSpec().getRole() == CharacterRole.TANK)
 				.collect(Collectors.toList());
-		return buildField(discordEmoteService.getEmote(CharacterSpec.WARRIOR_TANK).forMessage(), filtered, true, true);
+		return buildField(discordEmoteService.getEmote(CharacterSpec.WARRIOR_TANK).forMessage(), filtered,
+				ParticipantListStyle.NAME_AND_ICON, true);
 	}
 
-	private Field buildClassField(CharacterClass characterClass, List<RaidSubscription> subscriptions) {
-		List<RaidSubscription> filtered = subscriptions.stream()
+	private Field buildClassField(CharacterClass characterClass, List<SubscriptionModel> subscriptions) {
+		List<SubscriptionModel> filtered = subscriptions.stream()
 				.filter(s -> s.getResponse() == RaidSubscriptionResponse.PRESENT)
-				.filter(s -> s.getCharacter().getSpec().getRole() != CharacterRole.TANK)
-				.filter(s -> s.getCharacter().getSpec().getCharacterClass() == characterClass)
+				.filter(s -> s.getSpec().getRole() != CharacterRole.TANK)
+				.filter(s -> s.getSpec().getCharacterClass() == characterClass)
 				.collect(Collectors.toList());
-		return buildField(discordEmoteService.getEmote(characterClass).forMessage(), filtered, true, true);
+		return buildField(discordEmoteService.getEmote(characterClass).forMessage(), filtered, ParticipantListStyle.NAME_AND_ICON, true);
 	}
 
-	private Field buildResponseField(RaidSubscriptionResponse response, List<RaidSubscription> subscriptions) {
-		List<RaidSubscription> filtered = subscriptions.stream().filter(s -> s.getResponse() == response).collect(Collectors.toList());
-		return buildField(discordEmoteService.getEmote(response).forMessage(), filtered, true, true);
+	private Field buildResponseField(RaidSubscriptionResponse response, List<SubscriptionModel> subscriptions) {
+		List<SubscriptionModel> filtered = subscriptions.stream().filter(s -> s.getResponse() == response).collect(Collectors.toList());
+		return buildField(discordEmoteService.getEmote(response).forMessage(), filtered, ParticipantListStyle.NAME, true);
 	}
 
-	private Field buildField(String icon, List<RaidSubscription> subscriptions, boolean showParticipantList, boolean inline) {
+	private Field buildField(String icon, List<SubscriptionModel> subscriptions, ParticipantListStyle style, boolean inline) {
 		String content = icon + " " + bold("" + subscriptions.size());
 
-		if (showParticipantList) {
-			String list = subscriptions.stream()
-					.map(s -> s.getCharacter() == null ? s.getUser().getName()
-							: discordEmoteService.getEmote(s.getCharacter().getSpec()).forMessage() + " " + s.getCharacter().getName())
-					.collect(Collectors.joining(System.lineSeparator()));
-			content += System.lineSeparator() + list;
+		if (style != ParticipantListStyle.NONE) {
+			content += System.lineSeparator() + buildParticipantList(subscriptions, style == ParticipantListStyle.NAME_AND_ICON);
 		}
 
 		return new Field("", content, inline);
+	}
+
+	private String buildParticipantList(List<SubscriptionModel> subscriptions, boolean showIcons) {
+		return subscriptions.stream()
+				.map(s -> !showIcons ? s.getName() : discordEmoteService.getEmote(s.getSpec()).forMessage() + " " + s.getName())
+				.collect(Collectors.joining(System.lineSeparator()));
 	}
 
 	private Field buildBlankLineField() {
@@ -125,6 +132,14 @@ class DiscordEmbedService {
 
 	private String bold(String s) {
 		return "**" + s + "**";
+	}
+
+	@Value
+	public static class SubscriptionModel {
+		private String name;
+		private RaidSubscriptionResponse response;
+		private CharacterSpec spec;
+
 	}
 
 }
