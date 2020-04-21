@@ -2,7 +2,7 @@ jda:
   discord:
     token:
     guild-id:
-    raid-text-channel-id:
+    raid-text-channel-ids:
     user-roles:
     admin-roles:
     icons:

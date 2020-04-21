@@ -65,6 +65,7 @@ public class RaidController {
 		raid.setComment(req.getComment());
 		raid.setDate(req.getDate());
 		raid.setRaidType(req.getRaidType());
+		raid.setDiscordTextChannelId(req.getRaidTextChannelId());
 		return raidService.save(raid);
 	}
 
@@ -126,6 +127,10 @@ public class RaidController {
 		@NotNull
 		@JsonProperty(required = true)
 		private RaidType raidType;
+
+		@NotNull
+		@JsonProperty(required = true)
+		private String raidTextChannelId;
 	}
 
 	@Data

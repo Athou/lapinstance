@@ -20,6 +20,7 @@ import be.hehehe.lapinstance.model.CharacterClass;
 import be.hehehe.lapinstance.model.Raid;
 import be.hehehe.lapinstance.model.RaidSubscription;
 import be.hehehe.lapinstance.model.RaidSubscriptionResponse;
+import be.hehehe.lapinstance.model.RaidTextChannel;
 import be.hehehe.lapinstance.repository.RaidRepository;
 import be.hehehe.lapinstance.repository.RaidSubscriptionRepository;
 import be.hehehe.lapinstance.service.URLService;
@@ -54,14 +55,14 @@ public class DiscordService {
 
 	private JDA jda;
 	private Guild guild;
-	private TextChannel textChannel;
+	private List<RaidTextChannel> raidTextChannels;
 
 	private final List<MessageReactionListener> messageReactionListeners = new ArrayList<>();
 
 	@Autowired
 	public DiscordService(RaidRepository raidRepository, RaidSubscriptionRepository raidSubscriptionRepository, URLService urlService,
 			DiscordEmbedService discordEmbedService, DiscordEmoteService discordEmoteService, @Value("${jda.discord.token}") String token,
-			@Value("${jda.discord.guild-id}") String guildId, @Value("${jda.discord.raid-text-channel-id}") String raidTextChannelId,
+			@Value("${jda.discord.guild-id}") String guildId, @Value("${jda.discord.raid-text-channel-ids}") String[] raidTextChannelIds,
 			@Value("${jda.discord.user-roles}") String[] userRoles, @Value("${jda.discord.admin-roles}") String[] adminRoles) {
 
 		this.raidRepository = raidRepository;
@@ -77,7 +78,10 @@ public class DiscordService {
 			try {
 				this.jda = new JDABuilder().setToken(token).build().awaitReady();
 				this.guild = jda.getGuildById(guildId);
-				this.textChannel = guild.getTextChannelById(raidTextChannelId);
+				this.raidTextChannels = Stream.of(raidTextChannelIds)
+						.map(id -> new RaidTextChannel(id, guild.getTextChannelById(id).getName()))
+						.collect(Collectors.toList());
+
 			} catch (LoginException | InterruptedException e) {
 				Thread.currentThread().interrupt();
 				throw new RuntimeException("cannot create jda instance", e);
@@ -92,11 +96,11 @@ public class DiscordService {
 					}
 
 					MessageChannel channel = event.getChannel();
-					if (!channel.getId().equals(textChannel.getId())) {
+					if (raidTextChannels.stream().noneMatch(rtc -> rtc.getId().equals(channel.getId()))) {
 						return;
 					}
 
-					Message message = textChannel.retrieveMessageById(event.getMessageId()).complete();
+					Message message = event.getTextChannel().retrieveMessageById(event.getMessageId()).complete();
 					if (!message.getAuthor().getId().equals(jda.getSelfUser().getId())) {
 						return;
 					}
@@ -122,14 +126,15 @@ public class DiscordService {
 		}
 	}
 
-	public String getTextChannelId() {
-		return textChannel.getId();
+	public List<RaidTextChannel> getRaidTextChannels() {
+		return raidTextChannels;
 	}
 
 	// TODO make caller handle raid.discordMessageId update ?
 	public void sendOrUpdateEmbed(long raidId) {
 		Raid raid = getRaid(raidId);
 		List<RaidSubscription> subscriptions = raidSubscriptionRepository.findByRaidId(raidId);
+		TextChannel textChannel = guild.getTextChannelById(raid.getDiscordTextChannelId());
 
 		MessageEmbed embed = discordEmbedService.buildEmbed(raid, subscriptions, urlService.getRaidUrl(raid.getId()));
 
@@ -165,6 +170,7 @@ public class DiscordService {
 		Raid raid = getRaid(raidId);
 		if (raid.getDiscordMessageId() != null) {
 			try {
+				TextChannel textChannel = guild.getTextChannelById(raid.getDiscordTextChannelId());
 				textChannel.deleteMessageById(raid.getDiscordMessageId()).complete();
 			} catch (Exception e) {
 				log.warn("could not remove message", e);
@@ -181,6 +187,7 @@ public class DiscordService {
 	}
 
 	public Optional<String> getUserNickname(String userId) {
+		TextChannel textChannel = guild.getTextChannelById(raidTextChannels.get(0).getId());
 		return textChannel.getMembers().stream().filter(m -> m.getUser().getId().equals(userId)).findFirst().map(Member::getEffectiveName);
 	}
 

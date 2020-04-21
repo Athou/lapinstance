@@ -3,19 +3,21 @@ import { DatePicker } from "@blueprintjs/datetime"
 import React, { useState } from "react"
 import MomentLocaleUtils from "react-day-picker/moment"
 import { useHistory } from "react-router-dom"
-import { Raid, RaidType, SaveRaidRequest } from "../../api"
+import { Raid, RaidTextChannel, RaidType, SaveRaidRequest } from "../../api"
 import { client } from "../../api/client"
 import { raidTypeLabels, RaidTypes } from "../../api/utils"
 import { Routes } from "../../Routes"
 import { ActionButton } from "../ActionButton"
 
-export const RaidEdit: React.FC<{ raid?: Raid }> = props => {
+export const RaidEdit: React.FC<{ raid?: Raid; raidTextChannels: RaidTextChannel[] }> = props => {
     const newRaidDate = new Date()
     newRaidDate.setHours(20, 30, 0, 0)
 
     const [raidType, setRaidType] = useState(props.raid?.raidType ?? RaidType.ONYXIA)
+    const [raidTextChannelId, setRaidTextChannelId] = useState(props.raid?.discordTextChannelId ?? props.raidTextChannels[0].id)
     const [date, setDate] = useState(props.raid?.date ?? newRaidDate.getTime())
     const [comment, setComment] = useState(props.raid?.comment)
+
     const history = useHistory()
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -24,6 +26,7 @@ export const RaidEdit: React.FC<{ raid?: Raid }> = props => {
         const req: SaveRaidRequest = {
             raidId: props.raid?.id,
             raidType,
+            raidTextChannelId,
             date,
             comment
         }
@@ -40,6 +43,16 @@ export const RaidEdit: React.FC<{ raid?: Raid }> = props => {
                         {RaidTypes.map(type => (
                             <option key={type} value={type}>
                                 {raidTypeLabels[type]}
+                            </option>
+                        ))}
+                    </HTMLSelect>
+                </FormGroup>
+
+                <FormGroup label="Channel">
+                    <HTMLSelect value={raidTextChannelId} onChange={e => setRaidTextChannelId(e.target.value)}>
+                        {props.raidTextChannels.map(chan => (
+                            <option key={chan.id} value={chan.id}>
+                                {chan.name}
                             </option>
                         ))}
                     </HTMLSelect>

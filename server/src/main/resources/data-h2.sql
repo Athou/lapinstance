@@ -29,8 +29,8 @@ insert into USER_CHARACTERS (id, name, spec, main, user_id) values
 (21, 'Ramsey', 'HUNTER', true, 4),
 (22, 'Webb', 'HUNTER', true, 5);
 
-insert into RAIDS (id, date, comment, raid_type) values
-(1, DATEADD(DAY, 1, CURRENT_DATE()), 'Tout le monde à l''heure dans l''instance', 'BLACKWING_LAIR');
+insert into RAIDS (id, date, comment, raid_type, discord_text_channel_id) values
+(1, DATEADD(DAY, 1, CURRENT_DATE()), 'Tout le monde à l''heure dans l''instance', 'BLACKWING_LAIR', '0');
 
 insert into RAID_SUBSCRIPTIONS (raid_id, user_id, response, character_id) values
 (1, 4, 'LATE', null),

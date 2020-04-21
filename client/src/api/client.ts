@@ -2,6 +2,7 @@ import { Toaster } from "@blueprintjs/core"
 import axios from "axios"
 import {
     AxiosRaidControllerClient,
+    AxiosRaidTextChannelControllerClient,
     AxiosRaidTypeControllerClient,
     AxiosSessionControllerClient,
     AxiosUserCharacterControllerClient,
@@ -26,6 +27,7 @@ axiosInstance.interceptors.response.use(
 export const client = {
     raids: new AxiosRaidControllerClient("/", axiosInstance),
     raidTypes: new AxiosRaidTypeControllerClient("/", axiosInstance),
+    raidTextChannels: new AxiosRaidTextChannelControllerClient("/", axiosInstance),
     sessions: new AxiosSessionControllerClient("/", axiosInstance),
     users: new AxiosUserControllerClient("/", axiosInstance),
     userCharacters: new AxiosUserCharacterControllerClient("/", axiosInstance)

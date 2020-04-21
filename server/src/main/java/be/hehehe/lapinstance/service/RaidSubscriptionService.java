@@ -191,7 +191,7 @@ public class RaidSubscriptionService {
 			String message = String.format("Hey, tu ne t'es pas inscrit au raid %s du %s!", raid.getRaidType().getLongName(),
 					raid.getFormattedDate());
 			message += System.lineSeparator() + String.format("Tu peux t'inscrire depuis le channel <#%s> ou via la page <%s>",
-					discordService.getTextChannelId(), urlService.getRaidUrl(raidId));
+					raid.getDiscordTextChannelId(), urlService.getRaidUrl(raidId));
 			message += System.lineSeparator() + "Si tu es absent, merci de t'indiquer comme tel.";
 			discordService.sendPrivateMessage(user.getDiscordId(), message);
 		}

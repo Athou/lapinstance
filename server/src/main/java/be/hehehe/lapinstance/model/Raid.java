@@ -39,16 +39,14 @@ public class Raid extends AbstractModel {
 	@Enumerated(EnumType.STRING)
 	private RaidType raidType;
 
-	// The WarcraftLog link
-	private String raidLog;
-
 	private String discordMessageId;
+
+	@NotNull
+	@JsonProperty(required = true)
+	private String discordTextChannelId;
 
 	public final String getFormattedDate() {
 		return new SimpleDateFormat("EEEE dd MMMM yyyy HH:mm", Locale.FRENCH).format(getDate());
 	}
-
-	// TODO add rdv point? (SW, instance, gryph ...)
-	// TODO add Onyxia buff ?
 
 }
