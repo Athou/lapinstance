@@ -1,4 +1,4 @@
-import { Alert, Card, Toaster } from "@blueprintjs/core"
+import { Alert, Card, FormGroup, Toaster } from "@blueprintjs/core"
 import React, { useEffect, useState } from "react"
 import Moment from "react-moment"
 import { Link, useHistory } from "react-router-dom"
@@ -15,6 +15,7 @@ import { RaidNotificationButton } from "../components/raids/RaidNotificationButt
 import { RaidParticipantsCopyButton } from "../components/raids/RaidParticipantsCopyButton"
 import { SubscriptionList } from "../components/subscriptions/SubscriptionList"
 import { SubscriptionSelection } from "../components/subscriptions/SubscriptionSelection"
+import { UserPicker } from "../components/UserPicker"
 import { Routes } from "../Routes"
 
 const toaster = Toaster.create()
@@ -32,6 +33,8 @@ export const RaidPage: React.FC<{ raidId: number }> = props => {
     const [loading, setLoading] = useState(false)
 
     const session = useSession()
+    const [impersonatedUserId, setImpersonatedUserId] = useState(session.user.id)
+
     const history = useHistory()
 
     const participants = subscriptions.filter(sub => sub.response === "PRESENT")
@@ -44,12 +47,12 @@ export const RaidPage: React.FC<{ raidId: number }> = props => {
             client.raids
                 .saveRaidSubscription(props.raidId, {
                     response: response ?? RaidSubscriptionResponse.PRESENT,
-                    userId: session.user.id,
+                    userId: impersonatedUserId,
                     characterId: character?.id
                 })
                 .then(resp => {
                     setSubscriptions(subs => {
-                        const subsWithRemovedUserSubs = subs.filter(s => s.user.id !== session.user.id)
+                        const subsWithRemovedUserSubs = subs.filter(s => s.user.id !== impersonatedUserId)
                         return [...subsWithRemovedUserSubs, resp.data]
                     })
                     toaster.show({
@@ -65,18 +68,18 @@ export const RaidPage: React.FC<{ raidId: number }> = props => {
         Promise.all([
             client.raids.getRaid(props.raidId),
             client.raids.findRaidSubscriptions(props.raidId),
-            client.users.findAllUserCharacters(session.user.id)
+            client.users.findAllUserCharacters(impersonatedUserId)
         ])
             .then(([raidResp, subscriptionsResp, userCharactersResp]) => {
                 setRaid(raidResp.data)
                 setSubscriptions(subscriptionsResp.data)
                 setUserCharacters(userCharactersResp.data)
 
-                const userSubscription = subscriptionsResp.data.find(s => s.user.id === session.user.id)
+                const userSubscription = subscriptionsResp.data.find(s => s.user.id === impersonatedUserId)
                 setSubscription(userSubscription)
             })
             .finally(() => setLoading(false))
-    }, [props.raidId, session.user.id])
+    }, [props.raidId, impersonatedUserId])
 
     if (loading || !raid) return <Loader />
     return (
@@ -124,7 +127,14 @@ export const RaidPage: React.FC<{ raidId: number }> = props => {
                         <span>.</span>
                     </div>
                 ) : (
-                    <SubscriptionSelection subscription={subscription} characters={userCharacters} onSave={saveSubscription} />
+                    <>
+                        {session.hasRole(UserRole.ADMIN) && (
+                            <FormGroup label="Se faire passer pour">
+                                <UserPicker userId={impersonatedUserId} onChange={id => setImpersonatedUserId(id)} />
+                            </FormGroup>
+                        )}
+                        <SubscriptionSelection subscription={subscription} characters={userCharacters} onSave={saveSubscription} />
+                    </>
                 )}
             </StyledCard>
         </>
