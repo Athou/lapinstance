@@ -148,6 +148,14 @@ public class RaidSubscriptionService {
 			throw new UserDisabledException();
 		}
 
+		if (subscription.getCharacter() != null) {
+			UserCharacter userCharacter = userCharacterRepository.findById(subscription.getCharacter().getId())
+					.orElseThrow(ResourceNotFoundException::new);
+			if (userCharacter.getUser().getId() != user.getId()) {
+				throw new MissingCharacterException();
+			}
+		}
+
 		// remove existing subscriptions
 		List<RaidSubscription> existingSubscriptions = raidSubscriptionRepository.findByRaidIdAndUserId(subscription.getRaid().getId(),
 				user.getId());
