@@ -1,7 +1,6 @@
 package be.hehehe.lapinstance.service;
 
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -138,11 +137,6 @@ public class RaidSubscriptionService {
 			throw new MissingCharacterException();
 		}
 
-		Raid raid = raidRepository.findById(subscription.getRaid().getId()).orElseThrow(ResourceNotFoundException::new);
-		if (raid.getDate().before(new Date())) {
-			throw new PastRaidDateException();
-		}
-
 		User user = userRepository.findById(subscription.getUser().getId()).orElseThrow(ResourceNotFoundException::new);
 		if (user.isDisabled()) {
 			throw new UserDisabledException();
@@ -210,10 +204,6 @@ public class RaidSubscriptionService {
 	}
 
 	public static class MissingCharacterException extends RuntimeException {
-		private static final long serialVersionUID = 1L;
-	}
-
-	public static class PastRaidDateException extends RuntimeException {
 		private static final long serialVersionUID = 1L;
 	}
 

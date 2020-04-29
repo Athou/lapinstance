@@ -1,6 +1,7 @@
 package be.hehehe.lapinstance.service.discord;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -42,7 +43,9 @@ import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
+import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.requests.ErrorResponse;
 
 @Service
 @Slf4j
@@ -137,15 +140,19 @@ public class DiscordService {
 		return raidTextChannels;
 	}
 
-	// TODO make caller handle raid.discordMessageId update ?
 	public void sendOrUpdateEmbed(long raidId) {
 		Raid raid = getRaid(raidId);
 		List<RaidSubscription> subscriptions = raidSubscriptionRepository.findByRaidId(raidId);
 		TextChannel textChannel = guild.getTextChannelById(raid.getDiscordTextChannelId());
+		if (textChannel == null) {
+			String defaultTextChannelId = this.raidTextChannels.get(0).getId();
+			textChannel = guild.getTextChannelById(defaultTextChannelId);
+			log.warn("text channel {} does not exist, using default text channel {}", raid.getDiscordTextChannelId(), defaultTextChannelId);
+		}
 
 		Map<Long, UserCharacter> mainCharactersByUserId = userCharacterRepository.findAll()
 				.stream()
-				.filter(c -> c.isMain())
+				.filter(UserCharacter::isMain)
 				.collect(Collectors.toMap(c -> c.getUser().getId(), c -> c));
 		List<SubscriptionModel> subscriptionModels = buildSubscriptionModels(subscriptions, mainCharactersByUserId);
 		MessageEmbed embed = discordEmbedService.buildEmbed(raid, subscriptionModels, urlService.getRaidUrl(raid.getId()));
@@ -154,8 +161,17 @@ public class DiscordService {
 		if (raid.getDiscordMessageId() != null) {
 			try {
 				message = textChannel.retrieveMessageById(raid.getDiscordMessageId()).complete();
-			} catch (Exception e) {
-				log.warn("message {} not found for raid {}", raid.getDiscordMessageId(), raid.getId(), e);
+			} catch (ErrorResponseException e) {
+				if (e.getErrorResponse() == ErrorResponse.UNKNOWN_MESSAGE) {
+					if (raid.getDate().before(new Date())) {
+						log.info("message {} not found for raid {} in the past, skipping", raid.getDiscordMessageId(), raid.getId());
+						return;
+					} else {
+						log.warn("message {} not found for raid {}", raid.getDiscordMessageId(), raid.getId());
+					}
+				} else {
+					throw e;
+				}
 			}
 		}
 
