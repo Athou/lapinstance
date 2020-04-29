@@ -1,4 +1,5 @@
-body {
+body,
+.rbc-overlay {
     background-color: #293742;
 }
 

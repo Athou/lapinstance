@@ -88,6 +88,7 @@ export const RaidCalendar: React.FC<{
                     resource.type === "raid" && props.onRaidSelect(resource.raid.id)
                 }}
                 components={{ toolbar: Toolbar }}
+                popup={true}
             />
         </>
     )
