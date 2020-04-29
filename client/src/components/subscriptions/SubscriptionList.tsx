@@ -1,4 +1,5 @@
 import { H4, H5 } from "@blueprintjs/core"
+import _ from "lodash"
 import React from "react"
 import { Col, Grid, Row } from "react-flexbox-grid"
 import { useHistory } from "react-router-dom"
@@ -9,7 +10,11 @@ import { useSession } from "../../App"
 import { Routes } from "../../Routes"
 import { SpecIcon } from "../spec-icons/SpecIcon"
 
-export const SubscriptionList: React.FC<{ subscriptions: RaidSubscription[] }> = props => {
+export type SubscriptionModel = RaidSubscription & {
+    mainCharacterName?: string
+}
+
+export const SubscriptionList: React.FC<{ subscriptions: SubscriptionModel[] }> = props => {
     const presents = props.subscriptions.filter(sub => sub.response === "PRESENT")
     const absents = props.subscriptions.filter(sub => sub.response === "ABSENT")
     const lates = props.subscriptions.filter(sub => sub.response === "LATE")
@@ -48,40 +53,37 @@ export const SubscriptionList: React.FC<{ subscriptions: RaidSubscription[] }> =
     )
 }
 
-type StyledCharacterNameProps = {
-    user: boolean
-}
-const StyledCharacterName = styled.span`
+const CharacterName = styled.span`
     margin-left: 0.2rem;
-    color: ${(props: StyledCharacterNameProps) => (props.user ? "yellow" : "inherit")};
+    color: ${(props: { user: boolean }) => (props.user ? "yellow" : "inherit")};
     &:hover {
         text-decoration: underline;
         cursor: pointer;
     }
 `
 
+const MainCharacterName = styled.span`
+    color: gray;
+    margin-left: 0.2rem;
+    font-size: 80%;
+`
+
 const CharactersWrapper = styled.div`
     margin-bottom: 2rem;
 `
 
-const RaidSubscriptionList: React.FC<{ title: string; subscriptions: RaidSubscription[] }> = props => {
+const RaidSubscriptionList: React.FC<{ title: string; subscriptions: SubscriptionModel[] }> = props => {
     const session = useSession()
     const history = useHistory()
 
-    const buildSubscriptionDisplayName = (subscription: RaidSubscription) =>
-        subscription.character ? subscription.character.name : subscription.user.name
+    const sortedSubscriptions = _.sortBy(
+        props.subscriptions,
+        s => s.character?.spec,
+        s => s.character?.name,
+        s => s.mainCharacterName,
+        s => s.user.name
+    )
 
-    const sortedSubscriptions = props.subscriptions.sort((a, b) => {
-        const nameA = buildSubscriptionDisplayName(a)
-        const nameB = buildSubscriptionDisplayName(b)
-
-        if (a.character && b.character) {
-            if (a.character.spec === b.character.spec) return nameA.localeCompare(nameB)
-            return a.character.spec.localeCompare(b.character.spec)
-        } else {
-            return nameA.localeCompare(nameB)
-        }
-    })
     return (
         <>
             <H5>{`${props.title} (${sortedSubscriptions.length})`}</H5>
@@ -89,12 +91,15 @@ const RaidSubscriptionList: React.FC<{ title: string; subscriptions: RaidSubscri
                 {sortedSubscriptions.map(sub => (
                     <div key={sub.id}>
                         {sub.character && <SpecIcon spec={sub.character.spec} />}
-                        <StyledCharacterName
+                        <CharacterName
                             user={session.user.id === sub.user.id}
                             onClick={() => history.push(Routes.user.show.create({ userId: String(sub.user.id) }))}
                         >
-                            {buildSubscriptionDisplayName(sub)}
-                        </StyledCharacterName>
+                            {sub.character?.name ?? sub.mainCharacterName ?? sub.user.name}
+                        </CharacterName>
+                        {sub.character && !sub.character.main && sub.mainCharacterName && (
+                            <MainCharacterName>{sub.mainCharacterName}</MainCharacterName>
+                        )}
                     </div>
                 ))}
             </CharactersWrapper>

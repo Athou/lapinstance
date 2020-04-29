@@ -13,7 +13,7 @@ import { Loader } from "../components/Loader"
 import { PageTitle } from "../components/PageTitle"
 import { RaidNotificationButton } from "../components/raids/RaidNotificationButton"
 import { RaidParticipantsCopyButton } from "../components/raids/RaidParticipantsCopyButton"
-import { SubscriptionList } from "../components/subscriptions/SubscriptionList"
+import { SubscriptionList, SubscriptionModel } from "../components/subscriptions/SubscriptionList"
 import { SubscriptionSelection } from "../components/subscriptions/SubscriptionSelection"
 import { UserPicker } from "../components/UserPicker"
 import { Routes } from "../Routes"
@@ -25,23 +25,26 @@ const StyledCard = styled(Card)`
 `
 
 export const RaidPage: React.FC<{ raidId: number }> = props => {
+    const session = useSession()
+    const history = useHistory()
+
     const [raid, setRaid] = useState<Raid>()
     const [subscriptions, setSubscriptions] = useState<RaidSubscription[]>([])
     const [userCharacters, setUserCharacters] = useState<UserCharacter[]>([])
     const [subscription, setSubscription] = useState<RaidSubscription>()
     const [deleteAlertOpen, setDeleteAlertOpen] = useState(false)
     const [loading, setLoading] = useState(false)
-
-    const session = useSession()
     const [impersonatedUserId, setImpersonatedUserId] = useState(session.user.id)
 
-    const history = useHistory()
-
     const participants = subscriptions.filter(sub => sub.response === "PRESENT")
+    const impersonatedUserCharacters = userCharacters.filter(c => c.user.id === impersonatedUserId)
+    const subscriptionModels: SubscriptionModel[] = subscriptions.map(s => ({
+        ...s,
+        mainCharacterName: userCharacters.find(c => c.main && c.user.id === s.user.id)?.name
+    }))
 
     const editRaid = (raidId: number) => history.push(Routes.raid.edit.create({ raidId: String(raidId) }))
     const deleteRaid = (raidId: number) => client.raids.deleteRaid(raidId).then(() => history.push(Routes.raid.list.create({})))
-
     const saveSubscription = (character: UserCharacter | undefined, response: RaidSubscriptionResponse | undefined) => {
         raid &&
             client.raids
@@ -68,7 +71,7 @@ export const RaidPage: React.FC<{ raidId: number }> = props => {
         Promise.all([
             client.raids.getRaid(props.raidId),
             client.raids.findRaidSubscriptions(props.raidId),
-            client.users.findAllUserCharacters(impersonatedUserId)
+            client.userCharacters.findAllUserCharacters()
         ])
             .then(([raidResp, subscriptionsResp, userCharactersResp]) => {
                 setRaid(raidResp.data)
@@ -116,11 +119,11 @@ export const RaidPage: React.FC<{ raidId: number }> = props => {
             <StyledCard>
                 <p>{raid.comment}</p>
 
-                <SubscriptionList subscriptions={subscriptions} />
+                <SubscriptionList subscriptions={subscriptionModels} />
             </StyledCard>
 
             <StyledCard>
-                {userCharacters.length === 0 ? (
+                {impersonatedUserCharacters.length === 0 ? (
                     <div>
                         <span>Pour participer à ce raid, crée un personnage sur ta </span>
                         <Link to={Routes.profile.create({})}>page de profil</Link>
@@ -133,7 +136,11 @@ export const RaidPage: React.FC<{ raidId: number }> = props => {
                                 <UserPicker userId={impersonatedUserId} onChange={id => setImpersonatedUserId(id)} />
                             </FormGroup>
                         )}
-                        <SubscriptionSelection subscription={subscription} characters={userCharacters} onSave={saveSubscription} />
+                        <SubscriptionSelection
+                            subscription={subscription}
+                            characters={impersonatedUserCharacters}
+                            onSave={saveSubscription}
+                        />
                     </>
                 )}
             </StyledCard>
