@@ -21,7 +21,7 @@ import net.dv8tion.jda.api.entities.MessageEmbed.Field;
 
 @Service
 @RequiredArgsConstructor
-class DiscordEmbedService {
+public class DiscordEmbedService {
 
 	private final DiscordEmoteService discordEmoteService;
 

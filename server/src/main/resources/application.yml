@@ -20,6 +20,8 @@ spring:
       client:
         registration:
           discord:
+            client-id: <stub>
+            client-secret: <stub>
             client-authentication-method: post
             authorization-grant-type: authorization_code
             scope:

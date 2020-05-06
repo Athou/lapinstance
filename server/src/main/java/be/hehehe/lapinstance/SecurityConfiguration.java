@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.RequestEntity;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -28,18 +29,29 @@ import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequestEntityConverter;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.security.oauth2.core.user.OAuth2User;
+import org.springframework.web.context.annotation.ApplicationScope;
 import org.springframework.web.context.annotation.SessionScope;
 
+import com.google.common.base.Strings;
+import com.google.common.collect.Sets;
+
 import be.hehehe.lapinstance.model.User;
+import be.hehehe.lapinstance.repository.RaidRepository;
+import be.hehehe.lapinstance.repository.RaidSubscriptionRepository;
+import be.hehehe.lapinstance.repository.UserCharacterRepository;
+import be.hehehe.lapinstance.service.URLService;
 import be.hehehe.lapinstance.service.UserService;
+import be.hehehe.lapinstance.service.discord.DiscordEmbedService;
+import be.hehehe.lapinstance.service.discord.DiscordEmoteService;
 import be.hehehe.lapinstance.service.discord.DiscordService;
+import be.hehehe.lapinstance.service.discord.DiscordServiceImpl;
+import be.hehehe.lapinstance.service.discord.DiscordServiceStub;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-@RequiredArgsConstructor(onConstructor_ = { @Autowired })
 @Slf4j
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
@@ -48,23 +60,33 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 	private final UserService userService;
 	private final DiscordService discordService;
+	private final boolean discordIntegrationEnabled;
+
+	@Autowired
+	public SecurityConfiguration(UserService userService, DiscordService discordService, Environment env) {
+		this.userService = userService;
+		this.discordService = discordService;
+		this.discordIntegrationEnabled = !Strings.isNullOrEmpty(env.getProperty("jda.discord.token"));
+	}
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.csrf().disable();
-
 		http.logout().logoutSuccessUrl("/");
 
-		http.authorizeRequests()
-				.anyRequest()
-				.hasAuthority(UserRole.USER.name())
-				.and()
-				.oauth2Login()
-				.tokenEndpoint()
-				.accessTokenResponseClient(accessTokenResponseClient())
-				.and()
-				.userInfoEndpoint()
-				.userService(userService());
+		if (discordIntegrationEnabled) {
+			http.authorizeRequests()
+					.anyRequest()
+					.hasAuthority(UserRole.USER.name())
+					.and()
+					.oauth2Login()
+					.tokenEndpoint()
+					.accessTokenResponseClient(accessTokenResponseClient())
+					.and()
+					.userInfoEndpoint()
+					.userService(userService());
+		}
+
 	}
 
 	private OAuth2AccessTokenResponseClient<OAuth2AuthorizationCodeGrantRequest> accessTokenResponseClient() {
@@ -131,12 +153,30 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	@Bean
 	@SessionScope
 	public SecurityContext securityContext() {
+		if (!discordIntegrationEnabled) {
+			User user = userService.getDefaultUser();
+			return new SecurityContext(user.getId(), user.getName(), Sets.newHashSet(UserRole.ADMIN, UserRole.USER));
+		}
+
 		OAuth2AuthenticationToken authentication = (OAuth2AuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
 		OAuth2User oAuth2User = authentication.getPrincipal();
 		Long userId = oAuth2User.getAttribute(ATTRIBUTE_KEY_USER_ID);
 		String userName = oAuth2User.getName();
 		Set<UserRole> roles = oAuth2User.getAuthorities().stream().map(a -> UserRole.valueOf(a.getAuthority())).collect(Collectors.toSet());
 		return new SecurityContext(userId, userName, roles);
+	}
+
+	@Bean
+	@ApplicationScope
+	public DiscordService discordService(RaidRepository raidRepository, RaidSubscriptionRepository raidSubscriptionRepository,
+			UserCharacterRepository userCharacterRepository, URLService urlService, DiscordEmbedService discordEmbedService,
+			DiscordEmoteService discordEmoteService, Environment env) {
+		if (!discordIntegrationEnabled) {
+			return new DiscordServiceStub();
+		}
+
+		return new DiscordServiceImpl(raidRepository, raidSubscriptionRepository, userCharacterRepository, urlService, discordEmbedService,
+				discordEmoteService, env);
 	}
 
 	@Getter

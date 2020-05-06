@@ -17,7 +17,7 @@ import be.hehehe.lapinstance.model.RaidSubscriptionResponse;
 import lombok.RequiredArgsConstructor;
 
 @Service
-class DiscordEmoteService {
+public class DiscordEmoteService {
 
 	private static final Map<CharacterRole, DiscordEmoji> CHARACTER_ROLE_EMOTES = ImmutableMap.of(CharacterRole.DPS_CAC,
 			new DiscordEmoji("⚔️"), CharacterRole.DPS_RANGED, new DiscordEmoji("🏹"), CharacterRole.HEAL, new DiscordEmoji("💉"));

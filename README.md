@@ -24,7 +24,7 @@ mvnw clean install
 
 ### Backend
 
-Create an application on https://discordapp.com/developers/applications, copy (not rename)
+Lapinstance can start out of the box without discord integration. To enable Discord integration, create an application on https://discordapp.com/developers/applications, copy (not rename)
 `src/main/resources/application-default.yml.example` to `src/main/resources/application-default.yml`
 and fill all the fields (icons are optional).
 
