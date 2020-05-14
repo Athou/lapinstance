@@ -5,6 +5,7 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -16,7 +17,7 @@ import lombok.Setter;
  * A subscription to a {@link Raid}. This is the RSVP of a {@link UserCharacter} to a specific {@link Raid}.
  */
 @Entity
-@Table(name = "RAID_SUBSCRIPTIONS")
+@Table(name = "RAID_SUBSCRIPTIONS", uniqueConstraints = { @UniqueConstraint(columnNames = { "raid_id", "user_id" }) })
 @Getter
 @Setter
 public class RaidSubscription extends AbstractModel {
