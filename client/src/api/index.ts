@@ -1,6 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
-// Generated using typescript-generator version 2.19.577 on 2020-04-21 11:15:03.
+// Generated using typescript-generator version 2.19.577 on 2020-05-14 08:28:20.
 
 export interface AbstractModel {
     id: number;
@@ -21,6 +21,7 @@ export interface RaidParticipant extends AbstractModel {
 }
 
 export interface RaidSubscription extends AbstractModel {
+    date: DateAsNumber;
     raid: Raid;
     response: RaidSubscriptionResponse;
     character?: UserCharacter;
@@ -78,6 +79,48 @@ export interface SaveUserCharacterRequest {
 export interface HttpClient<O> {
 
     request<R>(requestConfig: { method: string; url: string; queryParams?: any; data?: any; copyFn?: (data: R) => R; options?: O; }): RestResponse<R>;
+}
+
+export class RaidTextChannelControllerClient<O> {
+
+    constructor(protected httpClient: HttpClient<O>) {
+    }
+
+    /**
+     * HTTP GET /raidTextChannels
+     * Java method: be.hehehe.lapinstance.controller.RaidTextChannelController.getAll
+     */
+    getAll(options?: O): RestResponse<RaidTextChannel[]> {
+        return this.httpClient.request({ method: "GET", url: uriEncoding`raidTextChannels`, options: options });
+    }
+}
+
+export class SessionControllerClient<O> {
+
+    constructor(protected httpClient: HttpClient<O>) {
+    }
+
+    /**
+     * HTTP GET /session/user
+     * Java method: be.hehehe.lapinstance.controller.SessionController.getCurrentUser
+     */
+    getCurrentUser(options?: O): RestResponse<Session> {
+        return this.httpClient.request({ method: "GET", url: uriEncoding`session/user`, options: options });
+    }
+}
+
+export class RaidTypeControllerClient<O> {
+
+    constructor(protected httpClient: HttpClient<O>) {
+    }
+
+    /**
+     * HTTP GET /raidTypes/{raidType}/nextReset
+     * Java method: be.hehehe.lapinstance.controller.RaidTypeController.nextReset
+     */
+    nextReset(raidType: RaidType, queryParams: { from: number; until: number; }, options?: O): RestResponse<DateAsNumber[]> {
+        return this.httpClient.request({ method: "GET", url: uriEncoding`raidTypes/${raidType}/nextReset`, queryParams: queryParams, options: options });
+    }
 }
 
 export class RaidControllerClient<O> {
@@ -204,34 +247,6 @@ export class UserControllerClient<O> {
     }
 }
 
-export class RaidTypeControllerClient<O> {
-
-    constructor(protected httpClient: HttpClient<O>) {
-    }
-
-    /**
-     * HTTP GET /raidTypes/{raidType}/nextReset
-     * Java method: be.hehehe.lapinstance.controller.RaidTypeController.nextReset
-     */
-    nextReset(raidType: RaidType, queryParams: { from: number; until: number; }, options?: O): RestResponse<DateAsNumber[]> {
-        return this.httpClient.request({ method: "GET", url: uriEncoding`raidTypes/${raidType}/nextReset`, queryParams: queryParams, options: options });
-    }
-}
-
-export class SessionControllerClient<O> {
-
-    constructor(protected httpClient: HttpClient<O>) {
-    }
-
-    /**
-     * HTTP GET /session/user
-     * Java method: be.hehehe.lapinstance.controller.SessionController.getCurrentUser
-     */
-    getCurrentUser(options?: O): RestResponse<Session> {
-        return this.httpClient.request({ method: "GET", url: uriEncoding`session/user`, options: options });
-    }
-}
-
 export class UserCharacterControllerClient<O> {
 
     constructor(protected httpClient: HttpClient<O>) {
@@ -243,20 +258,6 @@ export class UserCharacterControllerClient<O> {
      */
     findAllUserCharacters(options?: O): RestResponse<UserCharacter[]> {
         return this.httpClient.request({ method: "GET", url: uriEncoding`userCharacters`, options: options });
-    }
-}
-
-export class RaidTextChannelControllerClient<O> {
-
-    constructor(protected httpClient: HttpClient<O>) {
-    }
-
-    /**
-     * HTTP GET /raidTextChannels
-     * Java method: be.hehehe.lapinstance.controller.RaidTextChannelController.getAll
-     */
-    getAll(options?: O): RestResponse<RaidTextChannel[]> {
-        return this.httpClient.request({ method: "GET", url: uriEncoding`raidTextChannels`, options: options });
     }
 }
 
@@ -382,6 +383,30 @@ class AxiosHttpClient implements HttpClient<Axios.AxiosRequestConfig> {
     }
 }
 
+export class AxiosRaidTextChannelControllerClient extends RaidTextChannelControllerClient<Axios.AxiosRequestConfig> {
+
+    constructor(baseURL: string, axiosInstance: Axios.AxiosInstance = axios.create()) {
+        axiosInstance.defaults.baseURL = baseURL;
+        super(new AxiosHttpClient(axiosInstance));
+    }
+}
+
+export class AxiosSessionControllerClient extends SessionControllerClient<Axios.AxiosRequestConfig> {
+
+    constructor(baseURL: string, axiosInstance: Axios.AxiosInstance = axios.create()) {
+        axiosInstance.defaults.baseURL = baseURL;
+        super(new AxiosHttpClient(axiosInstance));
+    }
+}
+
+export class AxiosRaidTypeControllerClient extends RaidTypeControllerClient<Axios.AxiosRequestConfig> {
+
+    constructor(baseURL: string, axiosInstance: Axios.AxiosInstance = axios.create()) {
+        axiosInstance.defaults.baseURL = baseURL;
+        super(new AxiosHttpClient(axiosInstance));
+    }
+}
+
 export class AxiosRaidControllerClient extends RaidControllerClient<Axios.AxiosRequestConfig> {
 
     constructor(baseURL: string, axiosInstance: Axios.AxiosInstance = axios.create()) {
@@ -398,31 +423,7 @@ export class AxiosUserControllerClient extends UserControllerClient<Axios.AxiosR
     }
 }
 
-export class AxiosRaidTypeControllerClient extends RaidTypeControllerClient<Axios.AxiosRequestConfig> {
-
-    constructor(baseURL: string, axiosInstance: Axios.AxiosInstance = axios.create()) {
-        axiosInstance.defaults.baseURL = baseURL;
-        super(new AxiosHttpClient(axiosInstance));
-    }
-}
-
-export class AxiosSessionControllerClient extends SessionControllerClient<Axios.AxiosRequestConfig> {
-
-    constructor(baseURL: string, axiosInstance: Axios.AxiosInstance = axios.create()) {
-        axiosInstance.defaults.baseURL = baseURL;
-        super(new AxiosHttpClient(axiosInstance));
-    }
-}
-
 export class AxiosUserCharacterControllerClient extends UserCharacterControllerClient<Axios.AxiosRequestConfig> {
-
-    constructor(baseURL: string, axiosInstance: Axios.AxiosInstance = axios.create()) {
-        axiosInstance.defaults.baseURL = baseURL;
-        super(new AxiosHttpClient(axiosInstance));
-    }
-}
-
-export class AxiosRaidTextChannelControllerClient extends RaidTextChannelControllerClient<Axios.AxiosRequestConfig> {
 
     constructor(baseURL: string, axiosInstance: Axios.AxiosInstance = axios.create()) {
         axiosInstance.defaults.baseURL = baseURL;

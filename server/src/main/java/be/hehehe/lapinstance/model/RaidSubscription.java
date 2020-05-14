@@ -1,10 +1,14 @@
 package be.hehehe.lapinstance.model;
 
+import java.util.Date;
+
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
@@ -21,6 +25,11 @@ import lombok.Setter;
 @Getter
 @Setter
 public class RaidSubscription extends AbstractModel {
+
+	@NotNull
+	@JsonProperty(required = true)
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date date;
 
 	@NotNull
 	@JsonProperty(required = true)

@@ -1,8 +1,10 @@
 package be.hehehe.lapinstance.service;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
@@ -80,6 +82,7 @@ public class RaidSubscriptionService {
 				}
 
 				RaidSubscription sub = new RaidSubscription();
+				sub.setDate(new Date());
 				sub.setRaid(raid);
 				sub.setUser(user);
 				sub.setCharacter(userCharacter);
@@ -106,6 +109,7 @@ public class RaidSubscriptionService {
 				}
 
 				RaidSubscription sub = new RaidSubscription();
+				sub.setDate(new Date());
 				sub.setRaid(raid);
 				sub.setUser(user);
 				sub.setResponse(response);
@@ -150,10 +154,13 @@ public class RaidSubscriptionService {
 			}
 		}
 
-		// remove existing subscriptions
-		List<RaidSubscription> existingSubscriptions = raidSubscriptionRepository.findByRaidIdAndUserId(subscription.getRaid().getId(),
+		Optional<RaidSubscription> existingSubscription = raidSubscriptionRepository.findByRaidIdAndUserId(subscription.getRaid().getId(),
 				user.getId());
-		raidSubscriptionRepository.deleteAll(existingSubscriptions);
+		if (existingSubscription.isPresent()) {
+			subscription.setDate(existingSubscription.get().getDate());
+			raidSubscriptionRepository.delete(existingSubscription.get());
+			raidSubscriptionRepository.flush();
+		}
 
 		// save subscription
 		RaidSubscription updatedSubscription = raidSubscriptionRepository.save(subscription);

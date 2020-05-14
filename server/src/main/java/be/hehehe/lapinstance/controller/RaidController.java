@@ -92,6 +92,7 @@ public class RaidController {
 		}
 
 		RaidSubscription sub = new RaidSubscription();
+		sub.setDate(new Date());
 		sub.setRaid(raidRepository.findById(raidId).orElseThrow(ResourceNotFoundException::new));
 		sub.setUser(userRepository.findById(req.getUserId()).orElseThrow(ResourceNotFoundException::new));
 		sub.setResponse(req.getResponse());

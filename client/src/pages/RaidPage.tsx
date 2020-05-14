@@ -1,4 +1,5 @@
-import { Alert, Card, FormGroup, Toaster } from "@blueprintjs/core"
+import { Alert, Card, FormGroup, Switch, Toaster } from "@blueprintjs/core"
+import _ from "lodash"
 import React, { useEffect, useState } from "react"
 import Moment from "react-moment"
 import { Link, useHistory } from "react-router-dom"
@@ -32,15 +33,17 @@ export const RaidPage: React.FC<{ raidId: number }> = props => {
     const [subscriptions, setSubscriptions] = useState<RaidSubscription[]>([])
     const [userCharacters, setUserCharacters] = useState<UserCharacter[]>([])
     const [subscription, setSubscription] = useState<RaidSubscription>()
+    const [showIndexes, setShowIndexes] = useState(false)
     const [deleteAlertOpen, setDeleteAlertOpen] = useState(false)
     const [loading, setLoading] = useState(false)
     const [impersonatedUserId, setImpersonatedUserId] = useState(session.user.id)
 
     const participants = subscriptions.filter(sub => sub.response === "PRESENT")
     const impersonatedUserCharacters = userCharacters.filter(c => c.user.id === impersonatedUserId)
-    const subscriptionModels: SubscriptionModel[] = subscriptions.map(s => ({
+    const subscriptionModels: SubscriptionModel[] = _.sortBy(subscriptions, s => s.date).map((s, i) => ({
         ...s,
-        mainCharacterName: userCharacters.find(c => c.main && c.user.id === s.user.id)?.name
+        mainCharacterName: userCharacters.find(c => c.main && c.user.id === s.user.id)?.name,
+        index: i
     }))
 
     const editRaid = (raidId: number) => history.push(Routes.raid.edit.create({ raidId: String(raidId) }))
@@ -94,9 +97,9 @@ export const RaidPage: React.FC<{ raidId: number }> = props => {
                     </PageTitle>
                 </Box>
                 <Box>
+                    <RaidParticipantsCopyButton subscriptions={participants} />
                     {session.hasRole(UserRole.ADMIN) && (
                         <>
-                            <RaidParticipantsCopyButton subscriptions={participants} />
                             <RaidNotificationButton raidId={raid.id} />
                             <ActionButton onClick={() => editRaid(raid.id)} icon="edit" marginRight />
                             <ActionButton onClick={() => setDeleteAlertOpen(true)} icon="trash" intent="danger" />
@@ -119,7 +122,8 @@ export const RaidPage: React.FC<{ raidId: number }> = props => {
             <StyledCard>
                 <p>{raid.comment}</p>
 
-                <SubscriptionList subscriptions={subscriptionModels} />
+                <SubscriptionList subscriptions={subscriptionModels} showIndexes={showIndexes} />
+                <Switch checked={showIndexes} label="Ordre d'inscription" onChange={() => setShowIndexes(!showIndexes)} />
             </StyledCard>
 
             <StyledCard>

@@ -1,6 +1,7 @@
 package be.hehehe.lapinstance.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.transaction.Transactional;
 
@@ -14,7 +15,7 @@ public interface RaidSubscriptionRepository extends JpaRepository<RaidSubscripti
 
 	List<RaidSubscription> findByUserId(long userId);
 
-	List<RaidSubscription> findByRaidIdAndUserId(long raidId, long userId);
+	Optional<RaidSubscription> findByRaidIdAndUserId(long raidId, long userId);
 
 	@Transactional
 	void deleteByRaidId(Long raidId);

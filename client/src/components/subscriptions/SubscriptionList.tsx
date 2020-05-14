@@ -1,7 +1,8 @@
-import { H4, H5 } from "@blueprintjs/core"
+import { H4, H5, Tag, Tooltip } from "@blueprintjs/core"
 import _ from "lodash"
 import React from "react"
 import { Col, Grid, Row } from "react-flexbox-grid"
+import Moment from "react-moment"
 import { useHistory } from "react-router-dom"
 import styled from "styled-components"
 import { RaidSubscription } from "../../api"
@@ -12,9 +13,10 @@ import { SpecIcon } from "../spec-icons/SpecIcon"
 
 export type SubscriptionModel = RaidSubscription & {
     mainCharacterName?: string
+    index: number
 }
 
-export const SubscriptionList: React.FC<{ subscriptions: SubscriptionModel[] }> = props => {
+export const SubscriptionList: React.FC<{ subscriptions: SubscriptionModel[]; showIndexes: boolean }> = props => {
     const presents = props.subscriptions.filter(sub => sub.response === "PRESENT")
     const absents = props.subscriptions.filter(sub => sub.response === "ABSENT")
     const lates = props.subscriptions.filter(sub => sub.response === "LATE")
@@ -23,7 +25,7 @@ export const SubscriptionList: React.FC<{ subscriptions: SubscriptionModel[] }> 
     const roleList = (role: CharacterRole) => {
         const subs = presents.filter(sub => sub.character && specToRoleMapping[sub.character.spec] === role)
         const title = characterRoleLabels[role]
-        return <RaidSubscriptionList title={title} subscriptions={subs} />
+        return <RaidSubscriptionList title={title} subscriptions={subs} showIndexes={props.showIndexes} />
     }
 
     return (
@@ -38,13 +40,13 @@ export const SubscriptionList: React.FC<{ subscriptions: SubscriptionModel[] }> 
                 </Row>
                 <Row>
                     <Col xs>
-                        <RaidSubscriptionList title="En retard" subscriptions={lates} />
+                        <RaidSubscriptionList title="En retard" subscriptions={lates} showIndexes={props.showIndexes} />
                     </Col>
                     <Col xs>
-                        <RaidSubscriptionList title="Bench" subscriptions={benches} />
+                        <RaidSubscriptionList title="Bench" subscriptions={benches} showIndexes={props.showIndexes} />
                     </Col>
                     <Col xs>
-                        <RaidSubscriptionList title="Absents" subscriptions={absents} />
+                        <RaidSubscriptionList title="Absents" subscriptions={absents} showIndexes={props.showIndexes} />
                     </Col>
                     <Col xs></Col>
                 </Row>
@@ -72,7 +74,7 @@ const CharactersWrapper = styled.div`
     margin-bottom: 2rem;
 `
 
-const RaidSubscriptionList: React.FC<{ title: string; subscriptions: SubscriptionModel[] }> = props => {
+const RaidSubscriptionList: React.FC<{ title: string; subscriptions: SubscriptionModel[]; showIndexes: boolean }> = props => {
     const session = useSession()
     const history = useHistory()
 
@@ -91,6 +93,7 @@ const RaidSubscriptionList: React.FC<{ title: string; subscriptions: Subscriptio
                 {sortedSubscriptions.map(sub => (
                     <div key={sub.id}>
                         {sub.character && <SpecIcon spec={sub.character.spec} />}
+                        {props.showIndexes && <RaidSubscriptionOrder index={sub.index} date={sub.date} />}
                         <CharacterName
                             user={session.user.id === sub.user.id}
                             onClick={() => history.push(Routes.user.show.create({ userId: String(sub.user.id) }))}
@@ -104,5 +107,19 @@ const RaidSubscriptionList: React.FC<{ title: string; subscriptions: Subscriptio
                 ))}
             </CharactersWrapper>
         </>
+    )
+}
+
+const StyledTag = styled(Tag)`
+    margin: 0 0.5rem;
+`
+
+const RaidSubscriptionOrder: React.FC<{ index: number; date: number }> = props => {
+    return (
+        <Tooltip content={<Moment format="DD/MM/YYYY HH:mm">{props.date}</Moment>}>
+            <StyledTag minimal={true} round={true}>
+                {props.index + 1}
+            </StyledTag>
+        </Tooltip>
     )
 }
