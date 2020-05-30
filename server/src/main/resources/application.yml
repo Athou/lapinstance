@@ -12,6 +12,11 @@ spring:
   datasource:
     platform: h2
     sql-script-encoding: UTF-8
+  jpa:
+    hibernate:
+      ddl-auto: none
+  liquibase:
+    change-log: classpath:/liquibase/changelog.xml
   jackson:
     serialization:
       WRITE_DATES_AS_TIMESTAMPS: true

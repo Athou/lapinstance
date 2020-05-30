@@ -5,7 +5,6 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
@@ -18,9 +17,7 @@ import lombok.Setter;
  * One of the in-game character of a specific {@link User}.
  */
 @Entity
-@Table(
-		name = "USER_CHARACTERS",
-		uniqueConstraints = { @UniqueConstraint(columnNames = { "name" }), @UniqueConstraint(columnNames = { "user_id", "spec" }) })
+@Table(name = "USER_CHARACTERS")
 @Getter
 @Setter
 public class UserCharacter extends AbstractModel {

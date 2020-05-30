@@ -1,0 +1,100 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.8.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+	<changeSet author="Athou" id="init">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="RAIDS" />
+			</not>
+		</preConditions>
+		<createTable tableName="RAIDS">
+			<column autoIncrement="true" name="id" type="bigint">
+				<constraints nullable="false" primaryKey="true" />
+			</column>
+			<column name="comment" type="varchar(255)" />
+			<column name="date" type="timestamp">
+				<constraints nullable="false" />
+			</column>
+			<column name="discord_message_id" type="varchar(255)" />
+			<column name="discord_text_channel_id" type="varchar(255)">
+				<constraints nullable="false" />
+			</column>
+			<column name="raid_type" type="varchar(255)">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
+		<createTable tableName="RAID_PARTICIPANTS">
+			<column autoIncrement="true" name="id" type="bigint">
+				<constraints nullable="false" primaryKey="true" />
+			</column>
+			<column name="character_id" type="bigint">
+				<constraints nullable="false" />
+			</column>
+			<column name="raid_id" type="bigint">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
+		<createTable tableName="RAID_SUBSCRIPTIONS">
+			<column autoIncrement="true" name="id" type="bigint">
+				<constraints nullable="false" primaryKey="true" />
+			</column>
+			<column name="date" type="timestamp">
+				<constraints nullable="false" />
+			</column>
+			<column name="response" type="varchar(255)">
+				<constraints nullable="false" />
+			</column>
+			<column name="character_id" type="bigint" />
+			<column name="raid_id" type="bigint">
+				<constraints nullable="false" />
+			</column>
+			<column name="user_id" type="bigint">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
+		<createTable tableName="USERS">
+			<column autoIncrement="true" name="id" type="bigint">
+				<constraints nullable="false" primaryKey="true" />
+			</column>
+			<column name="disabled" type="boolean">
+				<constraints nullable="false" />
+			</column>
+			<column name="discord_id" type="varchar(255)" />
+			<column name="name" type="varchar(255)" />
+		</createTable>
+		<createTable tableName="USER_CHARACTERS">
+			<column autoIncrement="true" name="id" type="bigint">
+				<constraints nullable="false" primaryKey="true" />
+			</column>
+			<column name="main" type="boolean">
+				<constraints nullable="false" />
+			</column>
+			<column name="name" type="varchar(255)" />
+			<column name="spec" type="varchar(255)">
+				<constraints nullable="false" />
+			</column>
+			<column name="user_id" type="bigint">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
+
+		<addUniqueConstraint columnNames="raid_id, user_id" tableName="RAID_SUBSCRIPTIONS" />
+		<addUniqueConstraint columnNames="user_id, spec" tableName="USER_CHARACTERS" />
+		<addUniqueConstraint columnNames="name" tableName="USER_CHARACTERS" />
+
+		<addForeignKeyConstraint baseColumnNames="character_id" baseTableName="RAID_PARTICIPANTS"
+			constraintName="FK2EJ3JFXO8J4TONO0VFW3KFH5N" referencedColumnNames="id" referencedTableName="USER_CHARACTERS" />
+		<addForeignKeyConstraint baseColumnNames="raid_id" baseTableName="RAID_PARTICIPANTS"
+			constraintName="FK3XIX4SAKO1J3213K1S65Q38UU" referencedColumnNames="id" referencedTableName="RAIDS" />
+		<addForeignKeyConstraint baseColumnNames="character_id" baseTableName="RAID_SUBSCRIPTIONS"
+			constraintName="FKCQFY0O92CR3OABK1RCNDA60OU" referencedColumnNames="id" referencedTableName="USER_CHARACTERS" />
+		<addForeignKeyConstraint baseColumnNames="user_id" baseTableName="RAID_SUBSCRIPTIONS"
+			constraintName="FKLO4MR4XKPUKADM6G9RSSRXYIQ" referencedColumnNames="id" referencedTableName="USERS" />
+		<addForeignKeyConstraint baseColumnNames="raid_id" baseTableName="RAID_SUBSCRIPTIONS"
+			constraintName="FKMQO6YQXYRYWMLLAR8DJ140XJ5" referencedColumnNames="id" referencedTableName="RAIDS" />
+		<addForeignKeyConstraint baseColumnNames="user_id" baseTableName="USER_CHARACTERS"
+			constraintName="FKRBC83CT95GAOXHUV2T19DP05D" referencedColumnNames="id" referencedTableName="USERS" />
+	</changeSet>
+</databaseChangeLog>
