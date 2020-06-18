@@ -101,4 +101,5 @@
 	<changeSet author="Athou" id="larger-comments">
 		<modifyDataType tableName="RAIDS" columnName="comment" newDataType="clob" />
 	</changeSet>
+
 </databaseChangeLog>

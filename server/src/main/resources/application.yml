@@ -16,7 +16,7 @@ spring:
     hibernate:
       ddl-auto: none
   liquibase:
-    change-log: classpath:/liquibase/changelog.xml
+    change-log: classpath:/liquibase/index.xml
   jackson:
     serialization:
       WRITE_DATES_AS_TIMESTAMPS: true
