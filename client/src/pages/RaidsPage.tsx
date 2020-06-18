@@ -20,9 +20,7 @@ const RaidSection = styled.div`
 export const RaidsPage: React.FC = () => {
     const [raids, setRaids] = useState<Raid[]>([])
     const [raidResets, setRaidResets] = useState<RaidReset[]>([])
-    const [raidResetFilter, setRaidResetFilter] = useState<Map<RaidType, boolean>>(
-        new Map<RaidType, boolean>([[RaidType.ONYXIA, true]])
-    )
+    const [raidResetFilter, setRaidResetFilter] = useState<Map<RaidType, boolean>>(new Map<RaidType, boolean>())
     const [userSubscriptions, setUserSubscriptions] = useState<RaidSubscription[]>()
     const [loading, setLoading] = useState(false)
     const history = useHistory()
