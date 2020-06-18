@@ -97,4 +97,8 @@
 		<addForeignKeyConstraint baseColumnNames="user_id" baseTableName="USER_CHARACTERS"
 			constraintName="FKRBC83CT95GAOXHUV2T19DP05D" referencedColumnNames="id" referencedTableName="USERS" />
 	</changeSet>
+
+	<changeSet author="Athou" id="larger-comments">
+		<modifyDataType tableName="RAIDS" columnName="comment" newDataType="clob" />
+	</changeSet>
 </databaseChangeLog>
