@@ -84,7 +84,7 @@ public class DiscordServiceImpl implements DiscordService {
 
 		if (token != null && !token.isEmpty()) {
 			try {
-				this.jda = new JDABuilder().setToken(token).build().awaitReady();
+				this.jda = JDABuilder.createLight(token).build().awaitReady();
 				this.guild = jda.getGuildById(guildId);
 				this.raidTextChannels = Stream.of(raidTextChannelIds)
 						.map(id -> new RaidTextChannel(id, guild.getTextChannelById(id).getName()))
