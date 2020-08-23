@@ -1,6 +1,11 @@
 package be.hehehe.lapinstance.service;
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import be.hehehe.lapinstance.model.Raid;
@@ -8,8 +13,10 @@ import be.hehehe.lapinstance.repository.RaidRepository;
 import be.hehehe.lapinstance.repository.RaidSubscriptionRepository;
 import be.hehehe.lapinstance.service.discord.DiscordService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor(onConstructor_ = { @Autowired })
 public class RaidService {
 
@@ -28,5 +35,22 @@ public class RaidService {
 
 		raidSubscriptionRepository.deleteByRaidId(raidId);
 		raidRepository.deleteById(raidId);
+	}
+
+	@Scheduled(fixedRate = 1000 * 60 * 60)
+	public void deleteExpiredDiscordMessages() {
+		log.info("deleting expired discord messages...");
+
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.HOUR, -6);
+		Date threshold = cal.getTime();
+
+		List<Raid> raids = raidRepository.findByExpiredDiscordMessages(threshold);
+		for (Raid raid : raids) {
+			log.info("deleting expired discord message for raid {}", raid.getId());
+			discordService.removeEmbed(raid.getId());
+		}
+
+		log.info("done deleting expired discord messages");
 	}
 }
