@@ -44,6 +44,9 @@ import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.requests.ErrorResponse;
+import net.dv8tion.jda.api.requests.GatewayIntent;
+import net.dv8tion.jda.api.utils.ChunkingFilter;
+import net.dv8tion.jda.api.utils.MemberCachePolicy;
 
 @Slf4j
 public class DiscordServiceImpl implements DiscordService {
@@ -84,7 +87,12 @@ public class DiscordServiceImpl implements DiscordService {
 
 		if (token != null && !token.isEmpty()) {
 			try {
-				this.jda = JDABuilder.createLight(token).build().awaitReady();
+				this.jda = JDABuilder.createDefault(token)
+						.setChunkingFilter(ChunkingFilter.ALL)
+						.setMemberCachePolicy(MemberCachePolicy.ALL)
+						.enableIntents(GatewayIntent.GUILD_MEMBERS)
+						.build()
+						.awaitReady();
 				this.guild = jda.getGuildById(guildId);
 				this.raidTextChannels = Stream.of(raidTextChannelIds)
 						.map(id -> new RaidTextChannel(id, guild.getTextChannelById(id).getName()))
