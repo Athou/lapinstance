@@ -111,7 +111,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 				String discordId = oAuth2User.getAttribute("id").toString();
 				String userName = discordService.getUserNickname(discordId)
-						.orElseThrow(() -> new RuntimeException("unauthorized user: " + oAuth2User.getName()));
+						.orElseThrow(
+								() -> new RuntimeException(String.format("unauthorized user: %s (%s)", oAuth2User.getName(), discordId)));
 
 				User user = userService.saveOrUpdate(discordId, userName);
 				if (user.isDisabled()) {
