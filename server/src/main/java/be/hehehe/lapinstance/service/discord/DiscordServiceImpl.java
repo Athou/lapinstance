@@ -252,8 +252,8 @@ public class DiscordServiceImpl implements DiscordService {
 
 	@Override
 	public Optional<String> getUserNickname(String userId) {
-		TextChannel textChannel = guild.getTextChannelById(raidTextChannels.get(0).getId());
-		return textChannel.getMembers().stream().filter(m -> m.getUser().getId().equals(userId)).findFirst().map(Member::getEffectiveName);
+		Member member = guild.getMemberById(userId);
+		return Optional.ofNullable(member).map(Member::getEffectiveName);
 	}
 
 	@Override
