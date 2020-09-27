@@ -37,11 +37,12 @@ public class RaidSubscriptionService {
 	private final UserCharacterRepository userCharacterRepository;
 	private final DiscordService discordService;
 	private final URLService urlService;
+	private final WebSocketService webSocketService;
 
 	@Autowired
 	public RaidSubscriptionService(UserRepository userRepository, RaidSubscriptionRepository raidSubscriptionRepository,
 			RaidRepository raidRepository, UserCharacterRepository userCharacterRepository, DiscordService discordService,
-			URLService urlService) {
+			URLService urlService, WebSocketService webSocketService) {
 
 		this.userRepository = userRepository;
 		this.raidSubscriptionRepository = raidSubscriptionRepository;
@@ -49,6 +50,7 @@ public class RaidSubscriptionService {
 		this.userCharacterRepository = userCharacterRepository;
 		this.discordService = discordService;
 		this.urlService = urlService;
+		this.webSocketService = webSocketService;
 
 		addMessageReactionListener();
 	}
@@ -167,6 +169,9 @@ public class RaidSubscriptionService {
 
 		// update discord embed
 		discordService.sendOrUpdateEmbed(subscription.getRaid().getId());
+
+		// notify clients
+		webSocketService.notifyRaidSubscriptionChanged(updatedSubscription);
 
 		return updatedSubscription;
 	}

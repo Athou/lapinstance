@@ -87,6 +87,18 @@ export const RaidPage: React.FC<{ raidId: number }> = props => {
             .finally(() => setLoading(false))
     }, [props.raidId, impersonatedUserId])
 
+    useEffect(() => {
+        const wsClient = client.newWsClient()
+        wsClient.onConnect = () => {
+            wsClient.subscribe(`/topic/raid/${props.raidId}/subscriptions`, () => {
+                client.raids.findRaidSubscriptions(props.raidId).then(resp => setSubscriptions(resp.data))
+            })
+        }
+        wsClient.activate()
+
+        return () => wsClient.deactivate()
+    }, [props.raidId])
+
     if (loading || !raid) return <Loader />
     return (
         <>

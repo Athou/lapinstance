@@ -1,4 +1,5 @@
 import { Toaster } from "@blueprintjs/core"
+import { Client } from "@stomp/stompjs"
 import axios from "axios"
 import {
     AxiosRaidControllerClient,
@@ -24,11 +25,18 @@ axiosInstance.interceptors.response.use(
     }
 )
 
+const currentUrl = new URL(window.location.href)
+const wsProtocol = currentUrl.protocol === "http:" ? "ws" : "wss"
+// local dev proxy doesn't seem to work for websockets, bypass it
+const wsPort = currentUrl.hostname === "localhost" ? "8760" : currentUrl.port
+const wsUrl = `${wsProtocol}://${currentUrl.hostname}:${wsPort}/ws`
+
 export const client = {
     raids: new AxiosRaidControllerClient("/", axiosInstance),
     raidTypes: new AxiosRaidTypeControllerClient("/", axiosInstance),
     raidTextChannels: new AxiosRaidTextChannelControllerClient("/", axiosInstance),
     sessions: new AxiosSessionControllerClient("/", axiosInstance),
     users: new AxiosUserControllerClient("/", axiosInstance),
-    userCharacters: new AxiosUserCharacterControllerClient("/", axiosInstance)
+    userCharacters: new AxiosUserCharacterControllerClient("/", axiosInstance),
+    newWsClient: () => new Client({ brokerURL: wsUrl })
 }
