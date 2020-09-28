@@ -85,19 +85,28 @@ export const RaidPage: React.FC<{ raidId: number }> = props => {
                 setSubscription(userSubscription)
             })
             .finally(() => setLoading(false))
-    }, [props.raidId, impersonatedUserId])
 
-    useEffect(() => {
         const wsClient = client.newWsClient()
         wsClient.onConnect = () => {
-            wsClient.subscribe(`/topic/raid/${props.raidId}/subscriptions`, () => {
-                client.raids.findRaidSubscriptions(props.raidId).then(resp => setSubscriptions(resp.data))
+            wsClient.subscribe(`/topic/raid/${props.raidId}/subscriptions`, msg => {
+                const sub = JSON.parse(msg.body) as RaidSubscription
+                client.raids.findRaidSubscriptions(props.raidId).then(resp => {
+                    setSubscriptions(resp.data)
+
+                    if (sub.user.id !== impersonatedUserId) {
+                        toaster.show({
+                            message: `${sub.user.name} s'est enregistré`,
+                            icon: "arrow-right",
+                            intent: "primary"
+                        })
+                    }
+                })
             })
         }
         wsClient.activate()
 
         return () => wsClient.deactivate()
-    }, [props.raidId])
+    }, [props.raidId, impersonatedUserId])
 
     if (loading || !raid) return <Loader />
     return (
