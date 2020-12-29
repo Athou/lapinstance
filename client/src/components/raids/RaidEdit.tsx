@@ -1,5 +1,6 @@
 import { FormGroup, HTMLSelect, TextArea } from "@blueprintjs/core"
 import { DatePicker } from "@blueprintjs/datetime"
+import moment from "moment"
 import React, { useState } from "react"
 import MomentLocaleUtils from "react-day-picker/moment"
 import { useHistory } from "react-router-dom"
@@ -12,6 +13,10 @@ import { ActionButton } from "../ActionButton"
 export const RaidEdit: React.FC<{ raid?: Raid; raidTextChannels: RaidTextChannel[] }> = props => {
     const newRaidDate = new Date()
     newRaidDate.setHours(20, 30, 0, 0)
+
+    const datePickerMaxDate = moment()
+        .add(2, "years")
+        .toDate()
 
     const [raidType, setRaidType] = useState(props.raid?.raidType ?? RaidType.ONYXIA)
     const [raidTextChannelId, setRaidTextChannelId] = useState(props.raid?.discordTextChannelId ?? props.raidTextChannels[0].id)
@@ -73,6 +78,7 @@ export const RaidEdit: React.FC<{ raid?: Raid; raidTextChannels: RaidTextChannel
                         value={new Date(date)}
                         onChange={date => setDate(date.getTime())}
                         timePrecision="minute"
+                        maxDate={datePickerMaxDate}
                     />
                 </FormGroup>
 
