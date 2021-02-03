@@ -12,6 +12,7 @@ public enum CharacterClass {
 	PRIEST("Prêtre"),
 	ROGUE("Voleur"),
 	MAGE("Mage"),
+	SHAMAN("Chaman"),
 	WARLOCK("Démoniste"),
 	HUNTER("Chasseur");
 

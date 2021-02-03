@@ -7,6 +7,7 @@ import mage from "./mage.png"
 import paladin from "./paladin.png"
 import priest from "./priest.png"
 import rogue from "./rogue.png"
+import shaman from "./shaman.png"
 import warlock from "./warlock.png"
 import warrior from "./warrior.png"
 
@@ -18,7 +19,8 @@ const classToIcon = {
     [CharacterClass.ROGUE]: rogue,
     [CharacterClass.WARLOCK]: warlock,
     [CharacterClass.HUNTER]: hunter,
-    [CharacterClass.PRIEST]: priest
+    [CharacterClass.PRIEST]: priest,
+    [CharacterClass.SHAMAN]: shaman
 }
 
 const StyledImage = styled.img`

@@ -15,15 +15,18 @@ public enum CharacterSpec {
 	PRIEST_HEAL(CharacterClass.PRIEST, CharacterRole.HEAL),
 	PALADIN_HEAL(CharacterClass.PALADIN, CharacterRole.HEAL),
 	DRUID_RESTO(CharacterClass.DRUID, CharacterRole.HEAL),
+	SHAMAN_RESTO(CharacterClass.DRUID, CharacterRole.HEAL),
 	ROGUE(CharacterClass.ROGUE, CharacterRole.DPS_CAC),
 	WARRIOR_DPS(CharacterClass.WARRIOR, CharacterRole.DPS_CAC),
 	PALADIN_RET(CharacterClass.PALADIN, CharacterRole.DPS_CAC),
 	DRUID_CAT(CharacterClass.DRUID, CharacterRole.DPS_CAC),
+	SHAMAN_ENH(CharacterClass.DRUID, CharacterRole.DPS_CAC),
 	MAGE(CharacterClass.MAGE, CharacterRole.DPS_RANGED),
 	WARLOCK(CharacterClass.WARLOCK, CharacterRole.DPS_RANGED),
 	HUNTER(CharacterClass.HUNTER, CharacterRole.DPS_RANGED),
 	PRIEST_SHADOW(CharacterClass.PRIEST, CharacterRole.DPS_RANGED),
-	DRUID_BALANCE(CharacterClass.DRUID, CharacterRole.DPS_RANGED);
+	DRUID_BALANCE(CharacterClass.DRUID, CharacterRole.DPS_RANGED),
+	SHAMAN_ELEM(CharacterClass.DRUID, CharacterRole.DPS_RANGED);
 
 	private final CharacterClass characterClass;
 	private final CharacterRole role;
