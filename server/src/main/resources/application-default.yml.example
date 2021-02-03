@@ -13,6 +13,7 @@ jda:
         paladin:
         priest:
         rogue:
+        shaman:
         warlock:
         warrior:
       specs:
@@ -28,6 +29,9 @@ jda:
         priest_heal:
         priest_shadow:
         rogue:
+        shaman_elem:
+        shaman_enh:
+        shaman_resto:
         warlock:
         warrior_dps:
         warrior_tank:
