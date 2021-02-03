@@ -1,126 +1,9 @@
 /* tslint:disable */
 /* eslint-disable */
-// Generated using typescript-generator version 2.19.577 on 2020-05-14 08:28:20.
-
-export interface AbstractModel {
-    id: number;
-}
-
-export interface Raid extends AbstractModel {
-    date: DateAsNumber;
-    comment?: string;
-    raidType: RaidType;
-    discordMessageId?: string;
-    discordTextChannelId: string;
-    formattedDate?: string;
-}
-
-export interface RaidParticipant extends AbstractModel {
-    raid: Raid;
-    character: UserCharacter;
-}
-
-export interface RaidSubscription extends AbstractModel {
-    date: DateAsNumber;
-    raid: Raid;
-    response: RaidSubscriptionResponse;
-    character?: UserCharacter;
-    user: User;
-}
-
-export interface RaidTextChannel {
-    id: string;
-    name: string;
-}
-
-export interface User extends AbstractModel {
-    name: string;
-    discordId: string;
-    disabled: boolean;
-}
-
-export interface UserCharacter extends AbstractModel {
-    name: string;
-    spec: CharacterSpec;
-    main: boolean;
-    user: User;
-}
-
-export interface SaveRaidRequest {
-    raidId?: number;
-    comment?: string;
-    date: DateAsNumber;
-    raidType: RaidType;
-    raidTextChannelId: string;
-}
-
-export interface SaveRaidSubscriptionRequest {
-    response: RaidSubscriptionResponse;
-    userId: number;
-    characterId?: number;
-}
-
-export interface Session {
-    user: User;
-    roles: UserRole[];
-}
-
-export interface SaveUserRequest {
-    disabled: boolean;
-}
-
-export interface SaveUserCharacterRequest {
-    characterId?: number;
-    name: string;
-    spec: CharacterSpec;
-    main: boolean;
-}
 
 export interface HttpClient<O> {
 
     request<R>(requestConfig: { method: string; url: string; queryParams?: any; data?: any; copyFn?: (data: R) => R; options?: O; }): RestResponse<R>;
-}
-
-export class RaidTextChannelControllerClient<O> {
-
-    constructor(protected httpClient: HttpClient<O>) {
-    }
-
-    /**
-     * HTTP GET /raidTextChannels
-     * Java method: be.hehehe.lapinstance.controller.RaidTextChannelController.getAll
-     */
-    getAll(options?: O): RestResponse<RaidTextChannel[]> {
-        return this.httpClient.request({ method: "GET", url: uriEncoding`raidTextChannels`, options: options });
-    }
-}
-
-export class SessionControllerClient<O> {
-
-    constructor(protected httpClient: HttpClient<O>) {
-    }
-
-    /**
-     * HTTP GET /session/user
-     * Java method: be.hehehe.lapinstance.controller.SessionController.getCurrentUser
-     */
-    getCurrentUser(options?: O): RestResponse<Session> {
-        return this.httpClient.request({ method: "GET", url: uriEncoding`session/user`, options: options });
-    }
-}
-
-export class RaidTypeControllerClient<O> {
-
-    constructor(protected httpClient: HttpClient<O>) {
-    }
-
-    /**
-     * HTTP GET /raidTypes/{raidType}/nextReset
-     * Java method: be.hehehe.lapinstance.controller.RaidTypeController.nextReset
-     */
-    nextReset(raidType: RaidType, queryParams: { from: number; until: number; }, options?: O): RestResponse<DateAsNumber[]> {
-        return this.httpClient.request({ method: "GET", url: uriEncoding`raidTypes/${raidType}/nextReset`, queryParams: queryParams, options: options });
-    }
 }
 
 export class RaidControllerClient<O> {
@@ -193,6 +76,62 @@ export class RaidControllerClient<O> {
     }
 }
 
+export class RaidTextChannelControllerClient<O> {
+
+    constructor(protected httpClient: HttpClient<O>) {
+    }
+
+    /**
+     * HTTP GET /raidTextChannels
+     * Java method: be.hehehe.lapinstance.controller.RaidTextChannelController.getAll
+     */
+    getAll(options?: O): RestResponse<RaidTextChannel[]> {
+        return this.httpClient.request({ method: "GET", url: uriEncoding`raidTextChannels`, options: options });
+    }
+}
+
+export class RaidTypeControllerClient<O> {
+
+    constructor(protected httpClient: HttpClient<O>) {
+    }
+
+    /**
+     * HTTP GET /raidTypes/{raidType}/nextReset
+     * Java method: be.hehehe.lapinstance.controller.RaidTypeController.nextReset
+     */
+    nextReset(raidType: RaidType, queryParams: { from: number; until: number; }, options?: O): RestResponse<DateAsNumber[]> {
+        return this.httpClient.request({ method: "GET", url: uriEncoding`raidTypes/${raidType}/nextReset`, queryParams: queryParams, options: options });
+    }
+}
+
+export class SessionControllerClient<O> {
+
+    constructor(protected httpClient: HttpClient<O>) {
+    }
+
+    /**
+     * HTTP GET /session/user
+     * Java method: be.hehehe.lapinstance.controller.SessionController.getCurrentUser
+     */
+    getCurrentUser(options?: O): RestResponse<Session> {
+        return this.httpClient.request({ method: "GET", url: uriEncoding`session/user`, options: options });
+    }
+}
+
+export class UserCharacterControllerClient<O> {
+
+    constructor(protected httpClient: HttpClient<O>) {
+    }
+
+    /**
+     * HTTP GET /userCharacters
+     * Java method: be.hehehe.lapinstance.controller.UserCharacterController.findAllUserCharacters
+     */
+    findAllUserCharacters(options?: O): RestResponse<UserCharacter[]> {
+        return this.httpClient.request({ method: "GET", url: uriEncoding`userCharacters`, options: options });
+    }
+}
+
 export class UserControllerClient<O> {
 
     constructor(protected httpClient: HttpClient<O>) {
@@ -247,23 +186,83 @@ export class UserControllerClient<O> {
     }
 }
 
-export class UserCharacterControllerClient<O> {
-
-    constructor(protected httpClient: HttpClient<O>) {
-    }
-
-    /**
-     * HTTP GET /userCharacters
-     * Java method: be.hehehe.lapinstance.controller.UserCharacterController.findAllUserCharacters
-     */
-    findAllUserCharacters(options?: O): RestResponse<UserCharacter[]> {
-        return this.httpClient.request({ method: "GET", url: uriEncoding`userCharacters`, options: options });
-    }
+export interface AbstractModel {
+    id: number;
 }
 
-export type RestResponse<R> = Promise<Axios.GenericAxiosResponse<R>>;
+export interface Raid extends AbstractModel {
+    comment?: string;
+    date: DateAsNumber;
+    discordMessageId?: string;
+    discordTextChannelId: string;
+    formattedDate?: string;
+    raidType: RaidType;
+}
+
+export interface RaidParticipant extends AbstractModel {
+    character: UserCharacter;
+    raid: Raid;
+}
+
+export interface RaidSubscription extends AbstractModel {
+    character?: UserCharacter;
+    date: DateAsNumber;
+    raid: Raid;
+    response: RaidSubscriptionResponse;
+    user: User;
+}
+
+export interface RaidTextChannel {
+    id: string;
+    name: string;
+}
+
+export interface SaveRaidRequest {
+    comment?: string;
+    date: DateAsNumber;
+    raidId?: number;
+    raidTextChannelId: string;
+    raidType: RaidType;
+}
+
+export interface SaveRaidSubscriptionRequest {
+    characterId?: number;
+    response: RaidSubscriptionResponse;
+    userId: number;
+}
+
+export interface SaveUserCharacterRequest {
+    characterId?: number;
+    main: boolean;
+    name: string;
+    spec: CharacterSpec;
+}
+
+export interface SaveUserRequest {
+    disabled: boolean;
+}
+
+export interface Session {
+    roles: UserRole[];
+    user: User;
+}
+
+export interface User extends AbstractModel {
+    disabled: boolean;
+    discordId: string;
+    name: string;
+}
+
+export interface UserCharacter extends AbstractModel {
+    main: boolean;
+    name: string;
+    spec: CharacterSpec;
+    user: User;
+}
 
 export type DateAsNumber = number;
+
+export type RestResponse<R> = Promise<Axios.GenericAxiosResponse<R>>;
 
 export enum CharacterClass {
     WARRIOR = "WARRIOR",
@@ -272,9 +271,9 @@ export enum CharacterClass {
     PRIEST = "PRIEST",
     ROGUE = "ROGUE",
     MAGE = "MAGE",
+    SHAMAN = "SHAMAN",
     WARLOCK = "WARLOCK",
     HUNTER = "HUNTER",
-    SHAMAN = "SHAMAN",
 }
 
 export enum CharacterRole {
@@ -387,7 +386,7 @@ class AxiosHttpClient implements HttpClient<Axios.AxiosRequestConfig> {
     }
 }
 
-export class AxiosRaidTextChannelControllerClient extends RaidTextChannelControllerClient<Axios.AxiosRequestConfig> {
+export class AxiosRaidControllerClient extends RaidControllerClient<Axios.AxiosRequestConfig> {
 
     constructor(baseURL: string, axiosInstance: Axios.AxiosInstance = axios.create()) {
         axiosInstance.defaults.baseURL = baseURL;
@@ -395,7 +394,7 @@ export class AxiosRaidTextChannelControllerClient extends RaidTextChannelControl
     }
 }
 
-export class AxiosSessionControllerClient extends SessionControllerClient<Axios.AxiosRequestConfig> {
+export class AxiosRaidTextChannelControllerClient extends RaidTextChannelControllerClient<Axios.AxiosRequestConfig> {
 
     constructor(baseURL: string, axiosInstance: Axios.AxiosInstance = axios.create()) {
         axiosInstance.defaults.baseURL = baseURL;
@@ -411,15 +410,7 @@ export class AxiosRaidTypeControllerClient extends RaidTypeControllerClient<Axio
     }
 }
 
-export class AxiosRaidControllerClient extends RaidControllerClient<Axios.AxiosRequestConfig> {
-
-    constructor(baseURL: string, axiosInstance: Axios.AxiosInstance = axios.create()) {
-        axiosInstance.defaults.baseURL = baseURL;
-        super(new AxiosHttpClient(axiosInstance));
-    }
-}
-
-export class AxiosUserControllerClient extends UserControllerClient<Axios.AxiosRequestConfig> {
+export class AxiosSessionControllerClient extends SessionControllerClient<Axios.AxiosRequestConfig> {
 
     constructor(baseURL: string, axiosInstance: Axios.AxiosInstance = axios.create()) {
         axiosInstance.defaults.baseURL = baseURL;
@@ -428,6 +419,14 @@ export class AxiosUserControllerClient extends UserControllerClient<Axios.AxiosR
 }
 
 export class AxiosUserCharacterControllerClient extends UserCharacterControllerClient<Axios.AxiosRequestConfig> {
+
+    constructor(baseURL: string, axiosInstance: Axios.AxiosInstance = axios.create()) {
+        axiosInstance.defaults.baseURL = baseURL;
+        super(new AxiosHttpClient(axiosInstance));
+    }
+}
+
+export class AxiosUserControllerClient extends UserControllerClient<Axios.AxiosRequestConfig> {
 
     constructor(baseURL: string, axiosInstance: Axios.AxiosInstance = axios.create()) {
         axiosInstance.defaults.baseURL = baseURL;

@@ -169,6 +169,9 @@
 					<extensions>
 						<extension>cz.habarta.typescript.generator.ext.AxiosClientExtension</extension>
 					</extensions>
+					<sortDeclarations>true</sortDeclarations>
+					<sortTypeDeclarations>true</sortTypeDeclarations>
+					<noFileComment>true</noFileComment>
 					<outputFile>${project.basedir}/../client/src/api/index.ts</outputFile>
 				</configuration>
 			</plugin>
