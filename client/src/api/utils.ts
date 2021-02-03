@@ -39,7 +39,10 @@ export const characterSpecLabels = {
     [CharacterSpec.WARLOCK]: "Démoniste",
     [CharacterSpec.HUNTER]: "Chasseur",
     [CharacterSpec.PRIEST_HEAL]: "Prêtre - Sacré",
-    [CharacterSpec.PRIEST_SHADOW]: "Prêtre - Ombre"
+    [CharacterSpec.PRIEST_SHADOW]: "Prêtre - Ombre",
+    [CharacterSpec.SHAMAN_ENH]: "Chaman - Amélioration",
+    [CharacterSpec.SHAMAN_ELEM]: "Chaman - Élémentaire",
+    [CharacterSpec.SHAMAN_RESTO]: "Chaman - Restauration"
 }
 export const CharacterSpecs = (Object.keys(CharacterSpec) as CharacterSpec[]).sort((a, b) =>
     characterSpecLabels[a].localeCompare(characterSpecLabels[b])
@@ -80,5 +83,8 @@ export const specToRoleMapping = {
     [CharacterSpec.WARLOCK]: CharacterRole.RANGED,
     [CharacterSpec.HUNTER]: CharacterRole.RANGED,
     [CharacterSpec.PRIEST_HEAL]: CharacterRole.HEAL,
-    [CharacterSpec.PRIEST_SHADOW]: CharacterRole.RANGED
+    [CharacterSpec.PRIEST_SHADOW]: CharacterRole.RANGED,
+    [CharacterSpec.SHAMAN_ENH]: CharacterRole.MELEE,
+    [CharacterSpec.SHAMAN_ELEM]: CharacterRole.RANGED,
+    [CharacterSpec.SHAMAN_RESTO]: CharacterRole.HEAL
 }

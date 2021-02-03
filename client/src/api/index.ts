@@ -274,6 +274,7 @@ export enum CharacterClass {
     MAGE = "MAGE",
     WARLOCK = "WARLOCK",
     HUNTER = "HUNTER",
+    SHAMAN = "SHAMAN",
 }
 
 export enum CharacterRole {
@@ -290,15 +291,18 @@ export enum CharacterSpec {
     PRIEST_HEAL = "PRIEST_HEAL",
     PALADIN_HEAL = "PALADIN_HEAL",
     DRUID_RESTO = "DRUID_RESTO",
+    SHAMAN_RESTO = "SHAMAN_RESTO",
     ROGUE = "ROGUE",
     WARRIOR_DPS = "WARRIOR_DPS",
     PALADIN_RET = "PALADIN_RET",
     DRUID_CAT = "DRUID_CAT",
+    SHAMAN_ENH = "SHAMAN_ENH",
     MAGE = "MAGE",
     WARLOCK = "WARLOCK",
     HUNTER = "HUNTER",
     PRIEST_SHADOW = "PRIEST_SHADOW",
     DRUID_BALANCE = "DRUID_BALANCE",
+    SHAMAN_ELEM = "SHAMAN_ELEM",
 }
 
 export enum RaidSubscriptionResponse {

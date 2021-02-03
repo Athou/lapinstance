@@ -63,6 +63,7 @@ public class DiscordEmbedService {
 		eb.addField(buildClassField(CharacterClass.ROGUE, subscriptions));
 		eb.addField(buildClassField(CharacterClass.WARLOCK, subscriptions));
 		eb.addField(buildClassField(CharacterClass.DRUID, subscriptions));
+		eb.addField(buildClassField(CharacterClass.SHAMAN, subscriptions));
 
 		eb.addField(buildBlankLineField());
 
