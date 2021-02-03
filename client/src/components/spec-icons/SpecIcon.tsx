@@ -39,7 +39,6 @@ const specToIcon = {
     [CharacterSpec.SHAMAN_RESTO]: shaman_resto,
     [CharacterSpec.SHAMAN_ENH]: shaman_enh,
     [CharacterSpec.SHAMAN_ELEM]: shaman_elem
-
 }
 
 const StyledImage = styled.img`
