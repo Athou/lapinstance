@@ -78,7 +78,7 @@ public class RaidSubscriptionService {
 						.findFirst()
 						.orElse(null);
 				if (userCharacter == null) {
-					log.info("no character found class {} for user {} ({})", characterClass, user.getName(), user.getId());
+					log.info("no character class found {} for user {} ({})", characterClass, user.getName(), user.getId());
 					sendUnknownCharacterClassPrivateMessage(discordUserId, characterClass);
 					return;
 				}
