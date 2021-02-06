@@ -207,6 +207,8 @@ public class RaidSubscriptionService {
 			message += System.lineSeparator() + String.format("Tu peux t'inscrire depuis le channel <#%s> ou via la page <%s>",
 					raid.getDiscordTextChannelId(), urlService.getRaidUrl(raidId));
 			message += System.lineSeparator() + "Si tu es absent, merci de t'indiquer comme tel.";
+
+			log.info("notifying user {} ({}) of missing subscription to raid {}", user.getName(), user.getId(), raidId);
 			discordService.sendPrivateMessage(user.getDiscordId(), message);
 		}
 	}
