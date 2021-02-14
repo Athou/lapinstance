@@ -115,11 +115,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 								() -> new RuntimeException(String.format("unauthorized user: %s (%s)", oAuth2User.getName(), discordId)));
 
 				User user = userService.saveOrUpdate(discordId, userName);
-				if (user.isDisabled()) {
+				Set<UserRole> roles = discordService.getUserRoles(discordId);
+
+				if (user.isDisabled() && !roles.contains(UserRole.ADMIN)) {
 					throw new RuntimeException("user is disabled: " + oAuth2User.getName());
 				}
 
-				Set<UserRole> roles = discordService.getUserRoles(discordId);
 				Set<GrantedAuthority> authorities = roles.stream()
 						.map(r -> new SimpleGrantedAuthority(r.name()))
 						.collect(Collectors.toSet());
