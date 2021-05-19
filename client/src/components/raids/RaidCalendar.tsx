@@ -4,7 +4,7 @@ import React from "react"
 import { Calendar, Event, EventPropGetter, momentLocalizer, ToolbarProps } from "react-big-calendar"
 import { Box, Flex } from "reflexbox"
 import styled from "styled-components"
-import { Raid, RaidType } from "../../api"
+import { Raid, RaidResetDuration } from "../../api"
 import { raidTypeShortLabels } from "../../api/utils"
 
 const localizer = momentLocalizer(moment)
@@ -24,7 +24,8 @@ const ToolbarButtonGroup = styled(ButtonGroup)`
 
 export type RaidReset = {
     date: number
-    raidType: RaidType
+    label: string
+    raidResetDuration: RaidResetDuration
 }
 
 type EventPayload = { type: "raid"; raid: Raid } | { type: "reset"; reset: RaidReset }
@@ -55,7 +56,7 @@ export const RaidCalendar: React.FC<{
             reset
         }
         events.push({
-            title: `${moment(reset.date).format("HH:mm")} Reset ${raidTypeShortLabels[reset.raidType]}`,
+            title: `${moment(reset.date).format("HH:mm")} Reset ${reset.label}`,
             start: new Date(reset.date),
             end: new Date(reset.date),
             resource
@@ -65,7 +66,7 @@ export const RaidCalendar: React.FC<{
     const eventPropGetter: EventPropGetter<any> = (event, start, end, isSelected) => {
         const resource: EventPayload = event.resource
         if (resource.type === "reset") {
-            const color = resource.reset.raidType === RaidType.ONYXIA ? "#793122" : "#4CA66B"
+            const color = resource.reset.raidResetDuration === RaidResetDuration.FIVE_DAYS ? "#793122" : "#4CA66B"
             return {
                 style: {
                     backgroundColor: color

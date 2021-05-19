@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react"
 import { Col, Row } from "react-flexbox-grid"
 import { useHistory } from "react-router-dom"
 import styled from "styled-components"
-import { Raid, RaidSubscription, RaidType, UserRole } from "../api"
+import { Raid, RaidResetDuration, RaidSubscription, UserRole } from "../api"
 import { client } from "../api/client"
 import { useSession } from "../App"
 import { Loader } from "../components/Loader"
@@ -20,7 +20,7 @@ const RaidSection = styled.div`
 export const RaidsPage: React.FC = () => {
     const [raids, setRaids] = useState<Raid[]>([])
     const [raidResets, setRaidResets] = useState<RaidReset[]>([])
-    const [raidResetFilter, setRaidResetFilter] = useState<Map<RaidType, boolean>>(new Map<RaidType, boolean>())
+    const [raidResetFilter, setRaidResetFilter] = useState<Map<RaidResetDuration, boolean>>(new Map<RaidResetDuration, boolean>())
     const [userSubscriptions, setUserSubscriptions] = useState<RaidSubscription[]>()
     const [loading, setLoading] = useState(false)
     const history = useHistory()
@@ -42,30 +42,32 @@ export const RaidsPage: React.FC = () => {
         Promise.all([
             client.raids.findAllRaids(),
             client.users.findAllSubscriptions(session.user.id),
-            client.raidTypes.nextReset(RaidType.ONYXIA, {
+            client.raidTypes.nextReset(RaidResetDuration.FIVE_DAYS, {
                 from: raidResetFrom,
                 until: raidResetUntil
             }),
-            client.raidTypes.nextReset(RaidType.ZUL_GURUB, {
+            client.raidTypes.nextReset(RaidResetDuration.THREE_DAYS, {
                 from: raidResetFrom,
                 until: raidResetUntil
             })
         ])
-            .then(([raidsResp, subsResp, onyxiaResp, zgResp]) => {
+            .then(([raidsResp, subsResp, fiveDaysResetResp, threeDaysResetResp]) => {
                 setRaids(raidsResp.data)
                 setUserSubscriptions(subsResp.data)
 
                 const resets: RaidReset[] = []
                 resets.push(
-                    ...onyxiaResp.data.map(r => ({
+                    ...fiveDaysResetResp.data.map(r => ({
                         date: r,
-                        raidType: RaidType.ONYXIA
+                        label: "5J",
+                        raidResetDuration: RaidResetDuration.FIVE_DAYS
                     }))
                 )
                 resets.push(
-                    ...zgResp.data.map(r => ({
+                    ...threeDaysResetResp.data.map(r => ({
                         date: r,
-                        raidType: RaidType.ZUL_GURUB
+                        label: "3J",
+                        raidResetDuration: RaidResetDuration.THREE_DAYS
                     }))
                 )
                 setRaidResets(resets)
@@ -75,7 +77,7 @@ export const RaidsPage: React.FC = () => {
 
     const now = new Date().getTime()
     const futureRaids = raids.filter(raid => now < raid.date).sort((a, b) => a.date - b.date)
-    const filteredRaidResets = raidResets.filter(reset => raidResetFilter.get(reset.raidType))
+    const filteredRaidResets = raidResets.filter(reset => raidResetFilter.get(reset.raidResetDuration))
 
     if (loading) return <Loader />
     return (
@@ -103,21 +105,21 @@ export const RaidsPage: React.FC = () => {
                     <RaidCalendar raids={raids} resets={filteredRaidResets} onRaidSelect={raidId => showRaid(raidId)} />
                     <Switch
                         inline
-                        checked={raidResetFilter.get(RaidType.ONYXIA)}
+                        checked={raidResetFilter.get(RaidResetDuration.FIVE_DAYS)}
                         onClick={() => {
-                            raidResetFilter.set(RaidType.ONYXIA, !raidResetFilter.get(RaidType.ONYXIA))
+                            raidResetFilter.set(RaidResetDuration.FIVE_DAYS, !raidResetFilter.get(RaidResetDuration.FIVE_DAYS))
                             setRaidResetFilter(new Map(raidResetFilter))
                         }}
-                        label="Reset Onyxia"
+                        label="Reset 5J"
                     />
                     <Switch
                         inline
-                        checked={raidResetFilter.get(RaidType.ZUL_GURUB)}
+                        checked={raidResetFilter.get(RaidResetDuration.THREE_DAYS)}
                         onClick={() => {
-                            raidResetFilter.set(RaidType.ZUL_GURUB, !raidResetFilter.get(RaidType.ZUL_GURUB))
+                            raidResetFilter.set(RaidResetDuration.THREE_DAYS, !raidResetFilter.get(RaidResetDuration.THREE_DAYS))
                             setRaidResetFilter(new Map(raidResetFilter))
                         }}
-                        label="Reset ZG"
+                        label="Reset 3J"
                     />
                 </Col>
             </Row>

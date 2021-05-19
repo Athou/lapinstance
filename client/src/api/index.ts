@@ -96,11 +96,11 @@ export class RaidTypeControllerClient<O> {
     }
 
     /**
-     * HTTP GET /raidTypes/{raidType}/nextReset
+     * HTTP GET /raidTypes/{raidResetDuration}/nextReset
      * Java method: be.hehehe.lapinstance.controller.RaidTypeController.nextReset
      */
-    nextReset(raidType: RaidType, queryParams: { from: number; until: number; }, options?: O): RestResponse<DateAsNumber[]> {
-        return this.httpClient.request({ method: "GET", url: uriEncoding`raidTypes/${raidType}/nextReset`, queryParams: queryParams, options: options });
+    nextReset(raidResetDuration: RaidResetDuration, queryParams: { from: number; until: number; }, options?: O): RestResponse<DateAsNumber[]> {
+        return this.httpClient.request({ method: "GET", url: uriEncoding`raidTypes/${raidResetDuration}/nextReset`, queryParams: queryParams, options: options });
     }
 }
 
@@ -302,6 +302,12 @@ export enum CharacterSpec {
     PRIEST_SHADOW = "PRIEST_SHADOW",
     DRUID_BALANCE = "DRUID_BALANCE",
     SHAMAN_ELEM = "SHAMAN_ELEM",
+}
+
+export enum RaidResetDuration {
+    THREE_DAYS = "THREE_DAYS",
+    FIVE_DAYS = "FIVE_DAYS",
+    SEVEN_DAYS = "SEVEN_DAYS",
 }
 
 export enum RaidSubscriptionResponse {

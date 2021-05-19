@@ -10,19 +10,18 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum RaidType {
 
-	ONYXIA("Ony", "Onyxia", 5),
-	MOLTEN_CORE("MC", "Molten Core", 7),
-	ZUL_GURUB("ZG", "Zul'Gurub", 3),
-	BLACKWING_LAIR("BWL", "Blackwing Lair", 7),
-	AHN_QIRAJ_20("AQ20", "Ahn'Qiraj 20", 3),
-	AHN_QIRAJ_40("AQ40", "Ahn'Qiraj 40", 7),
-	NAXXRAMAS("Naxx", "Naxxramas", 7),
+	ONYXIA("Ony", "Onyxia"),
+	MOLTEN_CORE("MC", "Molten Core"),
+	ZUL_GURUB("ZG", "Zul'Gurub"),
+	BLACKWING_LAIR("BWL", "Blackwing Lair"),
+	AHN_QIRAJ_20("AQ20", "Ahn'Qiraj 20"),
+	AHN_QIRAJ_40("AQ40", "Ahn'Qiraj 40"),
+	NAXXRAMAS("Naxx", "Naxxramas"),
 
-	PVP("PvP", "PvP", -1),
-	OTHER("Autre", "Autre", -1);
+	PVP("PvP", "PvP"),
+	OTHER("Autre", "Autre");
 
 	private final String shortName;
 	private final String longName;
-	private final int resetTimer;
 
 }
