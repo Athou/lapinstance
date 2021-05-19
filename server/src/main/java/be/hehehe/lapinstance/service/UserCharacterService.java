@@ -2,7 +2,6 @@ package be.hehehe.lapinstance.service;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import be.hehehe.lapinstance.model.UserCharacter;
@@ -10,7 +9,7 @@ import be.hehehe.lapinstance.repository.UserCharacterRepository;
 import lombok.RequiredArgsConstructor;
 
 @Service
-@RequiredArgsConstructor(onConstructor_ = { @Autowired })
+@RequiredArgsConstructor
 public class UserCharacterService {
 
 	private final UserCharacterRepository userCharacterRepository;

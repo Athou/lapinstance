@@ -1,6 +1,5 @@
 package be.hehehe.lapinstance.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("system")
-@RequiredArgsConstructor(onConstructor_ = { @Autowired })
+@RequiredArgsConstructor
 public class SystemController {
 
 	private final DiscordService discordService;

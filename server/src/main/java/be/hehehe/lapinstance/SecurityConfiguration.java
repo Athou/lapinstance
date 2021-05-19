@@ -7,7 +7,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
@@ -62,7 +61,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	private final DiscordService discordService;
 	private final boolean discordIntegrationEnabled;
 
-	@Autowired
 	public SecurityConfiguration(UserService userService, DiscordService discordService, Environment env) {
 		this.userService = userService;
 		this.discordService = discordService;

@@ -9,7 +9,6 @@ import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import be.hehehe.lapinstance.controller.ResourceNotFoundException;
@@ -39,7 +38,6 @@ public class RaidSubscriptionService {
 	private final URLService urlService;
 	private final WebSocketService webSocketService;
 
-	@Autowired
 	public RaidSubscriptionService(UserRepository userRepository, RaidSubscriptionRepository raidSubscriptionRepository,
 			RaidRepository raidRepository, UserCharacterRepository userCharacterRepository, DiscordService discordService,
 			URLService urlService, WebSocketService webSocketService) {

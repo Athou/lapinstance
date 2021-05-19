@@ -1,6 +1,5 @@
 package be.hehehe.lapinstance.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import be.hehehe.lapinstance.controller.ResourceNotFoundException;
@@ -9,7 +8,7 @@ import be.hehehe.lapinstance.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 
 @Service
-@RequiredArgsConstructor(onConstructor_ = { @Autowired })
+@RequiredArgsConstructor
 public class UserService {
 
 	private final UserRepository userRepository;

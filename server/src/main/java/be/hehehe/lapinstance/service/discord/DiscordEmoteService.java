@@ -2,7 +2,6 @@ package be.hehehe.lapinstance.service.discord;
 
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
@@ -29,7 +28,6 @@ public class DiscordEmoteService {
 	private final BiMap<RaidSubscriptionResponse, String> raidSubscriptionResponseIcons = EnumHashBiMap
 			.create(RaidSubscriptionResponse.class);
 
-	@Autowired
 	public DiscordEmoteService(Environment env) {
 
 		for (CharacterClass klass : CharacterClass.values()) {
