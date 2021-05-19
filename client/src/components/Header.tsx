@@ -1,9 +1,12 @@
-import { Button, Navbar, NavbarDivider, NavbarGroup, NavbarHeading } from "@blueprintjs/core"
+import { Button, Navbar, NavbarDivider, NavbarGroup, NavbarHeading, Toaster, Tooltip } from "@blueprintjs/core"
 import React from "react"
 import { useHistory, useRouteMatch } from "react-router-dom"
+import { UserRole } from "../api"
+import { client } from "../api/client"
 import { useSession } from "../App"
 import { Routes } from "../Routes"
 
+const toaster = Toaster.create()
 export const Header: React.FC = () => {
     const history = useHistory()
     const session = useSession()
@@ -11,6 +14,16 @@ export const Header: React.FC = () => {
     const raidLinkActive = !!useRouteMatch(Routes.raid.list.template())
     const usersLinkActive = !!useRouteMatch(Routes.user.list.template())
     const profileLinkActive = !!useRouteMatch(Routes.profile.template())
+
+    const refreshDiscordRolesClicked = () => {
+        client.system.reconnect().then(() =>
+            toaster.show({
+                message: "Rôles rafraîchis",
+                intent: "success",
+                icon: "tick"
+            })
+        )
+    }
 
     return (
         <Navbar>
@@ -33,6 +46,11 @@ export const Header: React.FC = () => {
                 />
             </NavbarGroup>
             <NavbarGroup align="right">
+                {session.hasRole(UserRole.ADMIN) && (
+                    <Tooltip content="Rafraîchir les rôles Discord">
+                        <Button minimal icon="refresh" onClick={() => refreshDiscordRolesClicked()}></Button>
+                    </Tooltip>
+                )}
                 <Button
                     minimal
                     active={profileLinkActive}

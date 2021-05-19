@@ -46,6 +46,11 @@ public class DiscordServiceStub implements DiscordService {
 	}
 
 	@Override
+	public void reconnect() {
+		log.info("called reconnect");
+	}
+
+	@Override
 	public void addMessageReactionListener(MessageReactionListener listener) {
 
 	}

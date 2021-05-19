@@ -60,6 +60,9 @@ public class DiscordServiceImpl implements DiscordService {
 
 	private final String[] userRoles;
 	private final String[] adminRoles;
+	private final String token;
+	private final String guildId;
+	private final String[] raidTextChannelIds;
 
 	private JDA jda;
 	private Guild guild;
@@ -80,11 +83,15 @@ public class DiscordServiceImpl implements DiscordService {
 
 		this.userRoles = env.getProperty("jda.discord.user-roles").split(",");
 		this.adminRoles = env.getProperty("jda.discord.admin-roles").split(",");
+		this.token = env.getProperty("jda.discord.token");
+		this.guildId = env.getProperty("jda.discord.guild-id");
+		this.raidTextChannelIds = env.getProperty("jda.discord.raid-text-channel-ids").split(",");
 
-		String token = env.getProperty("jda.discord.token");
-		String guildId = env.getProperty("jda.discord.guild-id");
-		String[] raidTextChannelIds = env.getProperty("jda.discord.raid-text-channel-ids").split(",");
+		connect();
+	}
 
+	private void connect() {
+		log.info("connecting to Discord");
 		if (token != null && !token.isEmpty()) {
 			try {
 				this.jda = JDABuilder.createDefault(token)
@@ -140,6 +147,18 @@ public class DiscordServiceImpl implements DiscordService {
 		} else {
 			log.info("received no token, not connecting to discord");
 		}
+	}
+
+	private void disconnect() {
+		log.info("disconnecting from Discord");
+		jda.shutdownNow();
+	}
+
+	@Override
+	public void reconnect() {
+		log.info("reconnecting to Discord");
+		disconnect();
+		connect();
 	}
 
 	@Override

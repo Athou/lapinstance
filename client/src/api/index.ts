@@ -118,6 +118,20 @@ export class SessionControllerClient<O> {
     }
 }
 
+export class SystemControllerClient<O> {
+
+    constructor(protected httpClient: HttpClient<O>) {
+    }
+
+    /**
+     * HTTP POST /system/reconnect
+     * Java method: be.hehehe.lapinstance.controller.SystemController.reconnect
+     */
+    reconnect(options?: O): RestResponse<void> {
+        return this.httpClient.request({ method: "POST", url: uriEncoding`system/reconnect`, options: options });
+    }
+}
+
 export class UserCharacterControllerClient<O> {
 
     constructor(protected httpClient: HttpClient<O>) {
@@ -417,6 +431,14 @@ export class AxiosRaidTypeControllerClient extends RaidTypeControllerClient<Axio
 }
 
 export class AxiosSessionControllerClient extends SessionControllerClient<Axios.AxiosRequestConfig> {
+
+    constructor(baseURL: string, axiosInstance: Axios.AxiosInstance = axios.create()) {
+        axiosInstance.defaults.baseURL = baseURL;
+        super(new AxiosHttpClient(axiosInstance));
+    }
+}
+
+export class AxiosSystemControllerClient extends SystemControllerClient<Axios.AxiosRequestConfig> {
 
     constructor(baseURL: string, axiosInstance: Axios.AxiosInstance = axios.create()) {
         axiosInstance.defaults.baseURL = baseURL;

@@ -11,6 +11,8 @@ import be.hehehe.lapinstance.model.RaidTextChannel;
 
 public interface DiscordService {
 
+	void reconnect();
+
 	void sendOrUpdateEmbed(long raidId);
 
 	void removeEmbed(long raidId);

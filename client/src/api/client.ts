@@ -6,6 +6,7 @@ import {
     AxiosRaidTextChannelControllerClient,
     AxiosRaidTypeControllerClient,
     AxiosSessionControllerClient,
+    AxiosSystemControllerClient,
     AxiosUserCharacterControllerClient,
     AxiosUserControllerClient
 } from "."
@@ -38,5 +39,6 @@ export const client = {
     sessions: new AxiosSessionControllerClient("/", axiosInstance),
     users: new AxiosUserControllerClient("/", axiosInstance),
     userCharacters: new AxiosUserCharacterControllerClient("/", axiosInstance),
+    system: new AxiosSystemControllerClient("/", axiosInstance),
     newWsClient: () => new Client({ brokerURL: wsUrl })
 }
