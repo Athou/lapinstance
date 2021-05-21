@@ -32,7 +32,7 @@ public class DiscordEmbedService {
 	public MessageEmbed buildEmbed(Raid raid, List<SubscriptionModel> subscriptions, String raidUrl) {
 
 		EmbedBuilder eb = new EmbedBuilder();
-		eb.setTitle(raid.getRaidType().getLongName(), raidUrl);
+		eb.setTitle(raid.getRaidType().getName(), raidUrl);
 		eb.setColor(Color.BLACK);
 
 		String desc = raid.getFormattedDate();

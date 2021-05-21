@@ -6,7 +6,7 @@ import MomentLocaleUtils from "react-day-picker/moment"
 import { useHistory } from "react-router-dom"
 import { Raid, RaidTextChannel, RaidType, SaveRaidRequest } from "../../api"
 import { client } from "../../api/client"
-import { raidTypeLabels, RaidTypes } from "../../api/utils"
+import { raidTypeExpansions, raidTypeLabels } from "../../api/utils"
 import { Routes } from "../../Routes"
 import { ActionButton } from "../ActionButton"
 
@@ -51,7 +51,19 @@ export const RaidEdit: React.FC<{ raid?: Raid; raidTextChannels: RaidTextChannel
             <form onSubmit={handleSubmit}>
                 <FormGroup label="Raid">
                     <HTMLSelect value={raidType} onChange={e => setRaidType(e.target.value as RaidType)}>
-                        {RaidTypes.map(type => (
+                        {raidTypeExpansions.vanilla.map(type => (
+                            <option key={type} value={type}>
+                                {raidTypeLabels[type]}
+                            </option>
+                        ))}
+                        <option disabled>──────────</option>
+                        {raidTypeExpansions.tbc.map(type => (
+                            <option key={type} value={type}>
+                                {raidTypeLabels[type]}
+                            </option>
+                        ))}
+                        <option disabled>──────────</option>
+                        {raidTypeExpansions.all.map(type => (
                             <option key={type} value={type}>
                                 {raidTypeLabels[type]}
                             </option>

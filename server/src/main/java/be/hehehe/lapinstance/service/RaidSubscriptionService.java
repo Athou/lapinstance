@@ -200,7 +200,7 @@ public class RaidSubscriptionService {
 
 		Raid raid = raidRepository.findById(raidId).orElseThrow(ResourceNotFoundException::new);
 		for (User user : notifyUsers) {
-			String message = String.format("Hey, tu ne t'es pas inscrit au raid %s du %s!", raid.getRaidType().getLongName(),
+			String message = String.format("Hey, tu ne t'es pas inscrit au raid %s du %s!", raid.getRaidType().getName(),
 					raid.getFormattedDate());
 			message += System.lineSeparator() + String.format("Tu peux t'inscrire depuis le channel <#%s> ou via la page <%s>",
 					raid.getDiscordTextChannelId(), urlService.getRaidUrl(raidId));

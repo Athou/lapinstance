@@ -1,6 +1,5 @@
 import { CharacterSpec, RaidSubscriptionResponse, RaidType } from "."
 
-export const RaidTypes = Object.keys(RaidType) as RaidType[]
 export const raidTypeLabels = {
     [RaidType.ONYXIA]: "Onyxia",
     [RaidType.MOLTEN_CORE]: "Molten Core",
@@ -9,6 +8,17 @@ export const raidTypeLabels = {
     [RaidType.AHN_QIRAJ_20]: "Ahn'Qiraj 20",
     [RaidType.ZUL_GURUB]: "Zul'Gurub",
     [RaidType.NAXXRAMAS]: "Naxxramas",
+
+    [RaidType.KARAZHAN]: "Karazhan",
+    [RaidType.GRUUL]: "Gruul",
+    [RaidType.MAGTHERIDON]: "Magtheridon",
+    [RaidType.SERPENTSHRINE_CAVERN]: "Serpentshrine Cavern",
+    [RaidType.TEMPEST_KEEP]: "Tempest Keep",
+    [RaidType.HYJAL_SUMMIT]: "Hyjal Summit",
+    [RaidType.BLACK_TEMPLE]: "Black Temple",
+    [RaidType.ZUL_AMAN]: "Zul'Aman",
+    [RaidType.SUNWELL_PLATEAU]: "Sunwell Plateau",
+
     [RaidType.PVP]: "PvP",
     [RaidType.OTHER]: "Autre"
 }
@@ -20,8 +30,44 @@ export const raidTypeShortLabels = {
     [RaidType.AHN_QIRAJ_20]: "AQ20",
     [RaidType.ZUL_GURUB]: "ZG",
     [RaidType.NAXXRAMAS]: "Naxx",
+
+    [RaidType.KARAZHAN]: "KZ",
+    [RaidType.GRUUL]: "Gruul",
+    [RaidType.MAGTHERIDON]: "Mag",
+    [RaidType.SERPENTSHRINE_CAVERN]: "SSC",
+    [RaidType.TEMPEST_KEEP]: "TK",
+    [RaidType.HYJAL_SUMMIT]: "Hyjal",
+    [RaidType.BLACK_TEMPLE]: "BT",
+    [RaidType.ZUL_AMAN]: "ZA",
+    [RaidType.SUNWELL_PLATEAU]: "SWP",
+
     [RaidType.PVP]: "PvP",
     [RaidType.OTHER]: "Autre"
+}
+
+export const raidTypeExpansions = {
+    vanilla: [
+        RaidType.ONYXIA,
+        RaidType.MOLTEN_CORE,
+        RaidType.BLACKWING_LAIR,
+        RaidType.AHN_QIRAJ_40,
+        RaidType.AHN_QIRAJ_20,
+        RaidType.ZUL_GURUB,
+        RaidType.NAXXRAMAS
+    ],
+    tbc: [
+        RaidType.KARAZHAN,
+        RaidType.GRUUL,
+        RaidType.MAGTHERIDON,
+        RaidType.SERPENTSHRINE_CAVERN,
+        RaidType.TEMPEST_KEEP,
+        RaidType.HYJAL_SUMMIT,
+        RaidType.BLACK_TEMPLE,
+        RaidType.ZUL_AMAN,
+        RaidType.SUNWELL_PLATEAU
+    ],
+
+    all: [RaidType.PVP, RaidType.OTHER]
 }
 
 export const characterSpecLabels = {

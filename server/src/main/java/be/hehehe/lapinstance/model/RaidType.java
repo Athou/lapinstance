@@ -10,18 +10,29 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum RaidType {
 
-	ONYXIA("Ony", "Onyxia"),
-	MOLTEN_CORE("MC", "Molten Core"),
-	ZUL_GURUB("ZG", "Zul'Gurub"),
-	BLACKWING_LAIR("BWL", "Blackwing Lair"),
-	AHN_QIRAJ_20("AQ20", "Ahn'Qiraj 20"),
-	AHN_QIRAJ_40("AQ40", "Ahn'Qiraj 40"),
-	NAXXRAMAS("Naxx", "Naxxramas"),
+	// vanilla
+	ONYXIA("Onyxia"),
+	MOLTEN_CORE("Molten Core"),
+	ZUL_GURUB("Zul'Gurub"),
+	BLACKWING_LAIR("Blackwing Lair"),
+	AHN_QIRAJ_20("Ahn'Qiraj 20"),
+	AHN_QIRAJ_40("Ahn'Qiraj 40"),
+	NAXXRAMAS("Naxxramas"),
 
-	PVP("PvP", "PvP"),
-	OTHER("Autre", "Autre");
+	// tbc
+	KARAZHAN("Karazhan"),
+	GRUUL("Gruul"),
+	MAGTHERIDON("Magtheridon"),
+	SERPENTSHRINE_CAVERN("Serpentshrine Cavern"),
+	TEMPEST_KEEP("Tempest Keep"),
+	HYJAL_SUMMIT("Hyjal Summit"),
+	BLACK_TEMPLE("Black Temple"),
+	ZUL_AMAN("Zul'Aman"),
+	SUNWELL_PLATEAU("Sunwell Plateau"),
 
-	private final String shortName;
-	private final String longName;
+	PVP("PvP"),
+	OTHER("Autre");
+
+	private final String name;
 
 }
