@@ -36,7 +36,6 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.MessageReaction.ReactionEmote;
-import net.dv8tion.jda.api.entities.PrivateChannel;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
@@ -265,8 +264,7 @@ public class DiscordServiceImpl implements DiscordService {
 
 	@Override
 	public void sendPrivateMessage(String userId, String message) {
-		PrivateChannel privateChannel = jda.getUserById(userId).openPrivateChannel().complete();
-		privateChannel.sendMessage(message).complete();
+		jda.getUserById(userId).openPrivateChannel().queue(channel -> channel.sendMessage(message).queue());
 	}
 
 	@Override
