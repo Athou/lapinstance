@@ -44,8 +44,8 @@ export const RaidNotificationButton: React.FC<{ raidId: number }> = props => {
                 <div className={Classes.DIALOG_BODY}>
                     <Grid>
                         <Row>
-                            {usersChunks.map((chunk, i) => (
-                                <Col md key={i}>
+                            {usersChunks.map(chunk => (
+                                <Col md key={chunk[0].id}>
                                     {chunk.map(u => (
                                         <Checkbox key={u.id} label={u.name} checked={u.selected} onChange={() => checkboxClicked(u)} />
                                     ))}

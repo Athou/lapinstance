@@ -38,13 +38,13 @@ const specToIcon = {
     [CharacterSpec.PRIEST_SHADOW]: priest_shadow,
     [CharacterSpec.SHAMAN_RESTO]: shaman_resto,
     [CharacterSpec.SHAMAN_ENH]: shaman_enh,
-    [CharacterSpec.SHAMAN_ELEM]: shaman_elem
+    [CharacterSpec.SHAMAN_ELEM]: shaman_elem,
 }
 
 const StyledImage = styled.img`
     vertical-align: middle;
 `
 
-export const SpecIcon: React.FC<{ spec: CharacterSpec; size?: number }> = props => {
-    return <StyledImage src={specToIcon[props.spec]} height={props.size ?? 16} />
-}
+export const SpecIcon: React.FC<{ spec: CharacterSpec; size?: number }> = props => (
+    <StyledImage src={specToIcon[props.spec]} height={props.size ?? 16} />
+)

@@ -8,7 +8,7 @@ import {
     AxiosSessionControllerClient,
     AxiosSystemControllerClient,
     AxiosUserCharacterControllerClient,
-    AxiosUserControllerClient
+    AxiosUserControllerClient,
 } from "."
 
 const toaster = Toaster.create()
@@ -18,9 +18,9 @@ axiosInstance.interceptors.response.use(
     response => response,
     error => {
         toaster.show({
-            message: "Erreur: " + error,
+            message: `Erreur: ${error}`,
             icon: "error",
-            intent: "danger"
+            intent: "danger",
         })
         return Promise.reject(error)
     }
@@ -40,5 +40,5 @@ export const client = {
     users: new AxiosUserControllerClient("/", axiosInstance),
     userCharacters: new AxiosUserCharacterControllerClient("/", axiosInstance),
     system: new AxiosSystemControllerClient("/", axiosInstance),
-    newWsClient: () => new Client({ brokerURL: wsUrl })
+    newWsClient: () => new Client({ brokerURL: wsUrl }),
 }

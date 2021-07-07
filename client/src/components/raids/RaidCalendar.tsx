@@ -6,12 +6,9 @@ import { Box, Flex } from "reflexbox"
 import styled from "styled-components"
 import { Raid, RaidResetDuration } from "../../api"
 import { raidTypeShortLabels } from "../../api/utils"
+import "./RaidCalendar.css"
 
 const localizer = momentLocalizer(moment)
-
-const StyedCalendar = styled(Calendar)`
-    height: 600px;
-`
 
 const ToolbarLabelBox = styled(Box)`
     align-self: flex-end;
@@ -30,6 +27,19 @@ export type RaidReset = {
 
 type EventPayload = { type: "raid"; raid: Raid } | { type: "reset"; reset: RaidReset }
 
+const Toolbar: React.FC<ToolbarProps> = props => (
+    <Flex>
+        <ToolbarLabelBox flexGrow={1}>{props.label}</ToolbarLabelBox>
+        <Box>
+            <ToolbarButtonGroup>
+                <Button onClick={() => props.onNavigate("PREV")} icon="chevron-left" />
+                <Button onClick={() => props.onNavigate("TODAY")} icon="calendar" />
+                <Button onClick={() => props.onNavigate("NEXT")} icon="chevron-right" />
+            </ToolbarButtonGroup>
+        </Box>
+    </Flex>
+)
+
 export const RaidCalendar: React.FC<{
     raids: Raid[]
     resets: RaidReset[]
@@ -40,37 +50,37 @@ export const RaidCalendar: React.FC<{
         endDate.setHours(23, 59, 59, 999)
         const resource: EventPayload = {
             type: "raid",
-            raid
+            raid,
         }
         return {
             title: `${moment(raid.date).format("HH:mm")} ${raidTypeShortLabels[raid.raidType]}`,
             start: new Date(raid.date),
             end: endDate,
-            resource
+            resource,
         }
     })
 
     props.resets.forEach(reset => {
         const resource: EventPayload = {
             type: "reset",
-            reset
+            reset,
         }
         events.push({
             title: `${moment(reset.date).format("HH:mm")} Reset ${reset.label}`,
             start: new Date(reset.date),
             end: new Date(reset.date),
-            resource
+            resource,
         })
     })
 
-    const eventPropGetter: EventPropGetter<any> = (event, start, end, isSelected) => {
-        const resource: EventPayload = event.resource
+    const eventPropGetter: EventPropGetter<any> = event => {
+        const resource = event.resource as EventPayload
         if (resource.type === "reset") {
             const color = resource.reset.raidResetDuration === RaidResetDuration.FIVE_DAYS ? "#793122" : "#4CA66B"
             return {
                 style: {
-                    backgroundColor: color
-                }
+                    backgroundColor: color,
+                },
             }
         }
 
@@ -79,33 +89,18 @@ export const RaidCalendar: React.FC<{
 
     return (
         <>
-            <StyedCalendar
+            <Calendar
                 localizer={localizer}
                 events={events}
                 views={["month"]}
                 eventPropGetter={eventPropGetter}
                 onSelectEvent={(e: Event) => {
-                    const resource: EventPayload = e.resource
-                    resource.type === "raid" && props.onRaidSelect(resource.raid.id)
+                    const resource = e.resource as EventPayload
+                    if (resource.type === "raid") props.onRaidSelect(resource.raid.id)
                 }}
                 components={{ toolbar: Toolbar }}
-                popup={true}
+                popup
             />
         </>
-    )
-}
-
-const Toolbar: React.FC<ToolbarProps> = props => {
-    return (
-        <Flex>
-            <ToolbarLabelBox flexGrow={1}>{props.label}</ToolbarLabelBox>
-            <Box>
-                <ToolbarButtonGroup>
-                    <Button onClick={() => props.onNavigate("PREV")} icon="chevron-left" />
-                    <Button onClick={() => props.onNavigate("TODAY")} icon="calendar" />
-                    <Button onClick={() => props.onNavigate("NEXT")} icon="chevron-right" />
-                </ToolbarButtonGroup>
-            </Box>
-        </Flex>
     )
 }

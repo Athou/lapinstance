@@ -3,7 +3,7 @@ import React from "react"
 import { useHistory, useRouteMatch } from "react-router-dom"
 import { UserRole } from "../api"
 import { client } from "../api/client"
-import { useSession } from "../App"
+import { useSession } from "../hooks/useSession"
 import { Routes } from "../Routes"
 
 const toaster = Toaster.create()
@@ -20,7 +20,7 @@ export const Header: React.FC = () => {
             toaster.show({
                 message: "Rôles rafraîchis",
                 intent: "success",
-                icon: "tick"
+                icon: "tick",
             })
         )
     }
@@ -48,7 +48,7 @@ export const Header: React.FC = () => {
             <NavbarGroup align="right">
                 {session.hasRole(UserRole.ADMIN) && (
                     <Tooltip content="Rafraîchir les rôles Discord">
-                        <Button minimal icon="refresh" onClick={() => refreshDiscordRolesClicked()}></Button>
+                        <Button minimal icon="refresh" onClick={() => refreshDiscordRolesClicked()} />
                     </Tooltip>
                 )}
                 <Button

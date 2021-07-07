@@ -6,11 +6,11 @@ import { useHistory } from "react-router-dom"
 import styled from "styled-components"
 import { Raid, RaidResetDuration, RaidSubscription, UserRole } from "../api"
 import { client } from "../api/client"
-import { useSession } from "../App"
 import { Loader } from "../components/Loader"
 import { PageTitle } from "../components/PageTitle"
 import { RaidCalendar, RaidReset } from "../components/raids/RaidCalendar"
 import { RaidCard } from "../components/raids/RaidCard"
+import { useSession } from "../hooks/useSession"
 import { Routes } from "../Routes"
 
 const RaidSection = styled.div`
@@ -30,26 +30,20 @@ export const RaidsPage: React.FC = () => {
     useEffect(() => {
         setLoading(true)
 
-        const raidResetFrom = moment()
-            .subtract(1, "month")
-            .startOf("month")
-            .valueOf()
-        const raidResetUntil = moment()
-            .add(1, "month")
-            .endOf("month")
-            .valueOf()
+        const raidResetFrom = moment().subtract(1, "month").startOf("month").valueOf()
+        const raidResetUntil = moment().add(1, "month").endOf("month").valueOf()
 
         Promise.all([
             client.raids.findAllRaids(),
             client.users.findAllSubscriptions(session.user.id),
             client.raidTypes.nextReset(RaidResetDuration.FIVE_DAYS, {
                 from: raidResetFrom,
-                until: raidResetUntil
+                until: raidResetUntil,
             }),
             client.raidTypes.nextReset(RaidResetDuration.THREE_DAYS, {
                 from: raidResetFrom,
-                until: raidResetUntil
-            })
+                until: raidResetUntil,
+            }),
         ])
             .then(([raidsResp, subsResp, fiveDaysResetResp, threeDaysResetResp]) => {
                 setRaids(raidsResp.data)
@@ -60,14 +54,14 @@ export const RaidsPage: React.FC = () => {
                     ...fiveDaysResetResp.data.map(r => ({
                         date: r,
                         label: "5J",
-                        raidResetDuration: RaidResetDuration.FIVE_DAYS
+                        raidResetDuration: RaidResetDuration.FIVE_DAYS,
                     }))
                 )
                 resets.push(
                     ...threeDaysResetResp.data.map(r => ({
                         date: r,
                         label: "3J",
-                        raidResetDuration: RaidResetDuration.THREE_DAYS
+                        raidResetDuration: RaidResetDuration.THREE_DAYS,
                     }))
                 )
                 setRaidResets(resets)

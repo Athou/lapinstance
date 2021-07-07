@@ -12,13 +12,13 @@ export const RaidParticipantsCopyButton: React.FC<{ subscriptions: RaidSubscript
                 toaster.show({
                     message: "Liste copiée",
                     intent: "success",
-                    icon: "tick"
+                    icon: "tick",
                 }),
             () =>
                 toaster.show({
                     message: "Erreur",
                     intent: "danger",
-                    icon: "cross"
+                    icon: "cross",
                 })
         )
     }

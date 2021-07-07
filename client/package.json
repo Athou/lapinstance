@@ -22,15 +22,17 @@
         "@types/reflexbox": "^4.0.0",
         "@types/styled-components": "^5.1.0",
         "axios": "^0.19.2",
+        "jotai": "^1.1.2",
         "lodash": "^4.17.15",
         "moment": "^2.24.0",
         "react": "^16.13.1",
         "react-big-calendar": "^0.24.5",
+        "react-day-picker": "^7.3.2",
         "react-dom": "^16.13.1",
         "react-flexbox-grid": "^2.1.2",
         "react-moment": "^0.9.7",
         "react-router-dom": "^5.1.2",
-        "react-scripts": "3.4.1",
+        "react-scripts": "4.0.3",
         "reflexbox": "^4.0.6",
         "styled-components": "^5.1.0",
         "typesafe-react-router": "^2.2.4",
@@ -40,11 +42,8 @@
         "start": "react-scripts start",
         "build": "react-scripts build",
         "test": "react-scripts test",
-        "prettier-check": "prettier --check ./src/**/*.{js,jsx,ts,tsx}",
-        "eject": "react-scripts eject"
-    },
-    "eslintConfig": {
-        "extends": "react-app"
+        "eject": "react-scripts eject",
+        "eslint": "eslint --ext=.js,.jsx,.ts,.tsx src"
     },
     "browserslist": {
         "production": [
@@ -59,6 +58,9 @@
         ]
     },
     "devDependencies": {
-        "prettier": "^1.19.1"
+        "eslint-config-airbnb-typescript": "^12.3.1",
+        "eslint-config-prettier": "^8.3.0",
+        "eslint-plugin-prettier": "^3.4.0",
+        "prettier": "^2.3.2"
     }
 }

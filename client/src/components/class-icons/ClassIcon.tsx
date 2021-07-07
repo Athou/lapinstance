@@ -20,13 +20,13 @@ const classToIcon = {
     [CharacterClass.WARLOCK]: warlock,
     [CharacterClass.HUNTER]: hunter,
     [CharacterClass.PRIEST]: priest,
-    [CharacterClass.SHAMAN]: shaman
+    [CharacterClass.SHAMAN]: shaman,
 }
 
 const StyledImage = styled.img`
     vertical-align: middle;
 `
 
-export const ClassIcon: React.FC<{ characterClass: CharacterClass; size?: number }> = props => {
-    return <StyledImage src={classToIcon[props.characterClass]} height={props.size ?? 16} />
-}
+export const ClassIcon: React.FC<{ characterClass: CharacterClass; size?: number }> = props => (
+    <StyledImage src={classToIcon[props.characterClass]} height={props.size ?? 16} />
+)

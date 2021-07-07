@@ -1,0 +1,7 @@
+build
+coverage
+target
+node
+node_modules
+
+jest.config.js

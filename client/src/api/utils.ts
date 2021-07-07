@@ -20,7 +20,7 @@ export const raidTypeLabels = {
     [RaidType.SUNWELL_PLATEAU]: "Sunwell Plateau",
 
     [RaidType.PVP]: "PvP",
-    [RaidType.OTHER]: "Autre"
+    [RaidType.OTHER]: "Autre",
 }
 export const raidTypeShortLabels = {
     [RaidType.ONYXIA]: "Ony",
@@ -42,7 +42,7 @@ export const raidTypeShortLabels = {
     [RaidType.SUNWELL_PLATEAU]: "SWP",
 
     [RaidType.PVP]: "PvP",
-    [RaidType.OTHER]: "Autre"
+    [RaidType.OTHER]: "Autre",
 }
 
 export const raidTypeExpansions = {
@@ -53,7 +53,7 @@ export const raidTypeExpansions = {
         RaidType.AHN_QIRAJ_40,
         RaidType.AHN_QIRAJ_20,
         RaidType.ZUL_GURUB,
-        RaidType.NAXXRAMAS
+        RaidType.NAXXRAMAS,
     ],
     tbc: [
         RaidType.KARAZHAN,
@@ -64,10 +64,10 @@ export const raidTypeExpansions = {
         RaidType.HYJAL_SUMMIT,
         RaidType.BLACK_TEMPLE,
         RaidType.ZUL_AMAN,
-        RaidType.SUNWELL_PLATEAU
+        RaidType.SUNWELL_PLATEAU,
     ],
 
-    all: [RaidType.PVP, RaidType.OTHER]
+    all: [RaidType.PVP, RaidType.OTHER],
 }
 
 export const characterSpecLabels = {
@@ -88,7 +88,7 @@ export const characterSpecLabels = {
     [CharacterSpec.PRIEST_SHADOW]: "Prêtre - Ombre",
     [CharacterSpec.SHAMAN_ENH]: "Chaman - Amélioration",
     [CharacterSpec.SHAMAN_ELEM]: "Chaman - Élémentaire",
-    [CharacterSpec.SHAMAN_RESTO]: "Chaman - Restauration"
+    [CharacterSpec.SHAMAN_RESTO]: "Chaman - Restauration",
 }
 export const CharacterSpecs = (Object.keys(CharacterSpec) as CharacterSpec[]).sort((a, b) =>
     characterSpecLabels[a].localeCompare(characterSpecLabels[b])
@@ -99,20 +99,20 @@ export const raidSubscriptionResponseLabels = {
     [RaidSubscriptionResponse.PRESENT]: "présent",
     [RaidSubscriptionResponse.LATE]: "en retard",
     [RaidSubscriptionResponse.BENCH]: "dispo si besoin",
-    [RaidSubscriptionResponse.ABSENT]: "absent"
+    [RaidSubscriptionResponse.ABSENT]: "absent",
 }
 
 export enum CharacterRole {
     TANK = "TANK",
     MELEE = "MELEE",
     RANGED = "RANGED",
-    HEAL = "HEAL"
+    HEAL = "HEAL",
 }
 export const characterRoleLabels = {
     [CharacterRole.TANK]: "Tank",
     [CharacterRole.MELEE]: "CAC",
     [CharacterRole.RANGED]: "Ranged",
-    [CharacterRole.HEAL]: "Heal"
+    [CharacterRole.HEAL]: "Heal",
 }
 export const specToRoleMapping = {
     [CharacterSpec.DRUID_RESTO]: CharacterRole.HEAL,
@@ -132,5 +132,5 @@ export const specToRoleMapping = {
     [CharacterSpec.PRIEST_SHADOW]: CharacterRole.RANGED,
     [CharacterSpec.SHAMAN_ENH]: CharacterRole.MELEE,
     [CharacterSpec.SHAMAN_ELEM]: CharacterRole.RANGED,
-    [CharacterSpec.SHAMAN_RESTO]: CharacterRole.HEAL
+    [CharacterSpec.SHAMAN_RESTO]: CharacterRole.HEAL,
 }

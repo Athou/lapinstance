@@ -1,0 +1,30 @@
+{
+    "extends": ["plugin:react/recommended", "plugin:jest/recommended", "react-app", "react-app/jest", "airbnb-typescript", "prettier"],
+    "plugins": ["jest", "prettier"],
+    "parserOptions": {
+        "project": "./tsconfig.json"
+    },
+    "rules": {
+        // make eslint check prettier rules
+        "prettier/prettier": "error",
+
+        // make sure the key prop is filled when required
+        "react/jsx-key": ["error", { "checkFragmentShorthand": true }],
+
+        // no longer required with modern react versions
+        "react/react-in-jsx-scope": "off",
+
+        // not required with typescript
+        "react/prop-types": "off",
+        "react/require-default-props": "off",
+
+        // matter of taste
+        "react/destructuring-assignment": "off",
+        "react/jsx-props-no-spreading": "off",
+        "react/no-unescaped-entities": "off",
+        "import/prefer-default-export": "off",
+
+        // generates false positives
+        "jest/no-done-callback": "off"
+    }
+}
