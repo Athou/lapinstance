@@ -41,12 +41,12 @@
 						</configuration>
 					</execution>
 					<execution>
-						<id>prettier check</id>
+						<id>eslint</id>
 						<goals>
 							<goal>npm</goal>
 						</goals>
 						<configuration>
-							<arguments>run-script prettier-check</arguments>
+							<arguments>run eslint</arguments>
 						</configuration>
 					</execution>
 					<execution>

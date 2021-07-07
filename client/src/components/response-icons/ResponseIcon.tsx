@@ -10,13 +10,13 @@ const responseToIcon = {
     [RaidSubscriptionResponse.PRESENT]: present,
     [RaidSubscriptionResponse.LATE]: late,
     [RaidSubscriptionResponse.BENCH]: bench,
-    [RaidSubscriptionResponse.ABSENT]: absent
+    [RaidSubscriptionResponse.ABSENT]: absent,
 }
 
 const StyledImage = styled.img`
     vertical-align: middle;
 `
 
-export const ResponseIcon: React.FC<{ response: RaidSubscriptionResponse; size?: number }> = props => {
-    return <StyledImage src={responseToIcon[props.response]} height={props.size ?? 16} />
-}
+export const ResponseIcon: React.FC<{ response: RaidSubscriptionResponse; size?: number }> = props => (
+    <StyledImage src={responseToIcon[props.response]} height={props.size ?? 16} />
+)

@@ -5,11 +5,11 @@ export const Routes = {
         list: route("raids"),
         new: route("raid", "new"),
         show: route("raid", "show", param("raidId")),
-        edit: route("raid", "edit", param("raidId"))
+        edit: route("raid", "edit", param("raidId")),
     },
     user: {
         list: route("users"),
-        show: route("user", param("userId"))
+        show: route("user", param("userId")),
     },
-    profile: route("profile")
+    profile: route("profile"),
 }

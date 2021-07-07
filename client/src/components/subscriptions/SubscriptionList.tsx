@@ -7,53 +7,9 @@ import { useHistory } from "react-router-dom"
 import styled from "styled-components"
 import { RaidSubscription } from "../../api"
 import { CharacterRole, characterRoleLabels, specToRoleMapping } from "../../api/utils"
-import { useSession } from "../../App"
+import { useSession } from "../../hooks/useSession"
 import { Routes } from "../../Routes"
 import { SpecIcon } from "../spec-icons/SpecIcon"
-
-export type SubscriptionModel = RaidSubscription & {
-    mainCharacterName?: string
-    index: number
-}
-
-export const SubscriptionList: React.FC<{ subscriptions: SubscriptionModel[]; showIndexes: boolean }> = props => {
-    const presents = props.subscriptions.filter(sub => sub.response === "PRESENT")
-    const absents = props.subscriptions.filter(sub => sub.response === "ABSENT")
-    const lates = props.subscriptions.filter(sub => sub.response === "LATE")
-    const benches = props.subscriptions.filter(sub => sub.response === "BENCH")
-
-    const roleList = (role: CharacterRole) => {
-        const subs = presents.filter(sub => sub.character && specToRoleMapping[sub.character.spec] === role)
-        const title = characterRoleLabels[role]
-        return <RaidSubscriptionList title={title} subscriptions={subs} showIndexes={props.showIndexes} />
-    }
-
-    return (
-        <>
-            <H4>Inscrits ({presents.length})</H4>
-            <Grid>
-                <Row>
-                    <Col xs>{roleList(CharacterRole.TANK)}</Col>
-                    <Col xs>{roleList(CharacterRole.MELEE)}</Col>
-                    <Col xs>{roleList(CharacterRole.RANGED)}</Col>
-                    <Col xs>{roleList(CharacterRole.HEAL)}</Col>
-                </Row>
-                <Row>
-                    <Col xs>
-                        <RaidSubscriptionList title="En retard" subscriptions={lates} showIndexes={props.showIndexes} />
-                    </Col>
-                    <Col xs>
-                        <RaidSubscriptionList title="Bench" subscriptions={benches} showIndexes={props.showIndexes} />
-                    </Col>
-                    <Col xs>
-                        <RaidSubscriptionList title="Absents" subscriptions={absents} showIndexes={props.showIndexes} />
-                    </Col>
-                    <Col xs></Col>
-                </Row>
-            </Grid>
-        </>
-    )
-}
 
 const CharacterName = styled.span`
     margin-left: 0.2rem;
@@ -73,6 +29,23 @@ const MainCharacterName = styled.span`
 const CharactersWrapper = styled.div`
     margin-bottom: 2rem;
 `
+
+const StyledTag = styled(Tag)`
+    margin: 0 0.5rem;
+`
+
+export type SubscriptionModel = RaidSubscription & {
+    mainCharacterName?: string
+    index: number
+}
+
+const RaidSubscriptionOrder: React.FC<{ index: number; date: number }> = props => (
+    <Tooltip content={<Moment format="DD/MM/YYYY HH:mm">{props.date}</Moment>}>
+        <StyledTag minimal round>
+            {props.index + 1}
+        </StyledTag>
+    </Tooltip>
+)
 
 const RaidSubscriptionList: React.FC<{ title: string; subscriptions: SubscriptionModel[]; showIndexes: boolean }> = props => {
     const session = useSession()
@@ -110,16 +83,41 @@ const RaidSubscriptionList: React.FC<{ title: string; subscriptions: Subscriptio
     )
 }
 
-const StyledTag = styled(Tag)`
-    margin: 0 0.5rem;
-`
+export const SubscriptionList: React.FC<{ subscriptions: SubscriptionModel[]; showIndexes: boolean }> = props => {
+    const presents = props.subscriptions.filter(sub => sub.response === "PRESENT")
+    const absents = props.subscriptions.filter(sub => sub.response === "ABSENT")
+    const lates = props.subscriptions.filter(sub => sub.response === "LATE")
+    const benches = props.subscriptions.filter(sub => sub.response === "BENCH")
 
-const RaidSubscriptionOrder: React.FC<{ index: number; date: number }> = props => {
+    const roleList = (role: CharacterRole) => {
+        const subs = presents.filter(sub => sub.character && specToRoleMapping[sub.character.spec] === role)
+        const title = characterRoleLabels[role]
+        return <RaidSubscriptionList title={title} subscriptions={subs} showIndexes={props.showIndexes} />
+    }
+
     return (
-        <Tooltip content={<Moment format="DD/MM/YYYY HH:mm">{props.date}</Moment>}>
-            <StyledTag minimal={true} round={true}>
-                {props.index + 1}
-            </StyledTag>
-        </Tooltip>
+        <>
+            <H4>Inscrits ({presents.length})</H4>
+            <Grid>
+                <Row>
+                    <Col xs>{roleList(CharacterRole.TANK)}</Col>
+                    <Col xs>{roleList(CharacterRole.MELEE)}</Col>
+                    <Col xs>{roleList(CharacterRole.RANGED)}</Col>
+                    <Col xs>{roleList(CharacterRole.HEAL)}</Col>
+                </Row>
+                <Row>
+                    <Col xs>
+                        <RaidSubscriptionList title="En retard" subscriptions={lates} showIndexes={props.showIndexes} />
+                    </Col>
+                    <Col xs>
+                        <RaidSubscriptionList title="Bench" subscriptions={benches} showIndexes={props.showIndexes} />
+                    </Col>
+                    <Col xs>
+                        <RaidSubscriptionList title="Absents" subscriptions={absents} showIndexes={props.showIndexes} />
+                    </Col>
+                    <Col xs />
+                </Row>
+            </Grid>
+        </>
     )
 }

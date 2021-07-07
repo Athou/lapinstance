@@ -44,7 +44,7 @@ export const UsersPage: React.FC = () => {
     }, [])
 
     const row = (char: UserCharacter) => {
-        let rerolls = userCharacters.filter(c => !c.main && c.user.id === char.user.id).sort((a, b) => a.name.localeCompare(b.name))
+        const rerolls = userCharacters.filter(c => !c.main && c.user.id === char.user.id).sort((a, b) => a.name.localeCompare(b.name))
 
         return (
             <tr onClick={() => history.push(Routes.user.show.create({ userId: String(char.user.id) }))}>

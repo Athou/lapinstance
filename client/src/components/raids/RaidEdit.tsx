@@ -14,9 +14,7 @@ export const RaidEdit: React.FC<{ raid?: Raid; raidTextChannels: RaidTextChannel
     const newRaidDate = new Date()
     newRaidDate.setHours(20, 30, 0, 0)
 
-    const datePickerMaxDate = moment()
-        .add(2, "years")
-        .toDate()
+    const datePickerMaxDate = moment().add(2, "years").toDate()
 
     const [raidType, setRaidType] = useState(props.raid?.raidType ?? RaidType.ONYXIA)
     const [raidTextChannelId, setRaidTextChannelId] = useState(props.raid?.discordTextChannelId ?? props.raidTextChannels[0].id)
@@ -34,7 +32,7 @@ export const RaidEdit: React.FC<{ raid?: Raid; raidTextChannels: RaidTextChannel
             raidType,
             raidTextChannelId,
             date,
-            comment
+            comment,
         }
 
         setSaving(true)
@@ -88,7 +86,7 @@ export const RaidEdit: React.FC<{ raid?: Raid; raidTextChannels: RaidTextChannel
                         locale="fr"
                         localeUtils={MomentLocaleUtils}
                         value={new Date(date)}
-                        onChange={date => setDate(date.getTime())}
+                        onChange={d => setDate(d.getTime())}
                         timePrecision="minute"
                         maxDate={datePickerMaxDate}
                     />

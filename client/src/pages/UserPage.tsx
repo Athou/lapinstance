@@ -4,11 +4,11 @@ import { Col, Row } from "react-flexbox-grid"
 import styled from "styled-components"
 import { CharacterSpec, User, UserCharacter, UserRole } from "../api"
 import { client } from "../api/client"
-import { useSession } from "../App"
 import { CharacterCard } from "../components/characters/CharacterCard"
 import { CharacterEdit } from "../components/characters/CharacterEdit"
 import { Loader } from "../components/Loader"
 import { PageTitle } from "../components/PageTitle"
+import { useSession } from "../hooks/useSession"
 
 type EditableUserCharacter = UserCharacter & { editMode: boolean }
 const toaster = Toaster.create()
@@ -32,15 +32,16 @@ export const UserPage: React.FC<{ userId: number }> = props => {
 
     const enableUser = () => user && client.users.saveUser(user.id, { disabled: false }).then(resp => setUser(resp.data))
     const disableUser = () => {
-        user &&
+        if (user) {
             client.users.saveUser(user.id, { disabled: true }).then(resp => {
                 setUser(resp.data)
                 setDisablingConfirmationOpen(false)
             })
+        }
     }
 
     const addCharacter = () => {
-        user &&
+        if (user) {
             setCharacters(chars => [
                 ...chars,
                 {
@@ -49,9 +50,10 @@ export const UserPage: React.FC<{ userId: number }> = props => {
                     spec: CharacterSpec.DRUID_BALANCE,
                     main: true,
                     editMode: true,
-                    user: user
-                }
+                    user,
+                },
             ])
+        }
     }
 
     const saveCharacter = (char: UserCharacter) => {
@@ -60,20 +62,19 @@ export const UserPage: React.FC<{ userId: number }> = props => {
                 characterId: char.id === NEW_CHARACTER_ID ? undefined : char.id,
                 name: char.name,
                 spec: char.spec,
-                main: char.main
+                main: char.main,
             })
             .then(resp => {
                 setCharacters(chars => {
                     if (char.id === NEW_CHARACTER_ID) {
                         return chars.map(existing => (existing.id !== NEW_CHARACTER_ID ? existing : { ...resp.data, editMode: false }))
-                    } else {
-                        return chars.map(existing => (existing.id !== resp.data.id ? existing : { ...resp.data, editMode: false }))
                     }
+                    return chars.map(existing => (existing.id !== resp.data.id ? existing : { ...resp.data, editMode: false }))
                 })
                 toaster.show({
                     message: "Personnage enregistré",
                     intent: "success",
-                    icon: "tick"
+                    icon: "tick",
                 })
             })
     }
@@ -98,7 +99,7 @@ export const UserPage: React.FC<{ userId: number }> = props => {
                 setCharacters(
                     charsResp.data.map(c => ({
                         ...c,
-                        editMode: false
+                        editMode: false,
                     }))
                 )
             })

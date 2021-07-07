@@ -8,7 +8,6 @@ import styled from "styled-components"
 import { Raid, RaidSubscription, RaidSubscriptionResponse, UserCharacter, UserRole } from "../api"
 import { client } from "../api/client"
 import { raidTypeLabels } from "../api/utils"
-import { useSession } from "../App"
 import { ActionButton } from "../components/ActionButton"
 import { Loader } from "../components/Loader"
 import { PageTitle } from "../components/PageTitle"
@@ -17,6 +16,7 @@ import { RaidParticipantsCopyButton } from "../components/raids/RaidParticipants
 import { SubscriptionList, SubscriptionModel } from "../components/subscriptions/SubscriptionList"
 import { SubscriptionSelection } from "../components/subscriptions/SubscriptionSelection"
 import { UserPicker } from "../components/UserPicker"
+import { useSession } from "../hooks/useSession"
 import { Routes } from "../Routes"
 
 const toaster = Toaster.create()
@@ -43,18 +43,18 @@ export const RaidPage: React.FC<{ raidId: number }> = props => {
     const subscriptionModels: SubscriptionModel[] = _.sortBy(subscriptions, s => s.date).map((s, i) => ({
         ...s,
         mainCharacterName: userCharacters.find(c => c.main && c.user.id === s.user.id)?.name,
-        index: i
+        index: i,
     }))
 
     const editRaid = (raidId: number) => history.push(Routes.raid.edit.create({ raidId: String(raidId) }))
     const deleteRaid = (raidId: number) => client.raids.deleteRaid(raidId).then(() => history.push(Routes.raid.list.create({})))
     const saveSubscription = (character: UserCharacter | undefined, response: RaidSubscriptionResponse | undefined) => {
-        raid &&
+        if (raid) {
             client.raids
                 .saveRaidSubscription(props.raidId, {
                     response: response ?? RaidSubscriptionResponse.PRESENT,
                     userId: impersonatedUserId,
-                    characterId: character?.id
+                    characterId: character?.id,
                 })
                 .then(resp => {
                     setSubscriptions(subs => {
@@ -64,9 +64,10 @@ export const RaidPage: React.FC<{ raidId: number }> = props => {
                     toaster.show({
                         message: "Réponse enregistrée",
                         icon: "tick",
-                        intent: "success"
+                        intent: "success",
                     })
                 })
+        }
     }
 
     useEffect(() => {
@@ -74,7 +75,7 @@ export const RaidPage: React.FC<{ raidId: number }> = props => {
         Promise.all([
             client.raids.getRaid(props.raidId),
             client.raids.findRaidSubscriptions(props.raidId),
-            client.userCharacters.findAllUserCharacters()
+            client.userCharacters.findAllUserCharacters(),
         ])
             .then(([raidResp, subscriptionsResp, userCharactersResp]) => {
                 setRaid(raidResp.data)
@@ -97,7 +98,7 @@ export const RaidPage: React.FC<{ raidId: number }> = props => {
                         toaster.show({
                             message: `${sub.user.name} s'est enregistré`,
                             icon: "arrow-right",
-                            intent: "primary"
+                            intent: "primary",
                         })
                     }
                 })

@@ -2,7 +2,7 @@ import { Card, Checkbox, FormGroup, HTMLSelect, InputGroup } from "@blueprintjs/
 import React, { useState } from "react"
 import { CharacterSpec, UserCharacter } from "../../api"
 import { characterSpecLabels, CharacterSpecs } from "../../api/utils"
-import { useSession } from "../../App"
+import { useSession } from "../../hooks/useSession"
 import { ActionButton } from "../ActionButton"
 
 export const CharacterEdit: React.FC<{
@@ -23,7 +23,7 @@ export const CharacterEdit: React.FC<{
             name,
             spec,
             main,
-            user: session.user
+            user: session.user,
         })
     }
 
@@ -45,7 +45,7 @@ export const CharacterEdit: React.FC<{
                         </HTMLSelect>
                     </FormGroup>
 
-                    <Checkbox label="Main" checked={main} onChange={e => setMain(!main)} />
+                    <Checkbox label="Main" checked={main} onChange={() => setMain(!main)} />
 
                     <ActionButton intent="primary" type="submit" text="Sauver" marginRight />
                     <ActionButton text="Annuler" onClick={props.onCancel} />

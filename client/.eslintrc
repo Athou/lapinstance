@@ -1,0 +1,17 @@
+{
+    "extends": ["plugin:react/recommended", "react-app", "airbnb-typescript", "prettier"],
+    "plugins": ["prettier"],
+    "parserOptions": {
+        "project": "./tsconfig.json"
+    },
+    "rules": {
+        "prettier/prettier": "error",
+        "react/jsx-key": "error",
+        "import/prefer-default-export": "off",
+        "react/react-in-jsx-scope": "off",
+        "react/prop-types": "off",
+        "react/destructuring-assignment": "off",
+        "react/jsx-props-no-spreading": "off",
+        "react/no-unescaped-entities": "off"
+    }
+}
