@@ -1,11 +1,13 @@
 package be.hehehe.lapinstance.service;
 
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import javax.transaction.Transactional;
 
@@ -70,16 +72,21 @@ public class RaidSubscriptionService {
 					return;
 				}
 
-				UserCharacter userCharacter = userCharacterRepository.findByUserId(user.getId())
+				Comparator<UserCharacter> comp = Comparator.comparing(UserCharacter::isMain)
+						.reversed()
+						.thenComparing(Comparator.comparing(UserCharacter::getId));
+				List<UserCharacter> userCharacters = userCharacterRepository.findByUserId(user.getId())
 						.stream()
 						.filter(c -> c.getSpec().getCharacterClass() == characterClass)
-						.findFirst()
-						.orElse(null);
-				if (userCharacter == null) {
+						.sorted(comp)
+						.collect(Collectors.toList());
+				if (userCharacters.isEmpty()) {
 					log.info("no character class found {} for user {} ({})", characterClass, user.getName(), user.getId());
 					sendUnknownCharacterClassPrivateMessage(discordUserId, characterClass);
 					return;
 				}
+
+				UserCharacter userCharacter = getUserCharacter(user, raid, userCharacters);
 
 				RaidSubscription sub = new RaidSubscription();
 				sub.setDate(new Date());
@@ -117,6 +124,25 @@ public class RaidSubscriptionService {
 				log.info("registering user {} ({}) to raid {} and response {}", user.getName(), user.getId(), raid.getId(),
 						sub.getResponse());
 				save(sub);
+			}
+
+			/**
+			 * cycle between user characters
+			 */
+			private UserCharacter getUserCharacter(User user, Raid raid, List<UserCharacter> userCharacters) {
+				Optional<RaidSubscription> existingSubscription = raidSubscriptionRepository.findByRaidIdAndUserId(raid.getId(),
+						user.getId());
+				if (existingSubscription.isPresent() && existingSubscription.get().getCharacter() != null) {
+					long existingCharacterId = existingSubscription.get().getCharacter().getId();
+					int existingCharacterIndex = IntStream.range(0, userCharacters.size())
+							.filter(i -> userCharacters.get(i).getId() == existingCharacterId)
+							.findFirst()
+							.orElse(0);
+					int newIndex = (existingCharacterIndex + 1) % userCharacters.size();
+					return userCharacters.get(newIndex);
+				} else {
+					return userCharacters.get(0);
+				}
 			}
 		});
 	}

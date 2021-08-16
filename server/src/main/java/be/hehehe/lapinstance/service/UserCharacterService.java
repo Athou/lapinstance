@@ -24,13 +24,6 @@ public class UserCharacterService {
 			}
 		}
 
-		// allow only one character of each class
-		if (userCharacters.stream()
-				.anyMatch(c -> c.getId() != character.getId()
-						&& c.getSpec().getCharacterClass() == character.getSpec().getCharacterClass())) {
-			throw new TooManyClassCharacterException();
-		}
-
 		return userCharacterRepository.save(character);
 	}
 
@@ -38,7 +31,4 @@ public class UserCharacterService {
 		private static final long serialVersionUID = 1L;
 	}
 
-	public static class TooManyClassCharacterException extends RuntimeException {
-		private static final long serialVersionUID = 1L;
-	}
 }
