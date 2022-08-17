@@ -30,6 +30,16 @@ public enum RaidType {
 	ZUL_AMAN("Zul'Aman"),
 	SUNWELL_PLATEAU("Sunwell Plateau"),
 
+	// wotlk
+	VAULT_OF_ARCHAVON("Vault of Archavon"),
+	NAXXRAMAS_80("Naxxramas"),
+	THE_OBSIDIAN_SANCTUM("The Obsidian Sanctum"),
+	THE_EYE_OF_ETERNITY("The Eye of Eternity"),
+	ULDUAR("Ulduar"),
+	TRIAL_OF_THE_CRUSADER("Trial of the Crusader"),
+	ONYXIA_80("Onyxia"),
+	ICECROWN_CITADEL("Icecrown Citadel"),
+
 	PVP("PvP"),
 	OTHER("Autre");
 

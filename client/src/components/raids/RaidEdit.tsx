@@ -6,7 +6,7 @@ import MomentLocaleUtils from "react-day-picker/moment"
 import { useHistory } from "react-router-dom"
 import { Raid, RaidTextChannel, RaidType, SaveRaidRequest } from "../../api"
 import { client } from "../../api/client"
-import { raidTypeExpansions, raidTypeLabels } from "../../api/utils"
+import { Expansion, expansionLabels, getExpansion, raidTypeExpansions, raidTypeLabels } from "../../api/utils"
 import { Routes } from "../../Routes"
 import { ActionButton } from "../ActionButton"
 
@@ -16,7 +16,8 @@ export const RaidEdit: React.FC<{ raid?: Raid; raidTextChannels: RaidTextChannel
 
     const datePickerMaxDate = moment().add(2, "years").toDate()
 
-    const [raidType, setRaidType] = useState(props.raid?.raidType ?? RaidType.ONYXIA)
+    const [expansion, setExpansion] = useState<Expansion>((props.raid && getExpansion(props.raid.raidType)) ?? "wotlk")
+    const [raidType, setRaidType] = useState(props.raid?.raidType ?? RaidType.VAULT_OF_ARCHAVON)
     const [raidTextChannelId, setRaidTextChannelId] = useState(props.raid?.discordTextChannelId ?? props.raidTextChannels[0].id)
     const [date, setDate] = useState(props.raid?.date ?? newRaidDate.getTime())
     const [comment, setComment] = useState(props.raid?.comment)
@@ -47,21 +48,18 @@ export const RaidEdit: React.FC<{ raid?: Raid; raidTextChannels: RaidTextChannel
     return (
         <>
             <form onSubmit={handleSubmit}>
+                <FormGroup label="Extension">
+                    <HTMLSelect value={expansion} onChange={e => setExpansion(e.target.value as Expansion)}>
+                        {Object.entries(expansionLabels).map(([key, value]) => (
+                            <option key={key} value={key}>
+                                {value}
+                            </option>
+                        ))}
+                    </HTMLSelect>
+                </FormGroup>
                 <FormGroup label="Raid">
                     <HTMLSelect value={raidType} onChange={e => setRaidType(e.target.value as RaidType)}>
-                        {raidTypeExpansions.vanilla.map(type => (
-                            <option key={type} value={type}>
-                                {raidTypeLabels[type]}
-                            </option>
-                        ))}
-                        <option disabled>──────────</option>
-                        {raidTypeExpansions.tbc.map(type => (
-                            <option key={type} value={type}>
-                                {raidTypeLabels[type]}
-                            </option>
-                        ))}
-                        <option disabled>──────────</option>
-                        {raidTypeExpansions.all.map(type => (
+                        {raidTypeExpansions[expansion].map(type => (
                             <option key={type} value={type}>
                                 {raidTypeLabels[type]}
                             </option>

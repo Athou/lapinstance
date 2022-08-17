@@ -19,6 +19,15 @@ export const raidTypeLabels = {
     [RaidType.ZUL_AMAN]: "Zul'Aman",
     [RaidType.SUNWELL_PLATEAU]: "Sunwell Plateau",
 
+    [RaidType.VAULT_OF_ARCHAVON]: "Vault of Archavon",
+    [RaidType.NAXXRAMAS_80]: "Naxxramas",
+    [RaidType.THE_OBSIDIAN_SANCTUM]: "The Obsidian Sanctum",
+    [RaidType.THE_EYE_OF_ETERNITY]: "The Eye of Eternity",
+    [RaidType.ULDUAR]: "Ulduar",
+    [RaidType.TRIAL_OF_THE_CRUSADER]: "Trial of the Crusader",
+    [RaidType.ONYXIA_80]: "Onyxia",
+    [RaidType.ICECROWN_CITADEL]: "Icecrown Citadel",
+
     [RaidType.PVP]: "PvP",
     [RaidType.OTHER]: "Autre",
 }
@@ -41,11 +50,29 @@ export const raidTypeShortLabels = {
     [RaidType.ZUL_AMAN]: "ZA",
     [RaidType.SUNWELL_PLATEAU]: "SWP",
 
+    [RaidType.VAULT_OF_ARCHAVON]: "VoA",
+    [RaidType.NAXXRAMAS_80]: "Naxx",
+    [RaidType.THE_OBSIDIAN_SANCTUM]: "OS",
+    [RaidType.THE_EYE_OF_ETERNITY]: "EoE",
+    [RaidType.ULDUAR]: "Ulduar",
+    [RaidType.TRIAL_OF_THE_CRUSADER]: "ToC",
+    [RaidType.ONYXIA_80]: "Ony",
+    [RaidType.ICECROWN_CITADEL]: "ICC",
+
     [RaidType.PVP]: "PvP",
     [RaidType.OTHER]: "Autre",
 }
 
-export const raidTypeExpansions = {
+export type Expansion = "vanilla" | "tbc" | "wotlk" | "all"
+
+export const expansionLabels: { [key in Expansion]: string } = {
+    vanilla: "Vanilla",
+    tbc: "The Burning Crusade",
+    wotlk: "Wrath of the Lich King",
+    all: "Tous",
+}
+
+export const raidTypeExpansions: { [key in Expansion]: RaidType[] } = {
     vanilla: [
         RaidType.ONYXIA,
         RaidType.MOLTEN_CORE,
@@ -66,9 +93,21 @@ export const raidTypeExpansions = {
         RaidType.ZUL_AMAN,
         RaidType.SUNWELL_PLATEAU,
     ],
+    wotlk: [
+        RaidType.VAULT_OF_ARCHAVON,
+        RaidType.NAXXRAMAS_80,
+        RaidType.THE_OBSIDIAN_SANCTUM,
+        RaidType.THE_EYE_OF_ETERNITY,
+        RaidType.ULDUAR,
+        RaidType.TRIAL_OF_THE_CRUSADER,
+        RaidType.ONYXIA_80,
+        RaidType.ICECROWN_CITADEL,
+    ],
 
     all: [RaidType.PVP, RaidType.OTHER],
 }
+export const getExpansion = (raidType: RaidType) =>
+    Object.keys(raidTypeExpansions).find(expansion => raidTypeExpansions[expansion as Expansion].includes(raidType)) as Expansion
 
 export const characterSpecLabels = {
     [CharacterSpec.DRUID_RESTO]: "Druide - Restauration",
