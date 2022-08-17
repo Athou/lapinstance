@@ -1,6 +1,9 @@
 import React from "react"
 import styled from "styled-components"
 import { CharacterSpec } from "../../api"
+import deathknight_blood from "./deathknight_blood.png"
+import deathknight_frost from "./deathknight_frost.png"
+import deathknight_unholy from "./deathknight_unholy.png"
 import druid_balance from "./druid_balance.png"
 import druid_cat from "./druid_cat.png"
 import druid_resto from "./druid_resto.png"
@@ -39,6 +42,9 @@ const specToIcon = {
     [CharacterSpec.SHAMAN_RESTO]: shaman_resto,
     [CharacterSpec.SHAMAN_ENH]: shaman_enh,
     [CharacterSpec.SHAMAN_ELEM]: shaman_elem,
+    [CharacterSpec.DEATH_KNIGHT_BLOOD]: deathknight_blood,
+    [CharacterSpec.DEATH_KNIGHT_FROST]: deathknight_frost,
+    [CharacterSpec.DEATH_KNIGHT_UNHOLY]: deathknight_unholy,
 }
 
 const StyledImage = styled.img`

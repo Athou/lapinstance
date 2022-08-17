@@ -14,7 +14,8 @@ public enum CharacterClass {
 	MAGE("Mage"),
 	SHAMAN("Chaman"),
 	WARLOCK("Démoniste"),
-	HUNTER("Chasseur");
+	HUNTER("Chasseur"),
+	DEATH_KNIGHT("Chevalier de la mort");
 
 	private final String name;
 }

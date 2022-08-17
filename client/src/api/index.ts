@@ -288,6 +288,7 @@ export enum CharacterClass {
     SHAMAN = "SHAMAN",
     WARLOCK = "WARLOCK",
     HUNTER = "HUNTER",
+    DEATH_KNIGHT = "DEATH_KNIGHT",
 }
 
 export enum CharacterRole {
@@ -301,6 +302,7 @@ export enum CharacterSpec {
     WARRIOR_TANK = "WARRIOR_TANK",
     PALADIN_PROT = "PALADIN_PROT",
     DRUID_TANK = "DRUID_TANK",
+    DEATH_KNIGHT_BLOOD = "DEATH_KNIGHT_BLOOD",
     PRIEST_HEAL = "PRIEST_HEAL",
     PALADIN_HEAL = "PALADIN_HEAL",
     DRUID_RESTO = "DRUID_RESTO",
@@ -310,6 +312,8 @@ export enum CharacterSpec {
     PALADIN_RET = "PALADIN_RET",
     DRUID_CAT = "DRUID_CAT",
     SHAMAN_ENH = "SHAMAN_ENH",
+    DEATH_KNIGHT_FROST = "DEATH_KNIGHT_FROST",
+    DEATH_KNIGHT_UNHOLY = "DEATH_KNIGHT_UNHOLY",
     MAGE = "MAGE",
     WARLOCK = "WARLOCK",
     HUNTER = "HUNTER",

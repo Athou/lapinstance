@@ -89,6 +89,9 @@ export const characterSpecLabels = {
     [CharacterSpec.SHAMAN_ENH]: "Chaman - Amélioration",
     [CharacterSpec.SHAMAN_ELEM]: "Chaman - Élémentaire",
     [CharacterSpec.SHAMAN_RESTO]: "Chaman - Restauration",
+    [CharacterSpec.DEATH_KNIGHT_BLOOD]: "Chevalier de la mort - Sang",
+    [CharacterSpec.DEATH_KNIGHT_FROST]: "Chevalier de la mort - Givre",
+    [CharacterSpec.DEATH_KNIGHT_UNHOLY]: "Chevalier de la mort - Impie",
 }
 export const CharacterSpecs = (Object.keys(CharacterSpec) as CharacterSpec[]).sort((a, b) =>
     characterSpecLabels[a].localeCompare(characterSpecLabels[b])
@@ -133,4 +136,7 @@ export const specToRoleMapping = {
     [CharacterSpec.SHAMAN_ENH]: CharacterRole.MELEE,
     [CharacterSpec.SHAMAN_ELEM]: CharacterRole.RANGED,
     [CharacterSpec.SHAMAN_RESTO]: CharacterRole.HEAL,
+    [CharacterSpec.DEATH_KNIGHT_BLOOD]: CharacterRole.TANK,
+    [CharacterSpec.DEATH_KNIGHT_FROST]: CharacterRole.MELEE,
+    [CharacterSpec.DEATH_KNIGHT_UNHOLY]: CharacterRole.MELEE,
 }

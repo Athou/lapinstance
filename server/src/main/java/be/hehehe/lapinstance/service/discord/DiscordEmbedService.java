@@ -64,6 +64,8 @@ public class DiscordEmbedService {
 		eb.addField(buildClassField(CharacterClass.WARLOCK, subscriptions));
 		eb.addField(buildClassField(CharacterClass.DRUID, subscriptions));
 		eb.addField(buildClassField(CharacterClass.SHAMAN, subscriptions));
+		eb.addField(buildClassField(CharacterClass.DEATH_KNIGHT, subscriptions));
+		eb.addBlankField(true);
 
 		eb.addField(buildBlankLineField());
 
@@ -128,7 +130,7 @@ public class DiscordEmbedService {
 
 	private Field buildBlankLineField() {
 		// manually create a blank line to increase embed width
-		return new Field("", Strings.repeat(" ‎", 147), false);
+		return new Field("", Strings.repeat(" ‎", 350), false);
 	}
 
 	private String bold(String s) {

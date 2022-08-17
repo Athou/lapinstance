@@ -7,6 +7,7 @@ jda:
     admin-roles:
     icons:
       classes:
+        death_knight:
         druid:
         hunter:
         mage:
@@ -17,6 +18,9 @@ jda:
         warlock:
         warrior:
       specs:
+        death_knight_blood:
+        death_knight_frost:
+        death_knight_unholy:
         druid_balance:
         druid_cat:
         druid_resto:

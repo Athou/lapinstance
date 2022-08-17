@@ -1,6 +1,7 @@
 import React from "react"
 import styled from "styled-components"
 import { CharacterClass } from "../../api"
+import deathknight from "./deathknight.png"
 import druid from "./druid.png"
 import hunter from "./hunter.png"
 import mage from "./mage.png"
@@ -21,6 +22,7 @@ const classToIcon = {
     [CharacterClass.HUNTER]: hunter,
     [CharacterClass.PRIEST]: priest,
     [CharacterClass.SHAMAN]: shaman,
+    [CharacterClass.DEATH_KNIGHT]: deathknight,
 }
 
 const StyledImage = styled.img`
