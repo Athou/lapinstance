@@ -1,6 +1,6 @@
 import { Toaster } from "@blueprintjs/core"
 import { Client } from "@stomp/stompjs"
-import axios from "axios"
+import axios, { AxiosError } from "axios"
 import {
     AxiosRaidControllerClient,
     AxiosRaidTextChannelControllerClient,
@@ -16,9 +16,9 @@ const toaster = Toaster.create()
 const axiosInstance = axios.create()
 axiosInstance.interceptors.response.use(
     response => response,
-    error => {
+    (error: AxiosError) => {
         toaster.show({
-            message: `Erreur: ${error}`,
+            message: `Erreur: ${error.response?.data.message}`,
             icon: "error",
             intent: "danger",
         })
