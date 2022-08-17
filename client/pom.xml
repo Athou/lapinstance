@@ -1,19 +1,19 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	
+
 	<modelVersion>4.0.0</modelVersion>
-	
+
 	<parent>
 		<groupId>be.hehehe.lapinstance</groupId>
 		<artifactId>pom</artifactId>
 		<version>1.0.0</version>
 	</parent>
-	
+
 	<groupId>be.hehehe.lapinstance</groupId>
 	<artifactId>client</artifactId>
 	<name>lapinstance-client</name>
 	<description>Lapinstance Client</description>
-	
+
 	<build>
 		<plugins>
 			<plugin>
@@ -28,8 +28,8 @@
 							<goal>install-node-and-npm</goal>
 						</goals>
 						<configuration>
-							<nodeVersion>v12.14.1</nodeVersion>
-							<npmVersion>7.13.0</npmVersion>
+							<nodeVersion>v16.16.0</nodeVersion>
+							<npmVersion>8.15.0</npmVersion>
 						</configuration>
 					</execution>
 					<execution>
