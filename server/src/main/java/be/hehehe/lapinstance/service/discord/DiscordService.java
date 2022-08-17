@@ -27,7 +27,7 @@ public interface DiscordService {
 
 	void addMessageReactionListener(MessageReactionListener listener);
 
-	public interface MessageReactionListener {
+	interface MessageReactionListener {
 		void userClickedReaction(String discordUserId, String messageId, CharacterClass characterClass);
 
 		void userClickedReaction(String discordUserId, String messageId, RaidSubscriptionResponse response);
