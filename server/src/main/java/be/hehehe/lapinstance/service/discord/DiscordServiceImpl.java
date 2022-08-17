@@ -202,7 +202,7 @@ public class DiscordServiceImpl implements DiscordService {
 		}
 
 		if (message == null) {
-			message = textChannel.sendMessage(embed).complete();
+			message = textChannel.sendMessageEmbeds(embed).complete();
 			for (CharacterClass klass : CharacterClass.values()) {
 				String emote = discordEmoteService.getEmote(klass).forReaction();
 				message.addReaction(emote).complete();
@@ -216,7 +216,7 @@ public class DiscordServiceImpl implements DiscordService {
 			raid.setDiscordMessageId(message.getId());
 			raidRepository.save(raid);
 		} else {
-			message.editMessage(embed).complete();
+			message.editMessageEmbeds(embed).complete();
 		}
 	}
 
