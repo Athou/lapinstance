@@ -4,6 +4,7 @@ import moment from "moment"
 import React, { useState } from "react"
 import MomentLocaleUtils from "react-day-picker/moment"
 import { useHistory } from "react-router-dom"
+import { Box, Flex } from "reflexbox"
 import { Raid, RaidTextChannel, RaidType, SaveRaidRequest } from "../../api"
 import { client } from "../../api/client"
 import { Expansion, expansionLabels, getExpansion, raidTypeExpansions, raidTypeLabels } from "../../api/utils"
@@ -18,6 +19,7 @@ export const RaidEdit: React.FC<{ raid?: Raid; raidTextChannels: RaidTextChannel
 
     const [expansion, setExpansion] = useState<Expansion>((props.raid && getExpansion(props.raid.raidType)) ?? "wotlk")
     const [raidType, setRaidType] = useState(props.raid?.raidType ?? RaidType.VAULT_OF_ARCHAVON)
+    const [raidSize, setRaidSize] = useState(props.raid?.raidSize ?? 25)
     const [raidTextChannelId, setRaidTextChannelId] = useState(props.raid?.discordTextChannelId ?? props.raidTextChannels[0].id)
     const [date, setDate] = useState(props.raid?.date ?? newRaidDate.getTime())
     const [comment, setComment] = useState(props.raid?.comment)
@@ -31,6 +33,7 @@ export const RaidEdit: React.FC<{ raid?: Raid; raidTextChannels: RaidTextChannel
         const req: SaveRaidRequest = {
             raidId: props.raid?.id,
             raidType,
+            raidSize,
             raidTextChannelId,
             date,
             comment,
@@ -57,14 +60,25 @@ export const RaidEdit: React.FC<{ raid?: Raid; raidTextChannels: RaidTextChannel
                         ))}
                     </HTMLSelect>
                 </FormGroup>
+
                 <FormGroup label="Raid">
-                    <HTMLSelect value={raidType} onChange={e => setRaidType(e.target.value as RaidType)}>
-                        {raidTypeExpansions[expansion].map(type => (
-                            <option key={type} value={type}>
-                                {raidTypeLabels[type]}
-                            </option>
-                        ))}
-                    </HTMLSelect>
+                    <Flex>
+                        <Box marginRight={2}>
+                            <HTMLSelect value={raidType} onChange={e => setRaidType(e.target.value as RaidType)}>
+                                {raidTypeExpansions[expansion].map(type => (
+                                    <option key={type} value={type}>
+                                        {raidTypeLabels[type]}
+                                    </option>
+                                ))}
+                            </HTMLSelect>
+                        </Box>
+                        <Box>
+                            <HTMLSelect value={raidSize} onChange={e => setRaidSize(+e.target.value)}>
+                                <option value={10}>10</option>
+                                <option value={25}>25</option>
+                            </HTMLSelect>
+                        </Box>
+                    </Flex>
                 </FormGroup>
 
                 <FormGroup label="Channel">

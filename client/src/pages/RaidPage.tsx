@@ -115,7 +115,10 @@ export const RaidPage: React.FC<{ raidId: number }> = props => {
             <Flex>
                 <Box flexGrow={1}>
                     <PageTitle>
-                        Raid {raidTypeLabels[raid.raidType]} - <Moment format="dddd DD MMMM YYYY HH:mm">{raid.date}</Moment>
+                        <div>{`${raidTypeLabels[raid.raidType]} ${raid.raidSize ?? ""}`}</div>
+                        <div>
+                            <Moment format="dddd DD MMMM YYYY HH:mm">{raid.date}</Moment>
+                        </div>
                     </PageTitle>
                 </Box>
                 <Box>

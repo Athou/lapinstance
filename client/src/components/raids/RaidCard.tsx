@@ -31,7 +31,7 @@ export const RaidCard: React.FC<{
             <StyledCard elevation={2} interactive onClick={() => props.onClick(props.raid.id)}>
                 <Flex>
                     <Box flexGrow={1}>
-                        <H5>{raidTypeLabels[props.raid.raidType]}</H5>
+                        <H5>{`${raidTypeLabels[props.raid.raidType]} ${props.raid.raidSize ?? ""}`}</H5>
                     </Box>
                     <Box>{icon}</Box>
                 </Flex>

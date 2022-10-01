@@ -102,4 +102,10 @@
 		<modifyDataType tableName="RAIDS" columnName="comment" newDataType="clob" />
 	</changeSet>
 
+	<changeSet author="Athou" id="add-raid-size">
+		<addColumn tableName="RAIDS">
+			<column name="raid_size" type="int" />
+		</addColumn>
+	</changeSet>
+
 </databaseChangeLog>

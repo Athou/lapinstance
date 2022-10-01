@@ -53,7 +53,7 @@ export const RaidCalendar: React.FC<{
             raid,
         }
         return {
-            title: `${moment(raid.date).format("HH:mm")} ${raidTypeShortLabels[raid.raidType]}`,
+            title: `${moment(raid.date).format("HH:mm")} ${raidTypeShortLabels[raid.raidType]}${raid.raidSize ?? ""}`,
             start: new Date(raid.date),
             end: endDate,
             resource,

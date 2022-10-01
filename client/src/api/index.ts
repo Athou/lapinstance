@@ -210,6 +210,7 @@ export interface Raid extends AbstractModel {
     discordMessageId?: string;
     discordTextChannelId: string;
     formattedDate?: string;
+    raidSize?: number;
     raidType: RaidType;
 }
 
@@ -235,6 +236,7 @@ export interface SaveRaidRequest {
     comment?: string;
     date: DateAsNumber;
     raidId?: number;
+    raidSize?: number;
     raidTextChannelId: string;
     raidType: RaidType;
 }

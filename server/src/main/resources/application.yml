@@ -18,6 +18,7 @@ spring:
   liquibase:
     change-log: classpath:/liquibase/index.xml
   jackson:
+    default-property-inclusion: non_null
     serialization:
       WRITE_DATES_AS_TIMESTAMPS: true
   security:

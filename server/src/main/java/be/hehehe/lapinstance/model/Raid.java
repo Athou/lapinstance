@@ -26,7 +26,10 @@ import lombok.Setter;
 @Setter
 public class Raid extends AbstractModel {
 
-	// The starting time of the raid
+	/**
+	 * The starting time of the raid
+	 * 
+	 */
 	@NotNull
 	@JsonProperty(required = true)
 	@Temporal(TemporalType.TIMESTAMP)
@@ -38,6 +41,13 @@ public class Raid extends AbstractModel {
 	@JsonProperty(required = true)
 	@Enumerated(EnumType.STRING)
 	private RaidType raidType;
+
+	/**
+	 * max number of participants
+	 * 
+	 */
+	@JsonProperty
+	private Integer raidSize;
 
 	private String discordMessageId;
 
