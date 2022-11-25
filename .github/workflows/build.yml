@@ -1,0 +1,28 @@
+name: Java CI
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        java: ["8", "11", "17"]
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          java-version: ${{ matrix.java }}
+          distribution: "temurin"
+          cache: "maven"
+      - name: Build with Maven
+        run: mvn --batch-mode --update-snapshots verify
+      - uses: actions/upload-artifact@v3
+        if: ${{ matrix.java == '8' }}
+        with:
+          name: server-1.0.0.jar
+          path: server/target/server-1.0.0.jar
